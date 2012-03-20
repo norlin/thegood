@@ -1,0 +1,13 @@
+{?ajax.error}
+	{"status":"error","msg":"{ajax.status}"}
+{:else}
+	{?ajax.is_action}
+		{?ajax.addfact}
+			{"status":"ok","data":"{data.status}","callback":"update"}
+        {:else}
+    		{"status":"ok"{?second},"page":"{second}"{/second},"data":{data|s}}
+		{/ajax.addfact}
+	{:else}
+		{"status":"ok"{?second},"page":"{second}"{/second},"data":"{data|s|j}"}
+	{/ajax.is_action}
+{/ajax.error}

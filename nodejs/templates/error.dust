@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Перекрыли что-то не то</title>
+    
+    <link rel="icon" type="image/x-icon" href="http://perekrili.org/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="http://perekrili.org/favicon.ico" />
+    
+    <style type="text/css">
+        html,body {
+            position: relative;
+            
+            height: 100%;
+            
+            margin: 0;
+            padding: 0;
+            
+            background: url("http://perekrili.org/i/bg.gif") repeat;
+            
+            overflow: hidden;
+        }
+        
+        body {
+            position: relative;
+            width: 100%;
+            
+            font-family: "Tahoma", sans-serif;
+            text-align: center;
+            
+            color: #696969;
+        }
+        
+        img {
+            border: 0;
+        }
+        
+        a {
+            color: #0098c6;
+        }
+        
+        a:hover {
+            color: #00bae8;
+        }
+        
+        .b-404 {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            
+            margin: 50px auto;
+        }
+        
+        .mini {
+            font-size: 0.8em;
+        }
+        
+        h2 {
+            font-weight: normal;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="b-404">
+        <a href="/"><img src="http://perekrili.org/i/big_logo.jpg" /></a>
+        <h2>Сайт в разработке.</h2>
+        <h2>55% <span class="mini">30 января, 8:03</span></h2>
+        <a href="mailto:sovsem@perekrili.org">sovsem@perekrili.org</a>
+    </div>
+</body>
+</html>

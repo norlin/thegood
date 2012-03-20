@@ -1,0 +1,8 @@
+.b-pseudo-link {
+    cursor: hand;
+}
+
+.b-head-link,
+.b-head-menu-item {
+    zoom: 1;
+}

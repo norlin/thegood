@@ -1,0 +1,6 @@
+*.DS_Store
+nodejs/config.js
+nodejs/Makefile
+nginx/www/*/_*.*
+
+nginx/www/js/templates.js

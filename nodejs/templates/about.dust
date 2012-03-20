@@ -1,0 +1,16 @@
+{<page_title}О проекте{/page_title}
+{?full}
+    {>header/}
+<div id="content">
+{/full}
+    <div class="g-all">
+        <div class="g-round g-block">
+            <div class="b-static-text">
+                <p>"Перекрыли" - сайт о перекрытиях дорог в режиме онлайн.</p>
+                <p>Залогинитесь через свой аккаунт в социальных сетях, поставьте метку на карте и о перекрытии дороги узнают другие водители.</p>
+                <p>Если вы за рулем, то напишите о перекрытии в твиттере с хэш-тегом <a target="_blank" href="https://twitter.com/#!/search?q=%23%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D1%80%D1%8B%D0%BB%D0%B8">#перекрыли</a> или <a target="_blank" href="https://twitter.com/#!/search?q=%23%D0%BF%D0%B5%D1%80%D0%B5%D0%BA%D1%80%D1%8B%D1%82%D0%B8%D0%B5">#перекрытие</a> и информация об этом появится на сайте, а модераторы сами поставят метку.</p>
+                <p>Кроме того, вся информация о перекрытиях будет появляться в нашем твиттере <a target="_blank" href="https://twitter.com/perekrili">@perekrili</a></p>
+            </div>
+        </div>
+    </div>
+{?full}{>footer/}{/full}

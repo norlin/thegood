@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Перекрыли</title>
+    
+    <link rel="icon" type="image/x-icon" href="{info.domain}/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="{info.domain}/favicon.ico" />
+    <script type="text/javascript">
+        var g_user;
+        {?user}
+		g_user = {
+            name:'{user.name}',
+            status:'{user.status}'
+		};
+		{/user}
+        window.opener && window.opener.loginCallback && window.opener.loginCallback(g_user);
+        window.opener && window.close();
+        
+        !window.opener && (window.location = 'http://perekrili.org');
+    </script>
+</head>
+<body>
+Подождите, пожалуйста...
+</body>
+</html>

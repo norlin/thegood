@@ -1,0 +1,23 @@
+{?full}
+    {>header/}
+<div id="content">
+{/full}
+    {?news}
+    <div class="g-all">
+        <div class="g-round g-block b-news">
+            <h3 class="b-news-head">Свежие новости</h3>
+            
+            <div class="b-news-page">
+            {#news}
+                <div class="g-border-box b-news-block">
+                    <span class="b-news-date">{?value.human_date}{value.human_date}{/value.human_date}</span>
+                    <a class="b-news-title action" href="/news/{value._id}" onclick="return {action:'page',page:'news/{value._id}',template:'news',title:'Новости'}">{value.title}</a>
+                    <p class="b-news-body">{value.description}</p>
+                    <a class="b-news-title b-news-more action" href="/news/{value._id}" onclick="return {action:'page',page:'news/{value._id}',template:'news',title:'Новости'}">Читать дальше</a>
+                </div>
+            {/news}
+            </div>
+        </div>
+    </div>
+    {/news}
+{?full}{>footer/}{/full}

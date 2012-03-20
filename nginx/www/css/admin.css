@@ -1,0 +1,79 @@
+.b-admin {
+    position: relative;
+    display: inline-block;
+    
+    width: 50%;
+}
+
+.b-admin-link {
+    margin: 0 5px;
+}
+
+.b-admin-list {
+    list-style: none;
+    
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    
+    vertical-align: middle;
+}
+
+.b-admin-data {
+    display: inline-block;
+    
+    width: 50%;
+    height: 400px;
+    
+    background: #ccc;
+}
+
+.b-admin-list-item {
+    padding: 2px;
+    
+    height: 25px;
+    line-height: 25px;
+    
+    border: 1px transparent solid;
+}
+
+.b-admin-list-item:hover {
+    background: #ccc;
+}
+
+.b-li-inner {
+    display: inline-block;
+    
+    width: 500px;
+    
+    overflow: hidden;
+}
+
+.b-error {
+    border-color: #f00;
+}
+
+.b-admin-news {
+    
+}
+
+.b-news-add {
+    width: 800px;
+    
+    margin: 0 auto;
+    
+    text-align: left;
+}
+
+    .b-admin-input {
+        width: 790px;
+        
+        margin: 0;
+        padding: 3px;
+        
+        border: 1px #ccc solid;
+    }
+    
+    .b-admin-text {
+        height: 400px;
+    }

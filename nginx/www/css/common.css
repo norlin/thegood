@@ -1,0 +1,348 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    position: relative;
+    min-width: 950px;
+    
+    background: #f3f3f3 url("/i/bg.gif") left top repeat;
+    color: #696969;
+
+    font-family: Tahoma, sans-serif;
+}
+
+a {
+    color: #0098c6;
+}
+
+a:hover {
+    color: #00bae8;
+}
+
+a,span,p,div,img {
+    vertical-align: top;
+}
+
+img {
+    border: 0;
+}
+
+p {
+    margin: 5px 0 10px;
+}
+
+.fullscreen {
+    overflow: hidden;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    margin: 0 0 20px;
+    padding: 0;
+    
+    font-family: Georgia, serif;
+    font-weight: normal;
+}
+
+h1 {
+    font-size: 1.8em;
+}
+
+h2 {
+    font-size: 1.7em;
+}
+
+h3 {
+    font-size: 1.5em;
+}
+
+h4 {
+    font-size: 1.3em; 
+}
+
+h5 {
+    font-size: 1.2em;
+}
+
+h6 {
+    font-size: 1.1em;
+}
+
+.g-hidden {
+    display: none !important;
+}
+
+.g-clear {
+    display: block;
+    clear: both;
+    line-height: 1px;
+    height: 1px;
+}
+
+.g-all {
+    clear: both;
+
+    margin: 0 0 18px 0;
+    padding: 0 30px;
+}
+
+.g-clear-left {
+    clear: left;
+}
+
+.g-border-box {
+    box-sizing:border-box;
+    -moz-box-sizing:border-box;
+    -webkit-box-sizing:border-box;
+}
+
+.g-round {
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+}
+
+.g-block {
+    padding: 3px;
+    
+    border-width: 1px;
+    border-style: solid;
+    border-color: #dadada;
+    background: #fff;
+}
+
+.b-pseudo-link {
+    text-decoration: none;
+    border-bottom: 1px dashed;
+    cursor: pointer;
+}
+
+.b-header {
+    position: relative;
+    height: 41px;
+    line-height: 41px;
+    
+    background: #0099c7 url("/i/top_bg.jpg") left top repeat-x;
+    
+    color: #fff;
+}
+
+.b-header a {
+    color: #fff;
+}
+
+    .b-menu {
+        float: right;
+        
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        
+        height: 41px;
+        line-height: 41px;
+        
+        vertical-align: top;
+    
+        font-family: Georgia, serif;
+        font-size: 0.9em;
+        font-style: oblique;
+    }
+    
+        .b-head-link {
+            display: block;
+            
+            height: 41px;
+            line-height: 41px;
+            margin: 0;
+            padding: 0 15px;
+        
+            text-decoration: none;
+            vertical-align: middle;
+            
+            background: url("/i/top_menu_active.gif") left top repeat-x;
+        }
+        
+        .b-head-link:hover {
+            background-position: left bottom;
+        }
+        
+        .b-menu-item {
+            display: inline-block;
+            vertical-align: top;
+        }
+        
+    .b-logo-text {
+        position: relative;
+        
+        display: block;
+        float: left;
+        
+        width: 160px;
+        height: 41px;
+        
+        margin: 0;
+        padding: 0;
+    }
+    
+        .b-logo-img,
+        .b-logo-bg {
+            position: absolute;
+            
+            display: block;
+            
+            top: 0;
+            left: 0;
+            
+            width: 160px;
+            height: 41px;
+            
+            margin: 0;
+            padding: 0;
+            
+            background: #0099c7 url("/i/top_bg.jpg") left top repeat-x;
+            
+            z-index: 1;
+        }
+        
+        .b-logo-img {
+            background: url("/i/logo_text2.gif") center center no-repeat;
+            
+            z-index: 2;
+        }
+    
+    .b-share-container {
+        float: left;
+        
+        height: 31px;
+        margin-left: 50px;
+        padding-top: 5px;
+        
+        color: #fff;
+    }
+        
+        .b-share-container a:hover span {
+            color: #eee !important;
+        }
+    
+        .b-share {
+            vertical-align: top !important;
+        }
+        
+    .b-logo {
+        display: block;
+        float: left;
+        
+        width: 160px;
+        height: 91px;
+        
+        vertical-align: middle;
+        text-align: center;
+    }
+    
+        .b-logo img {
+            padding: 0;
+            margin: 0;
+            border: 0;
+            
+            width: 91px;
+            height: 91px;
+            
+            vertical-align: middle;
+        }
+    
+    .b-logo-link {
+        display: block;
+    }
+    
+    .b-logo-span,
+    .b-index-content {
+        display: none;
+    }
+    
+    .b-index .b-logo-link {
+        display: none;
+    }
+    
+    .b-index .b-logo-span,
+    #nojs .b-index .b-index-content {
+        display: block;
+    }
+    
+    .b-page-title {
+        height: 91px;
+        line-height: 91px;
+        
+        font-weight: bold;
+        
+        white-space: nowrap;
+    }
+    
+    .b-static-text {
+        padding: 30px;
+        white-space: normal;
+        text-align: left;
+    }
+    
+    .b-footer {
+        height: 35px;
+        padding-top: 15px;
+    
+        border-top: 1px #dadada solid;
+    }
+    
+        .b-copyright {
+            float: left;
+            
+            width: 500px;
+            height: 35px;
+            line-height: 1.2em;
+            
+            font-size: 12px;
+        }
+        
+        .b-foot-menu {
+        
+        }
+        
+            .b-foot-menu-item {
+                padding: 0 15px;
+                
+                line-height: 1em;
+                
+                vertical-align: top;
+            }
+            
+    .b-mark-settings {
+        
+    }
+        .b-input {
+            display: block;
+        }
+    
+        .b-show {
+            display: block;
+            
+            margin: 1px;
+            padding: 1px;
+        }
+        
+        .b-mark-settings-list {
+            width: 100%;
+        }
+        
+        .b-mark-settings-list-data {
+            display: none;
+        }
+        
+        .b-mark-settings-label {
+            line-height: 20px;
+        
+            white-space: nowrap;
+        }
+        
+        .b-mark-settings-label .b-input {
+            display: inline-block;
+            
+            vertical-align: top;
+        }

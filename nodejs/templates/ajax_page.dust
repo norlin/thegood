@@ -1,0 +1,5 @@
+{?ajax.error}
+	{"status":"error","msg":"{ajax.status}"}
+{:else}
+    {data|s}
+{/ajax.error}
