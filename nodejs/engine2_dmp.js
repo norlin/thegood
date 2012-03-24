@@ -461,6 +461,12 @@ var g_actions = {
 		g_data.getNews({limit:4},callbackNews);
 		*/
 	},
+	'upload':function(){
+		var interface = this;
+
+
+		sys.log(this.post_data);
+	},
 	'news':function(ajax){
 		var interface = this,
 			params = {};
