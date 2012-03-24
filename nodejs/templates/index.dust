@@ -2,7 +2,7 @@
 	{>header/}
 <div id="content">
 {/full}
-	<form class="b-send-file" action="/upload">
+	<form class="b-send-file" action="/upload" method="POST">
 		<input type="file" name="file"/>
 		<input type="submit" />
 	</form>

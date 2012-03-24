@@ -1,13 +1,14 @@
+/*jslint browser: true, sloppy: true, white: true, maxerr: 50, indent: 4 */
 include('tiny_mce/jquery.tinymce.js');
 
-$().ready(function(){
-	var $admin = $('.b-admin'),
-		$editor = $("#newsEditor");
-	if (!g_server){
+$().ready(function () {
+	var $editor = $("#newsEditor");
+	
+	if (!g_server) {
 		return false;
 	}
 	
-	g_server.saveNews = function(news,callback,error){
+	g_server.saveNews = function (news,callback,error) {
 		var data = {
 			news: news
 		};
@@ -15,12 +16,12 @@ $().ready(function(){
 		this.post('save_news',data,callback,error);
 	};
 	
-	g_actions.saveNews = function(params){
+	g_actions.saveNews = function (params) {
 		var data = {},
 			$form = $('#news_form'),
 			$title = $form.find('[name=title]');
 		
-		if (params.id){
+		if (params.id) {
 			data.id = params.id;
 		}
 		data.title = $title.val();
@@ -28,18 +29,18 @@ $().ready(function(){
 		data.description = $("#newsEditor").text();
 		
 		data.description = data.description.replace(/(\&[^;\s]*;)|\n/gi,' ').replace(/\s+/gi,' ');
-		if (data.description.length > 100){
+		if (data.description.length > 100) {
 			data.description = data.description.slice(0,200) + '...';
 		}
 		
-		g_server.saveNews(data,function(response){
-			if (!response || !response.data){
+		g_server.saveNews(data,function (response) {
+			if (!response || !response.data) {
 				alert('не получилось сохранить новость!');
 				return;
 			}
 			
 			window.location.reload();
-		},function(err){
+		},function (err) {
 			alert('не получилось сохранить новость!');
 		});
 	};
