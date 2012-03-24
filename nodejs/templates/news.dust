@@ -1,26 +1,26 @@
 {<page_title}
-    {#news}
-        {?value.title}
-            {value.title}
-        {:else}
-            (Без заголовка)
-        {/value.title}
-    {/news}
+	{#news}
+		{?value.title}
+			{value.title}
+		{:else}
+			(Без заголовка)
+		{/value.title}
+	{/news}
 {/page_title}
 {?full}
-    {>header/}
+	{>header/}
 <div id="content">
 {/full}
-    <div class="g-all">
-    {#news}
-        <div class="g-round g-block">
-            <div class="b-static-text">
-                {value.text|s}
-                {!?value.author_name}
-                <span class="b-news-author">Автор: {value.author_name}</span>
-                {/value.author_name!}
-            </div>
-        </div>
-    {/news}
-    </div>
+	<div class="g-all">
+	{#news}
+		<div class="g-round g-block">
+			<div class="b-static-text">
+				{value.text|s}
+				{!?value.author_name}
+				<span class="b-news-author">Автор: {value.author_name}</span>
+				{/value.author_name!}
+			</div>
+		</div>
+	{/news}
+	</div>
 {?full}{>footer/}{/full}

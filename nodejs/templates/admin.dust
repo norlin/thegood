@@ -2,61 +2,61 @@
 
 {<admin_pages}
 <li class="b-menu-item b-head-menu-item">
-    <a class="b-head-link" href="/admin_news">Редактировать новости</a>
+	<a class="b-head-link" href="/admin_news">Редактировать новости</a>
 </li>
 {/admin_pages}
 
 {?full}
-    {>header/}
+	{>header/}
 <div id="content">
 {/full}
-    <div class="g-all">
-        {?user.is_admin}
-            <div class="g-round g-block">
-                <div class="b-static-text">
-                    <a href="#" class="b-admin-link action" onclick="return {action:'getMarks',status:'spam'}">Спамовые метки</a> 
-                    <a href="#" class="b-admin-link action" onclick="return {action:'getMarks',status:'good'}">Хорошие метки</a>
-                    <a href="#" class="b-admin-link action" onclick="return {action:'getMarks',status:'new'}">Новые метки</a>
-                    <a href="#" class="b-admin-link action" onclick="return {action:'getMarks',today:true}">Метки за сегодня</a>
-                    <a href="#" class="b-admin-link action" onclick="return {action:'getMarks',all:true}">Метки за всё время</a>
-                </div>
-            </div>
-            <div class="g-round g-block">
-            {?adminMarks}
-                <div class="b-admin-controls">
-                    <a href="#" class="action" onclick="return {action:'saveMarks',status:-1}">Пометить как спам</a> 
-                    <a href="#" class="action" onclick="return {action:'saveMarks',status:1}">Пометить как нормальные</a>
-                </div>
-                
-                <form class="b-admin" action="/admin" method="post">
-                    <ul class="b-admin-list">
-                        {#adminMarks}
-                        <li class="b-admin-list-item" id="b-mark_{.id}">
-                            <span class="b-li-inner">
-                                <input class="b-mark-checkbox" type="checkbox" value="{.id}"/>
-                                <span class="b-pseudo-link">{value.title}</span>
-                            </span>
-                            <a href="#" class="action" onclick="return {action:'saveMark',id:'{.id}',status:-1}">трэш</a>
-                        </li>
-                        {/adminMarks}
-                    </ul>
-                </form>
-                <div class="b-admin-data"></div>
-            {:else}
-                <div class="b-static-text">
-                    <p>Меток нет</p>
-                </div>
-            {/adminMarks}
-            </div>
-        {:else}
-        <div class="g-round g-block">
-            <form class="b-login" method="POST" action="/admin">
-                <input type="text" value="" placeholder="логин" name="login" />
-                <input type="password" value="" placeholder="пароль" name="pass" />
-                <input type="submit" value="Войти" />
-            </form>
-        </div>
-        {/user.is_admin}
-        
-    </div>
+	<div class="g-all">
+		{?user.is_admin}
+			<div class="g-round g-block">
+				<div class="b-static-text">
+					<a href="#" class="b-admin-link action" onclick="return {action:'getMarks',status:'spam'}">Спамовые метки</a> 
+					<a href="#" class="b-admin-link action" onclick="return {action:'getMarks',status:'good'}">Хорошие метки</a>
+					<a href="#" class="b-admin-link action" onclick="return {action:'getMarks',status:'new'}">Новые метки</a>
+					<a href="#" class="b-admin-link action" onclick="return {action:'getMarks',today:true}">Метки за сегодня</a>
+					<a href="#" class="b-admin-link action" onclick="return {action:'getMarks',all:true}">Метки за всё время</a>
+				</div>
+			</div>
+			<div class="g-round g-block">
+			{?adminMarks}
+				<div class="b-admin-controls">
+					<a href="#" class="action" onclick="return {action:'saveMarks',status:-1}">Пометить как спам</a> 
+					<a href="#" class="action" onclick="return {action:'saveMarks',status:1}">Пометить как нормальные</a>
+				</div>
+				
+				<form class="b-admin" action="/admin" method="post">
+					<ul class="b-admin-list">
+						{#adminMarks}
+						<li class="b-admin-list-item" id="b-mark_{.id}">
+							<span class="b-li-inner">
+								<input class="b-mark-checkbox" type="checkbox" value="{.id}"/>
+								<span class="b-pseudo-link">{value.title}</span>
+							</span>
+							<a href="#" class="action" onclick="return {action:'saveMark',id:'{.id}',status:-1}">трэш</a>
+						</li>
+						{/adminMarks}
+					</ul>
+				</form>
+				<div class="b-admin-data"></div>
+			{:else}
+				<div class="b-static-text">
+					<p>Меток нет</p>
+				</div>
+			{/adminMarks}
+			</div>
+		{:else}
+		<div class="g-round g-block">
+			<form class="b-login" method="POST" action="/admin">
+				<input type="text" value="" placeholder="логин" name="login" />
+				<input type="password" value="" placeholder="пароль" name="pass" />
+				<input type="submit" value="Войти" />
+			</form>
+		</div>
+		{/user.is_admin}
+		
+	</div>
 {?full}{>footer/}{/full}

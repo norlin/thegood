@@ -1,21 +1,21 @@
 {<page_title}Новости{/page_title}
 {?full}
-    {>header/}
+	{>header/}
 <div id="content">
 {/full}
-    <div class="g-all">
-        <div class="g-round g-block">
-            <div class="b-static-text">
-                <div class="b-news-list">
-                {#news}
-                    <div class="g-border-box b-news-block">
-                        <a class="b-news-title action" href="/news/{value._id}" onclick="return {action:'page',page:'news/{value._id}',template:'news',title:'Новости'}">{value.title}</a>
-                        <span class="b-news-date">{?value.human_date}{value.human_date}{/value.human_date}</span>
-                        <p class="b-news-body">{value.description}</p>
-                    </div>
-                {/news}
-                </div>
-            </div>
-        </div>
-    </div>
+	<div class="g-all">
+		<div class="g-round g-block">
+			<div class="b-static-text">
+				<div class="b-news-list">
+				{#news}
+					<div class="g-border-box b-news-block">
+						<a class="b-news-title action" href="/news/{value._id}" onclick="return {action:'page',page:'news/{value._id}',template:'news',title:'Новости'}">{value.title}</a>
+						<span class="b-news-date">{?value.human_date}{value.human_date}{/value.human_date}</span>
+						<p class="b-news-body">{value.description}</p>
+					</div>
+				{/news}
+				</div>
+			</div>
+		</div>
+	</div>
 {?full}{>footer/}{/full}

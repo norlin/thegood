@@ -1,16 +1,16 @@
 {?full}
-    <div class="g-all g-clear-left b-map-all">
-        <div class="g-round g-block b-map-container">
-            
-             <div class="b-search">
-                 <form class="g-border-box b-search-form" id="search">
-                     <input class="g-border-box b-search-text" type="text" placeholder="Введите адрес" value="" />
-                 </form>
-             </div>
-            <div id="map" class="b-map"></div>
-            <div class="b-map-info">
-                <span id="marks_count">{>markscount/}</span>
-            </div>
-        </div>
-    </div>
+	<div class="g-all g-clear-left b-map-all">
+		<div class="g-round g-block b-map-container">
+			
+			 <div class="b-search">
+				 <form class="g-border-box b-search-form" id="search">
+					 <input class="g-border-box b-search-text" type="text" placeholder="Введите адрес" value="" />
+				 </form>
+			 </div>
+			<div id="map" class="b-map"></div>
+			<div class="b-map-info">
+				<span id="marks_count">{>markscount/}</span>
+			</div>
+		</div>
+	</div>
 {/full}

@@ -1,5 +1,5 @@
 {?ajax.error}
 	{"status":"error","msg":"{ajax.status}"}
 {:else}
-    {data|s}
+	{data|s}
 {/ajax.error}

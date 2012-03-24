@@ -2,10 +2,10 @@
 <html id="nojs">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Перекрыли</title>
+	<title>Добрая Машина Правды №4</title>
 	
-	<meta name="description" content="Сайт о перекрытиях дорог. Смотрите и добавляйте информация сами! Есть твиттер: @perekrili" />
-	<meta name="keywords" content="перекрытия, перекрыли, дороги, дорогу, синие, ведерки, ведёрки, россия, коррупция, чиновники, кортеж, кортежи, мигалки, мигалка, путин, медведев, пробки, не проехать" />
+	<meta name="description" content="Добрая Машина Правды №4, твиттер: @the_outreach" />
+	<meta name="keywords" content="навальный,машина,правда,пропаганда,путин,путинвор,вор,президент,премьер,коррупция,закон,агитация,россия,будущее" />
 	<meta name="author" lang="ru" content="Алексей Макаров" />
 	<meta name="document-state" content="Dynamic" />
 	
@@ -17,10 +17,6 @@
 	
 	<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.js"></script>
 	
-	{^info.second}
-	<script src="http://api-maps.yandex.ru/1.1/index.xml?key=AO-h-U4BAAAACrkIKwIA0gPVswfrs1CC73N3PGSOo8tEp_oAAAAAAAAAAADYGJSzBuNrOxmlJJTK6t_-XN-5FQ==&modules=traffic" type="text/javascript"></script>
-	{/info.second}
-	
 	<script type="text/javascript">
 		document.getElementById('nojs').id="js"; /*всякие анимашки и аяксики*/
 		var g_version = '{info.version}',
@@ -31,7 +27,6 @@
 				name:'{user.name}',
 				status:'{user.status}'
 			}{/user},
-			g_start_marks{?marks} = {marks|s}{/marks},
 			g_params = {
 				page:window.location.pathname.replace(/^\//,''),
 				title:'{+page_title/}'
@@ -50,26 +45,15 @@
 		{/info.second}
 	{/info.admin}
 </head>
-<body id="body" class="{?index}b-index {/index}b-second">
+<body id="body">
 
 <!-- Yandex.Metrika counter -->
-<div style="display:none;"><script type="text/javascript">
-(function(w, c) {
-	(w[c] = w[c] || []).push(function() {
-		try {
-			w.yaCounter11570722 = new Ya.Metrika({id:11570722, enableAll: true, webvisor:true});
-		}
-		catch(e) { }
-	});
-})(window, "yandex_metrika_callbacks");
-</script></div>
-<script src="//mc.yandex.ru/metrika/watch.js" type="text/javascript" defer="defer"></script>
-<noscript><div><img src="//mc.yandex.ru/watch/11570722" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+
 <!-- /Yandex.Metrika counter -->
 
 	<div class="g-all b-header" id="head">
-		<h1 class="b-logo-text b-logo-span">Перекрыли<span class="b-logo-img"></span></h1>
-		<h1 class="b-logo-text b-logo-link">Перекрыли<a href="/" class="b-logo-img{^info.admin} action{/info.admin}"{^info.admin} onclick="return {action:'page',page:'',title:''}"{/info.admin}></a></h1>
+		<h1 class="b-logo-text b-logo-span">Добрая Машина<span class="b-logo-img"></span></h1>
+		<h1 class="b-logo-text b-logo-link">Добрая Машина<a href="/" class="b-logo-img{^info.admin} action{/info.admin}"{^info.admin} onclick="return {action:'page',page:'',title:''}"{/info.admin}></a></h1>
 		
 		<div class="b-share-container yashare-auto-init" data-yashareL10n="ru" data-yashareType="link" data-yashareQuickServices="vkontakte,facebook,twitter,lj"></div> 
 		
@@ -98,38 +82,13 @@
 	<div class="g-all">
 
 		<span class="b-logo b-logo-span">
-			<img src="/i/logo.jpg" title="Перекрыли" />
+			<img src="/i/logo.jpg" title="Добрая Машина Правды" />
 		</span>
 		<a href="/" class="b-logo b-logo-link{^info.admin} action{/info.admin}"{^info.admin} onclick="return {action:'page',page:'',title:''}"{/info.admin}>
 			<img src="/i/logo.jpg" title="На главную" />
 		</a>
 		
-		<div class="g-round b-steps b-closed">
-			<div class="b-step b-step1">
-				<div class="b-arrow"></div>
-				<div class="b-step-bg"></div>
-				<div class="b-step-birdee"></div>
-				<div class="b-step-content">
-					{>userinfo/}
-				</div>
-			</div>
-			<div class="b-step b-step2">
-				<div class="b-arrow"></div>
-				<div class="b-step-bg"></div>
-				<div class="b-step-birdee"></div>
-				<div class="b-step-content">
-					<span class="b-step-num">2.</span> Найдите на&nbsp;карте место&nbsp;перекрытия
-				</div>
-			</div>
-			<div class="b-step b-step3">
-				<div class="b-arrow"></div>
-				<div class="b-step-bg"></div>
-				<div class="b-step-birdee"></div>
-				<div class="b-step-content">
-					<span class="b-step-num">3.</span> Добавьте метку щелчком мыши
-				</div>
-			</div>
-		</div>
+		{>userinfo/}
 		
 		<h2 class="b-page-title">{+page_title/}</h2>
 		
@@ -137,36 +96,5 @@
 	</div>
 	
 	<div id="index" class="b-index-content">
-		<div class="b-twitter">
-			<script>
-				new TWTR.Widget({
-				  version: 2,
-				  type: 'profile',
-				  interval: 30000,
-				  rpp:20,
-				  title: 'люди говорят',
-				  subject: 'Перекрытия',
-				  width: 250,
-				  height: 317,
-				  theme: {
-					shell: {
-					  background: '#0098c6',
-					  color: '#ffffff'
-					},
-					tweets: {
-					  background: '#ffffff',
-					  color: '#696969',
-					  links: '#0098c6'
-					}
-				  },
-				  features: {
-					scrollbar: true,
-					loop: false,
-					live: true,
-					behavior: 'all'
-				  }
-				}).render().setUser('perekrili').start();
-			</script>
-		</div>
-		{>map/}
+		
 	</div>

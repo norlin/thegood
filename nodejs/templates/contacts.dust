@@ -1,16 +1,16 @@
 {<page_title}Контакты{/page_title}
 {?full}
-    {>header/}
+	{>header/}
 <div id="content">
 {/full}
-    <div class="g-all">
-        <div class="g-round g-block">
-            <div class="b-static-text">
-                <p>По всем вопросам, связанным с сайтом, вы можете обращаться по почте: <a href="mailto:sovsem@perekrili.org">sovsem@perekrili.org</a></p>
-                <p>Если есть какие-то пожелания, или вы нашли на сайте ошибку, пожалуйста, напишите на <a href="mailto:admin@perekrili.org">admin@perekrili.org</a></p>
-                <p>Наш твиттер: <a href="http://twitter.com/perekrili">@perekrili</a></p>
-                <p>Спасибо, что с нами!</p>
-            </div>
-        </div>
-    </div>
+	<div class="g-all">
+		<div class="g-round g-block">
+			<div class="b-static-text">
+				<p>По всем вопросам, связанным с сайтом, вы можете обращаться по почте: <a href="mailto:sovsem@perekrili.org">sovsem@perekrili.org</a></p>
+				<p>Если есть какие-то пожелания, или вы нашли на сайте ошибку, пожалуйста, напишите на <a href="mailto:admin@perekrili.org">admin@perekrili.org</a></p>
+				<p>Наш твиттер: <a href="http://twitter.com/perekrili">@perekrili</a></p>
+				<p>Спасибо, что с нами!</p>
+			</div>
+		</div>
+	</div>
 {?full}{>footer/}{/full}

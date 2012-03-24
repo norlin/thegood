@@ -2,34 +2,34 @@
 
 {<admin_pages}
 <li class="b-menu-item b-head-menu-item">
-    <a class="b-head-link" href="/admin">Админка</a>
+	<a class="b-head-link" href="/admin">Админка</a>
 </li>
 {/admin_pages}
 
 {?full}
-    {>header/}
+	{>header/}
 <div id="content">
 {/full}
-    <div class="g-all">
-        <div class="g-round g-block">
-            {?user.is_admin}
-            {#news}
-            <form id="news_form" class="b-news-add" action="/ajax/save_news" method="post">
-                <h3>Редактировать новость</h3>
-                <input class="b-admin-input" type="text" value="{value.title}" name="title" placeholder="Заголовок"/>
-                <br />
-                <div class="b-admin-input b-admin-text" id="newsEditor" name="text">{value.text|s}</div>
-                <br />
-                <input class="action" type="submit" onclick="return {action:'saveNews',id:'{value._id}'}" value="Добавить новость" />
-            </form>
-            {/news}
-            {:else}
-                <form class="b-login" method="POST" action="/admin">
-                    <input type="text" value="" placeholder="логин" name="login" />
-                    <input type="password" value="" placeholder="пароль" name="pass" />
-                    <input type="submit" value="Войти" />
-                </form>
-            {/user.is_admin}
-        </div>
-    </div>
+	<div class="g-all">
+		<div class="g-round g-block">
+			{?user.is_admin}
+			{#news}
+			<form id="news_form" class="b-news-add" action="/ajax/save_news" method="post">
+				<h3>Редактировать новость</h3>
+				<input class="b-admin-input" type="text" value="{value.title}" name="title" placeholder="Заголовок"/>
+				<br />
+				<div class="b-admin-input b-admin-text" id="newsEditor" name="text">{value.text|s}</div>
+				<br />
+				<input class="action" type="submit" onclick="return {action:'saveNews',id:'{value._id}'}" value="Добавить новость" />
+			</form>
+			{/news}
+			{:else}
+				<form class="b-login" method="POST" action="/admin">
+					<input type="text" value="" placeholder="логин" name="login" />
+					<input type="password" value="" placeholder="пароль" name="pass" />
+					<input type="submit" value="Войти" />
+				</form>
+			{/user.is_admin}
+		</div>
+	</div>
 {?full}{>footer/}{/full}

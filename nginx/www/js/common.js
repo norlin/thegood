@@ -1,19 +1,19 @@
 if (typeof(Array.forEach) != "function"){
 	Array.prototype.forEach = function(fn, thisObj) {
-        var i, l;
-        
-	    for (i = 0, l = this.length; i < l; i++) {
-	        if (i in this) {
-	            fn.call(thisObj, this[i], i, this);
-	        }
-	    }
+		var i, l;
+		
+		for (i = 0, l = this.length; i < l; i++) {
+			if (i in this) {
+				fn.call(thisObj, this[i], i, this);
+			}
+		}
 	};
 }
 if (typeof(Array.indexOf) != "function"){
 	Array.prototype.indexOf = function(elt /*, from*/){
 		var len = this.length,
-            from = Number(arguments[1]) || 0;
-            
+			from = Number(arguments[1]) || 0;
+			
 		from = (from < 0) ? Math.ceil(from): Math.floor(from);
 		if (from < 0){
 			from += len;
@@ -43,22 +43,22 @@ var g_months = ['января','февраля','марта','апреля','м�
 
 function transform_date(timestamp,without_date,exact){
 	var date = new Date(timestamp),
-        year = date.getFullYear(),
-        month = date.getMonth(),
-        day = date.getDate(),
-        hour = date.getHours(),
-        minute = date.getMinutes(),
-        second = date.getSeconds(),
-        now_year, now_month, now_day;
-        
-    function make_time(time){
-    	if (time < 10){
-    		time = '0'+time;
-    	}
-    	return time;
-    }
+		year = date.getFullYear(),
+		month = date.getMonth(),
+		day = date.getDate(),
+		hour = date.getHours(),
+		minute = date.getMinutes(),
+		second = date.getSeconds(),
+		now_year, now_month, now_day;
+		
+	function make_time(time){
+		if (time < 10){
+			time = '0'+time;
+		}
+		return time;
+	}
 	
-    date = new Date();
+	date = new Date();
 	now_year = date.getFullYear();
 	now_month = date.getMonth();
 	now_day = date.getDate();
@@ -66,30 +66,30 @@ function transform_date(timestamp,without_date,exact){
 	date = '';
 	
 	if (exact){
-        date = make_time(now_day) +'.'+make_time(now_month+1)+'.'+now_year;
+		date = make_time(now_day) +'.'+make_time(now_month+1)+'.'+now_year;
 	}else{
-    	if (now_year == year){
-    		if (now_month == month){
-    			if (now_day == day){
-    				date+='сегодня';
-    			}else if (now_day-1 == day){
-    				date+='вчера';
-    			}else if (now_day+1 == day){
-    				date+='завтра';
-    			}else{
-    				date+=day+' '+g_months[month];
-    			}
-    		}else{
-    			date+=day+' '+g_months[month];
-    		}
-    	}else{
-    		date+=day+' '+g_months[month]+' '+year;
-    	}
-    	
-    	if (!without_date){
-        	date+=', '+make_time(hour)+':'+make_time(minute)+':'+make_time(second);	
-        }
-    }
+		if (now_year == year){
+			if (now_month == month){
+				if (now_day == day){
+					date+='сегодня';
+				}else if (now_day-1 == day){
+					date+='вчера';
+				}else if (now_day+1 == day){
+					date+='завтра';
+				}else{
+					date+=day+' '+g_months[month];
+				}
+			}else{
+				date+=day+' '+g_months[month];
+			}
+		}else{
+			date+=day+' '+g_months[month]+' '+year;
+		}
+		
+		if (!without_date){
+			date+=', '+make_time(hour)+':'+make_time(minute)+':'+make_time(second);	
+		}
+	}
 	
 	return date;
 }
@@ -150,32 +150,32 @@ function parseHash(hash){
 }
 
 function makeAuthWindow(provider,retpath,callback){
-    var providers = {
-            facebook:{
-                url:'https://www.facebook.com/dialog/oauth?client_id=209747195791751&redirect_uri='+retpath+provider,
-                width:900,
-                height:400
-            },
-            vkontakt:{
-                url:'http://oauth.vk.com/authorize?client_id=2863963&display=popup&response_type=code&redirect_uri='+retpath+provider,
-                width:600,
-                height:300
-            },
-            logout:{
-                url:'http://theoutreach.info/logout',
-                width:600,
-                height:300
-            }
-        },
-        width = providers[provider].width,
-        height = providers[provider].height,
-        left = (window.outerWidth/2)-(width/2),
-        top = 200,
-        auth_window;
-    
-    auth_window = window.open(providers[provider].url,'_blank','location=no,menubar=no,resizable=no,scrollbar=no,status=no,toolbar=no,left='+left+'px,top='+top+'px,width='+width+'px,height='+height+'px');
-    
-    window.loginCallback = callback;
-    
-    
+	var providers = {
+			facebook:{
+				url:'https://www.facebook.com/dialog/oauth?client_id=209747195791751&redirect_uri='+retpath+provider,
+				width:900,
+				height:400
+			},
+			vkontakt:{
+				url:'http://oauth.vk.com/authorize?client_id=2863963&display=popup&response_type=code&redirect_uri='+retpath+provider,
+				width:600,
+				height:300
+			},
+			logout:{
+				url:'http://theoutreach.info/logout',
+				width:600,
+				height:300
+			}
+		},
+		width = providers[provider].width,
+		height = providers[provider].height,
+		left = (window.outerWidth/2)-(width/2),
+		top = 200,
+		auth_window;
+	
+	auth_window = window.open(providers[provider].url,'_blank','location=no,menubar=no,resizable=no,scrollbar=no,status=no,toolbar=no,left='+left+'px,top='+top+'px,width='+width+'px,height='+height+'px');
+	
+	window.loginCallback = callback;
+	
+	
 }
