@@ -2,6 +2,8 @@
 var sys = require('util'),
 	http = require('http'),
 	https = require('https'),
+	formidable = require('formidable'),
+	im = require('imagemagick'),
 	url = require('url'),
 	fs = require('fs'),
 	dust = require('dust'),
@@ -17,6 +19,7 @@ var sys = require('util'),
 var g_domain = g_config.host,
 	g_node_path = g_config.node,
 	g_www_path = g_config.www,
+	g_tmp_path = g_config.tmp,
 	g_version = '0.0.1',
 	g_auth_retpath = 'http://' + g_domain + '/auth/',
 	g_node_port = g_config.port,
@@ -99,7 +102,7 @@ function textValidate(text) {
 	return text;
 }
 
-var Resolver = function(req,resp,callback) {
+var Resolver = function(req, resp, files, callback) {
 	var Interface = this;
 	/*
 	основная внешняя функция
@@ -113,6 +116,7 @@ var Resolver = function(req,resp,callback) {
 	this.response = resp;
 	this.data = {};
 	this.action = [];
+	this.files = files;
 	this.status = 500;
 	this.template = 'error';
 	this.headers = {
@@ -132,12 +136,12 @@ var Resolver = function(req,resp,callback) {
 		Interface.cb = callback;
 		
 		process.on('uncaughtException', function(err) {
-			Interface.debug('exeption!' + (sys.inspect(err) + console.trace()).replace(/\n/g,' '));
+			Interface.debug('exeption!' + ((err ? sys.inspect(err) : 'no error') + console.trace()).replace(/\n/g,' '));
 			Interface.print();
 		});
 	}
 	
-	if (req.post_data) {
+	if (req.post_data && !req.multipart) {
 		this.post = url.parse('http://'+g_domain+'/?'+req.post_data,true).query || {};
 	} else {
 		this.post = {};
@@ -391,10 +395,40 @@ g_actions = {
 		callback();
 	},
 	'upload':function() {
-		var Interface = this;
+		var Interface = this,
+			i,
+			data,
+			file,
+			files = [],
+			count = 0;
 
+		function metadataCallback(err, metadata){
+			files.push(metadata);
+			count = count - 1;
 
-		sys.log(this.post_data);
+			// 55/1	5085/100	0/1
+			// 
+			// 50	50.85		0
+			//
+			// 50 + (50.85/60) + (0/3600)
+			//
+			// Если S или W - то минус
+
+			if (!count){
+				sys.log(sys.inspect(files));
+				Interface.print();
+			}
+		}
+
+		for (file in this.files){
+			if (this.files.hasOwnProperty(file)){
+				count = count + 1;
+
+				im.readMetadata(this.files[file].path, metadataCallback);
+			}
+		}
+
+		this.template = 'index';
 	},
 	'news':function(ajax) {
 		var Interface = this,
@@ -833,20 +867,29 @@ function Init() {
 	sys.print(' starting');
 
 	function serverCallback(req, resp) {
-		var post = '';
+		var post = '',
+			type = req.headers ? req.headers['content-type'] : '',
+			form;
 	
 		function onData(chunk) {
 			post+= chunk;
 		}
 		
-		function onRequestEnd() {
+		function onRequestEnd(err, fields, files) {
 			req.post_data = post;
-			
-			var main = new Resolver(req, resp, logError);
+
+			var main = new Resolver(req, resp, files, logError);
 		}
-		
-		req.on('data', onData);
-		req.on('end', onRequestEnd);
+
+		if (type && type.match('multipart/form-data')) {
+			form = new formidable.IncomingForm();
+			form.uploadDir = g_tmp_path;
+			form.maxFieldsSize = 5 * 1024 * 1024
+			form.parse(req, onRequestEnd);
+		} else {
+			req.on('data', onData);
+			req.on('end', onRequestEnd);
+		}
 	}
 	sys.print('.');
 	
