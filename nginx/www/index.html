@@ -66,12 +66,24 @@
 		.b-light {
 			padding: 40px 60px 80px;
 		}
+
+		.b-block-light {
+			position: relative;
+
+			width: 831px;
+			height: 715px;
+			margin: 0 auto;
+
+			z-index: 2;
+
+			background: url('i/block_light.png') 0 0 no-repeat;
+		}
 		
 		.b-block {
 			position: relative;
 			
 			width: 670px;
-			margin: 40px auto;
+			margin: -680px auto;
 
 			background: url('i/block_bg.gif') 0 0 repeat;
 			color: #4b4b4b;
@@ -96,19 +108,6 @@
 				z-index: 1;
 
 				box-shadow: 0 20px 30px #000;
-			}
-
-			.b-block-light {
-				position: absolute;
-				top: -50px;
-				left: -80px;
-
-				width: 831px;
-				height: 715px;
-
-				z-index: 2;
-
-				background: url('i/block_light.png') 0 0 no-repeat;
 			}
 
 			.b-block-content {
@@ -288,9 +287,9 @@
 </head>
 <body>
 	<div class="b-print"></div>
+	<div class="b-block-light"></div>
 	<div class="b-block">
 		<div class="b-block-shadow"></div>
-		<div class="b-block-light"></div>
 		<div class="b-block-content">
 			<div class="b-message">
 				<h2 class="b-title">Друзья!</h2>
