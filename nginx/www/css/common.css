@@ -20,7 +20,7 @@
 			color: #fff;
 
 
-			background: url('i/print.png') center 0 no-repeat;
+			background: url('../i/print.png') center 0 no-repeat;
 		}
 		
 		img {
@@ -62,7 +62,7 @@
 
 			z-index: 2;
 
-			background: url('i/block_light.png') 0 0 no-repeat;
+			background: url('../i/block_light.png') 0 0 no-repeat;
 		}
 		
 		.b-block {
@@ -71,7 +71,7 @@
 			width: 670px;
 			margin: -680px auto;
 
-			background: #f3f3f3 url('i/block_bg.gif') 0 0 repeat;
+			background: #f3f3f3 url('../i/block_bg.gif') 0 0 repeat;
 			color: #4b4b4b;
 
 			text-align: center;
@@ -93,7 +93,7 @@
 
 				z-index: 1;
 
-				background: url('i/block_shadow.png') center top no-repeat;
+				background: url('../i/block_shadow.png') center top no-repeat;
 			}
 
 			.b-block-content {
@@ -102,7 +102,7 @@
 				min-height: 540px;
 				padding: 35px;
 
-				background: url('i/block_bg.png') 0 bottom repeat-x;
+				background: url('../i/block_bg.png') 0 bottom repeat-x;
 				border-radius: 13px;
 				-moz-border-radius: 13px;
 				-webkit-border-radius: 13px;
@@ -182,7 +182,7 @@
 			width: 13px;
 			height: 38px;
 
-			background: url('i/stripe.png') 0 -38px no-repeat;
+			background: url('../i/stripe.png') 0 -38px no-repeat;
 		}
 
 		.b-stripe__left {
@@ -231,7 +231,7 @@
 
 		vertical-align: top;
 
-		background: url('i/social.png') 0 0 no-repeat;
+		background: url('../i/social.png') 0 0 no-repeat;
 
 		border-radius: 22px;
 		-moz-border-radius: 22px;
