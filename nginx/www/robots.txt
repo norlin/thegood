@@ -4,5 +4,4 @@ Disallow: /admin_news
 Disallow: /ajax
 Disallow: /auth
 Disallow: /logout
-Disallow: /
-Host: node.norlin.ru
+Host: theoutreach.info
