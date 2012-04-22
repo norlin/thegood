@@ -11,21 +11,26 @@
 		html,body {
 			margin: 0;
 			padding: 0;
-
-			height: 100%;
-			min-height: 100%;
 		}
 		
+		html {
+			background: url("i/bg_blueprint.gif") 0 0 repeat;
+		}
+
 		body {
 			width: 100%;
+			min-width: 840px;
+			min-height: 100%;
+			padding-bottom: 1048px;
 			
 			font-family: "Georgia", serif;
 			font-size: 18px;
 			text-align: center;
 			
 			color: #fff;
-			
-			background: url("i/bg_blueprint.gif") 0 0 repeat;
+
+
+			background: url('i/print.png') center 0 no-repeat;
 		}
 		
 		img {
@@ -52,18 +57,6 @@
 		.b-print,
 		.b-light {
 			position: relative;
-		}
-
-		.b-print {
-			position: absolute;
-			left: 0;
-			top: 0;
-
-			display: block;
-			width: 100%;
-			height: 1048px;
-
-			background: url('i/print.png') 50% 0 no-repeat;
 		}
 
 		.b-light {
@@ -136,7 +129,7 @@
 			text-transform: uppercase;
 
 			color: #d52a3e;
-			font-family: "Myriad Pro", sans-serif;
+			font-family: "DroidSans", "Myriad Pro", sans-serif;
 		}
 
 			.b-message {
