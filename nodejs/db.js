@@ -380,7 +380,7 @@ Database.prototype.getPointsByUid = function(uid,cb){
 
 	Interface._db.request({
 		method:'POST',
-		path:'/_design/facts/_view/getUserPoints',
+		path:'/_design/outreach/_view/getUserPoints',
 		data:JSON.stringify({keys:[uid.toString(10)]})
 	},function(err,doc){
 		if (err){
@@ -432,7 +432,7 @@ Database.prototype.checkAuth = function(query,cb){
 	var uid = query.viewer_id.toString(10);
 	Interface._db.request({
 		method:'POST',
-		path:'/_design/facts/_view/getUserAuth',
+		path:'/_design/outreach/_view/getUserAuth',
 		data:JSON.stringify({keys:[uid],limit:1})
 	},authRender);
 	
@@ -452,7 +452,7 @@ Database.prototype.checkAuth = function(query,cb){
 
 Database.prototype.getTopFacts = function(cb){
 	var Interface = this;
-	Interface._db.view('facts','getTopFacts',function(err,doc){
+	Interface._db.view('outreach','getTopFacts',function(err,doc){
 		if (err){
 			errorCallback(err,cb);
 			return false;
@@ -480,7 +480,7 @@ Database.prototype.getStat = function(cb){
 		//}
 	}
 	
-	Interface._db.view('facts','getUsersCount',function(err,doc){
+	Interface._db.view('outreach','getUsersCount',function(err,doc){
 		if (err){
 			sys.log(sys.inspect(err));
 			result = false;
@@ -495,7 +495,7 @@ Database.prototype.getStat = function(cb){
 		emit();
 	});
 /*
-	Interface._db.view('facts','getFactsCount',function(err,doc){
+	Interface._db.view('outreach','getFactsCount',function(err,doc){
 		if (err){
 			sys.log(sys.inspect(err));
 			result[1]=-1;
