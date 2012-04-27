@@ -18,10 +18,6 @@
 					&laquo;Носителем суверенитета и единственным источником власти в Российской Федерации является её многонациональный народ&raquo;
 					<span>Конституция Российской Федерации, ст. 3, п. 1.</span>
 				</div>
-
-				<div class="b-epigraph">
-					p.s. нас уже {userCount}.
-				</div>
 				<i class="g-clear"></i>
 			</div>
 
@@ -41,6 +37,12 @@
 			{:else}
 				{>userinfo/}
 			{/info.beta}
+			{?userCount}
+			<div class="b-epigraph">
+				p.s. нас уже {userCount}.
+			</div>
+			{/userCount}
+			<i class="g-clear"></i>
 		</div>
 	</div>
 {?full}{>footer/}{/full}

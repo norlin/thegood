@@ -389,7 +389,7 @@ g_actions = {
 		this.data.userCount = 0;
 		
 		function callback(err,data) {
-			if (data) {
+			if (typeof(data) !== 'undefined') {
 				this.data.userCount = data;
 			}
 			if (ajax) {

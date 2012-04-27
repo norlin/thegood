@@ -472,7 +472,7 @@ Database.prototype.getTopFacts = function(cb){
 
 Database.prototype.getStat = function(cb){
 	var Interface = this;
-	var result = [];
+	var result = false;
 	
 	function emit(){
 		//if (result[0] && result[1]){
@@ -483,12 +483,14 @@ Database.prototype.getStat = function(cb){
 	Interface._db.view('facts','getUsersCount',function(err,doc){
 		if (err){
 			sys.log(sys.inspect(err));
-			result[0]=-1;
+			result = false;
 			emit();
 			return false;
 		}
 		
-		result = doc.rows[0].value||0;
+		sys.log(sys.inspect(doc));
+
+		result = doc.rows[0].value||false;
 		
 		emit();
 	});
