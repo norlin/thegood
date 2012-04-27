@@ -157,7 +157,7 @@ function makeAuthWindow(provider,retpath,callback){
 				height:400
 			},
 			vkontakt:{
-				url:'http://oauth.vk.com/authorize?client_id=2863963&display=popup&response_type=code&redirect_uri='+retpath+provider,
+				url:'http://oauth.vk.com/authorize?client_id=2926531&display=popup&response_type=code&redirect_uri='+retpath+provider,
 				width:600,
 				height:300
 			},
