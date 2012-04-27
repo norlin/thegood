@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html id="nojs">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Добрая Машина Правды №4</title>
@@ -26,7 +26,8 @@
 			g_user{?user} = {
 				name:'{user.name}',
 				status:'{user.status}'
-			}{/user};
+			}{/user},
+			g_admin;
 	</script>
 
 	<script src="{info.domain}/js/_scripts.js?ver={info.version}" type="text/javascript"></script>
