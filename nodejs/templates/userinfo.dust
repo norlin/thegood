@@ -22,10 +22,10 @@
 
 		<a href="http://oauth.vk.com/authorize?client_id={info.social.vk}&display=popup&response_type=code&redirect_uri={info.retpath}vkontakt" class="b-social b-social__vk action" onclick="return {action:'login',provider:'vkontakt',client:{info.social.vk}}"></a>&nbsp;
 
-		<a href="#" class="b-social b-social__twitter b-social__twitter-disabled"></a>&nbsp;
+		<a href="#" title="Ещё не работает" class="b-social b-social__twitter b-social__twitter-disabled"></a>&nbsp;
 		
 		или&nbsp;
-		<a href="#" class="b-social b-social__mail b-social__mail-disabled"></a>
+		<a href="#" title="Ещё не работает" class="b-social b-social__mail b-social__mail-disabled"></a>
 		{/user}
 	</span>
 </div>
