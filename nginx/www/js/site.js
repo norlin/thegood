@@ -7,7 +7,7 @@
 			g_inited = false;
 			
 		function Init() {
-			
+			/*
 			if (!g_inited) {
 				window.addEventListener('popstate', function (e) {
 					var params = e.state || {
@@ -31,6 +31,9 @@
 				
 				g_inited = true;
 			}
+			*/
+			
+			g_actions.init();
 		}
 
 		//разные функции
