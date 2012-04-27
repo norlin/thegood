@@ -544,23 +544,17 @@ g_actions = {
 						var token,
 							expires,
 							uid;
-						sys.log('onauth');
+
 						data = data ? JSON.parse(data) || 0 : 0;
 
-						sys.log('err '+sys.inspect(err));
-						sys.log('data '+sys.inspect(data));
-
 						if (err || !data || data.error) {
-						sys.log('onauth err');
 							Interface.template = 'auth';
 							Interface.print();
 						} else {
-						sys.log('onauth ok');
 							token = data.access_token;
 							expires = data.expires_in;
 							uid = data.user_id;
 
-						sys.log('onauth getdata');
 							getData(
 								providers[provider].protocol,
 								providers[provider].hostInfo,
@@ -571,24 +565,18 @@ g_actions = {
 						}
 					},
 					oninfo:function(err,data,token) {
-						sys.log('oninfo');
-						sys.log(sys.inspect(data));
 						if (err || !data) {
-						sys.log('oninfo err');
 							Interface.template = 'auth';
 							Interface.print();
 						} else {
 							
-						sys.log('oninfo ok');
 							data = data ? JSON.parse(data) || 0 : 0;
 							
 							if (err || !data || data.error) {
-						sys.log('oninfo err2');
 								g_actions['500'].call(Interface);
 								return false;
 							}
 							
-						sys.log('oninfo ok2');
 							data = data.response[0];
 							
 							data = {
@@ -596,9 +584,6 @@ g_actions = {
 								name:[data.first_name,data.last_name].join(' ')
 							};
 
-							sys.log(sys.inspect(data));
-							
-						sys.log('oninfo save');
 							g_data.saveSocialUser(provider,data,token[0],function(user,cookie) {
 								Interface.headers['Set-Cookie'] = 'login='+cookie+'; path=/;';
 								Interface.template = 'auth';

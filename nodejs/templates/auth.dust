@@ -14,10 +14,14 @@
 			status:'{user.status}'
 		};
 		{/user}
+		alert(1);
 		window.opener && window.opener.loginCallback && window.opener.loginCallback(g_user);
+		alert(2);
 		window.opener && window.close();
+		alert(3);
 		
 		!window.opener && (window.location = '{info.domain}');
+		alert(4);
 	</script>
 </head>
 <body>
