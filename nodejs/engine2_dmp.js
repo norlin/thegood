@@ -386,17 +386,20 @@ g_actions = {
 
 		this.template = 'index';
 		this.data.index = true;
-		this.data.marks_count = 0;
-		this.data.marks_word = 'перекрытий';
+		this.data.userCount = 0;
 		
-		function callback() {
+		function callback(err,data) {
+			if (data) {
+				this.data.userCount = data;
+			}
 			if (ajax) {
 				ajax();
 			} else {
 				Interface.print();
 			}
 		}
-		callback();
+
+		g_data.getStat(callback);
 	},
 	'upload':function() {
 		var Interface = this,

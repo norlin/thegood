@@ -468,22 +468,17 @@ Database.prototype.getTopFacts = function(cb){
 		
 	});
 }
+*/
 
 Database.prototype.getStat = function(cb){
 	var Interface = this;
 	var result = [];
 	
 	function emit(){
-		if (result[0] && result[1]){
+		//if (result[0] && result[1]){
 			cb(null,result);
-		}
+		//}
 	}
-	
-	result = [1,2];
-	emit();
-	
-	return;
-	
 	
 	Interface._db.view('facts','getUsersCount',function(err,doc){
 		if (err){
@@ -493,10 +488,11 @@ Database.prototype.getStat = function(cb){
 			return false;
 		}
 		
-		result[0] = doc.rows[0].value||-1;
+		result = doc.rows[0].value||0;
 		
 		emit();
 	});
+/*
 	Interface._db.view('facts','getFactsCount',function(err,doc){
 		if (err){
 			sys.log(sys.inspect(err));
@@ -509,8 +505,8 @@ Database.prototype.getStat = function(cb){
 		
 		emit();
 	});
-}
 */
+}
 
 //внешние интерфейсы
 exports.createDatabase = function(port,host,login,pass,db){
