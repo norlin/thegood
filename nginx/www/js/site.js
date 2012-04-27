@@ -51,7 +51,6 @@
 				});
 			},
 			login:function (params) {
-				g_actions.hideFirstStep();
 				makeAuthWindow(params.provider,g_auth_retpath,function (user) {
 					g_user = user;
 
