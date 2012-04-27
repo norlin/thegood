@@ -487,8 +487,6 @@ Database.prototype.getStat = function(cb){
 			emit();
 			return false;
 		}
-		
-		sys.log(sys.inspect(doc));
 
 		result = doc.rows[0].value||false;
 		
