@@ -44,11 +44,11 @@
 					<i class="b-stripe__left b-stripe__left-mini"></i>
 					<i class="b-stripe__right b-stripe__right-mini"></i>
 					<span class="b-stripe__text">
-						Используй аккаунт в социальных сетях
-						<a href="#" class="b-social b-social__twitter"></a>
-						<a href="#" class="b-social b-social__facebook"></a>
-						<a href="#" class="b-social b-social__vk"></a>
-						или
+						Используй аккаунт в социальных сетях&nbsp;
+						<a href="#" class="b-social b-social__twitter"></a>&nbsp;
+						<a href="#" class="b-social b-social__facebook"></a>&nbsp;
+						<a href="#" class="b-social b-social__vk"></a>&nbsp;
+						или&nbsp;
 						<a href="#" class="b-social b-social__mail"></a>
 					</span>
 				</div>
