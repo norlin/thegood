@@ -21,6 +21,7 @@
 				<i class="g-clear"></i>
 			</div>
 
+			{?info.beta}
 			<div class="b-stripe">
 				<i class="b-stripe__left"></i>
 				<i class="b-stripe__right"></i>
@@ -33,27 +34,25 @@
 					Скоро всё будет
 				</span>
 			</div>
-
-			<!-- div class="b-stripe">
-				<i class="b-stripe__left"></i>
-				<i class="b-stripe__right"></i>
-				<span class="b-stripe__text">Зарегистрируйся, чтобы в числе первых узнать о запуске ДМП №4</span>
-			</div>
-			<div class="b-stripe b-stripe__mini">
-				<i class="b-stripe__left b-stripe__left-mini"></i>
-				<i class="b-stripe__right b-stripe__right-mini"></i>
-				<span class="b-stripe__text">
-					Используй аккаунт в социальных сетях
-
-					<a href="#" class="b-social b-social__twitter"></a>
-					<a href="#" class="b-social b-social__facebook"></a>
-					<a href="#" class="b-social b-social__vk"></a>
-
-					или
-
-					<a href="#" class="b-social b-social__mail"></a>
-				</span>
-			</div-->
+			{:else}
+				<div class="b-stripe">
+					<i class="b-stripe__left"></i>
+					<i class="b-stripe__right"></i>
+					<span class="b-stripe__text">Зарегистрируйся, чтобы в числе первых узнать о запуске ДМП №4</span>
+				</div>
+				<div class="b-stripe b-stripe__mini">
+					<i class="b-stripe__left b-stripe__left-mini"></i>
+					<i class="b-stripe__right b-stripe__right-mini"></i>
+					<span class="b-stripe__text">
+						Используй аккаунт в социальных сетях
+						<a href="#" class="b-social b-social__twitter"></a>
+						<a href="#" class="b-social b-social__facebook"></a>
+						<a href="#" class="b-social b-social__vk"></a>
+						или
+						<a href="#" class="b-social b-social__mail"></a>
+					</span>
+				</div>
+			{/info.beta}
 		</div>
 	</div>
 {?full}{>footer/}{/full}
