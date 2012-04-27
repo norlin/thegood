@@ -533,7 +533,7 @@ g_actions = {
 					protocol:https,
 					host:'oauth.vk.com',
 					hostInfo:'api.vk.com',
-					authUrl:'/access_token?client_id='+g_config.oauth.vk[0]+'&client_secret='+g_config.oauth.vk[1]+'&code=',
+					authUrl:'/access_token?client_id='+g_config.oauth.vk[0]+'&client_secret='+g_config.oauth.vk[1]+'&scope=notify,friends,offline&code=',
 					infoUrl:'/method/getProfiles?uid=',
 					infoUrlEnd:'&access_token=',
 					onauth:function(err,data) {
@@ -579,6 +579,8 @@ g_actions = {
 								id:data.uid,
 								name:[data.first_name,data.last_name].join(' ')
 							};
+
+							sys.log(sys.inspect(data));
 							
 							g_data.saveSocialUser(provider,data,token[0],function(user,cookie) {
 								Interface.headers['Set-Cookie'] = 'login='+cookie+'; path=/;';
