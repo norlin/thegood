@@ -386,11 +386,11 @@ g_actions = {
 
 		this.template = 'index';
 		this.data.index = true;
-		this.data.userCount = 0;
+		this.data.userCount = false;
 		
 		function callback(err,data) {
 			if (typeof(data) !== 'undefined') {
-				this.data.userCount = data;
+				Interface.data.userCount = data;
 			}
 			if (ajax) {
 				ajax();
