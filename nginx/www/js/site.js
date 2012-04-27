@@ -103,6 +103,9 @@
 				/* */
 			},
 			updatePage:function (params,html) {
+				window.location.reload();
+
+				return;
 				if (g_user) {
 					$('.b-username').html(g_user.name);
 					$('.b-userinfo').removeClass('g-hidden');
