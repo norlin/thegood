@@ -247,6 +247,11 @@
 			background-position: -2px -50px;
 		}
 
+		.b-social__twitter-disabled {
+			background-position: -2px -100px !important;
+			cursor: default;
+		}
+
 		.b-social__facebook {
 			background-position: -47px 0;
 		}
@@ -255,12 +260,22 @@
 			background-position: -47px -50px;
 		}
 
+		.b-social__facebook-disabled {
+			background-position: -47px -100px !important;
+			cursor: default;
+		}
+
 		.b-social__vk {
 			background-position: -92px 0;
 		}
 
 		.b-social__vk:hover {
 			background-position: -92px -50px;
+		}
+
+		.b-social__vk-disabled {
+			background-position: -92px -100px !important;
+			cursor: default;
 		}
 
 		.b-social__mail {
@@ -274,4 +289,9 @@
 
 		.b-social__mail:hover {
 			background-position: -137px -50px;
+		}
+
+		.b-social__mail-disabled {
+			background-position: -137px -100px !important;
+			cursor: default;
 		}
