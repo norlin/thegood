@@ -46,8 +46,8 @@
 					<span class="b-stripe__text">
 						Используй аккаунт в социальных сетях&nbsp;
 						<a href="#" class="b-social b-social__twitter"></a>&nbsp;
-						<a href="#" class="b-social b-social__facebook"></a>&nbsp;
-						<a href="#" class="b-social b-social__vk"></a>&nbsp;
+						<a href="#" class="b-social b-social__facebook action" return {action:'login',provider:'facebook'}></a>&nbsp;
+						<a href="http://oauth.vk.com/authorize?client_id=2926531&display=popup&response_type=code&redirect_uri={info.retpath}vkontakt" class="b-social b-social__vk action" return {action:'login',provider:'vkontakt'}></a>&nbsp;
 						или&nbsp;
 						<a href="#" class="b-social b-social__mail"></a>
 					</span>
