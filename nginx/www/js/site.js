@@ -51,7 +51,7 @@
 				});
 			},
 			login:function (params) {
-				makeAuthWindow(params.provider,g_auth_retpath,function (user) {
+				makeAuthWindow(params.provider,params.client,g_auth_retpath,function (user) {
 					g_user = user;
 
 					g_actions.updatePage();
@@ -77,7 +77,7 @@
 					window.location = g_domain + '/'+params.page;
 					return false;
 				}
-				
+
 				g_server.getPage(page,function (data) {
 					g_start_marks = data.marks ? JSON.parse(data.marks) || [] : [];
 

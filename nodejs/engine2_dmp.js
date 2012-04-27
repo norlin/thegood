@@ -249,7 +249,11 @@ Resolver.prototype.authDone = function(cookie) {
 		action:this.action,
 		query:sys.inspect(this.url.query),
 		version:g_version,
-		retpath:g_auth_retpath
+		retpath:g_auth_retpath,
+		social:{
+			vk:g_config.oauth.vk[0],
+			fb:g_config.oauth.fb[0],
+		}
 	};
 		
 	if (this.user && this.user.status > 0) {

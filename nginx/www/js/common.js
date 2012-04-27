@@ -149,15 +149,15 @@ function parseHash(hash){
 	return result;
 }
 
-function makeAuthWindow(provider,retpath,callback){
+function makeAuthWindow(provider,client,retpath,callback){
 	var providers = {
 			facebook:{
-				url:'https://www.facebook.com/dialog/oauth?client_id=209747195791751&redirect_uri='+retpath+provider,
+				url:'https://www.facebook.com/dialog/oauth?client_id='+client+'&redirect_uri='+retpath+provider,
 				width:900,
 				height:400
 			},
 			vkontakt:{
-				url:'http://oauth.vk.com/authorize?client_id=2926531&display=popup&response_type=code&redirect_uri='+retpath+provider,
+				url:'http://oauth.vk.com/authorize?client_id='+client+'&display=popup&response_type=code&redirect_uri='+retpath+provider,
 				width:600,
 				height:300
 			},
