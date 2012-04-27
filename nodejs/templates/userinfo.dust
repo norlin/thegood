@@ -1,14 +1,27 @@
-<div class="b-userinfo{?user}{:else} g-hidden{/user}">
-	<span class="b-step-num">1.</span> Добро пожаловать, <span class="b-username">{user.name}</span>!
-	<br />
-	<a class="b-link action" onclick="return {action:'logout'}" href="/logout">выйти</a>
+<div class="b-stripe">
+	<i class="b-stripe__left"></i>
+	<i class="b-stripe__right"></i>
+	<span class="b-stripe__text">
+		{?user}
+		Привет, {user.name}!
+		{:else}
+		Зарегистрируйся, чтобы в числе первых узнать о запуске ДМП №4
+		{/user}
+	</span>
 </div>
-
-<div class="b-login{?user} g-hidden{/user}">
-	<span class="b-step-num">1.</span> Войдите через <br/>
-	<a href="http://oauth.vk.com/authorize?client_id=2769050&display=popup&response_type=code&redirect_uri={info.retpath}vkontakt" class="b-vk-login action" onclick="return {action:'login',provider:'vkontakt'}">
-		<img src="/i/vk.gif" alt="VK"/>
-	</a>&nbsp;или&nbsp;<a href="https://www.facebook.com/dialog/oauth?client_id=210476312380425&redirect_uri={info.retpath}facebook" class="b-fb-login action" onclick="return {action:'login',provider:'facebook'}">
-		<img src="/i/fb.gif" alt="Fb"/>
-	</a>
+<div class="b-stripe b-stripe__mini">
+	<i class="b-stripe__left b-stripe__left-mini"></i>
+	<i class="b-stripe__right b-stripe__right-mini"></i>
+	<span class="b-stripe__text">
+		{?user}
+		Машина скоро заработает.
+		{:else}
+		Используй аккаунт в социальных сетях&nbsp;
+		<a href="#" class="b-social b-social__twitter"></a>&nbsp;
+		<a href="#" class="b-social b-social__facebook action" onclick="return {action:'login',provider:'facebook'}"></a>&nbsp;
+		<a href="http://oauth.vk.com/authorize?client_id={info.social.vk}&display=popup&response_type=code&redirect_uri={info.retpath}vkontakt" class="b-social b-social__vk action" onclick="return {action:'login',provider:'vkontakt',client:{info.social.vk}}"></a>&nbsp;
+		или&nbsp;
+		<a href="#" class="b-social b-social__mail"></a>
+		{/user}
+	</span>
 </div>

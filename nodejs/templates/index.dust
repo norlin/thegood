@@ -35,23 +35,7 @@
 				</span>
 			</div>
 			{:else}
-				<div class="b-stripe">
-					<i class="b-stripe__left"></i>
-					<i class="b-stripe__right"></i>
-					<span class="b-stripe__text">Зарегистрируйся, чтобы в числе первых узнать о запуске ДМП №4</span>
-				</div>
-				<div class="b-stripe b-stripe__mini">
-					<i class="b-stripe__left b-stripe__left-mini"></i>
-					<i class="b-stripe__right b-stripe__right-mini"></i>
-					<span class="b-stripe__text">
-						Используй аккаунт в социальных сетях&nbsp;
-						<a href="#" class="b-social b-social__twitter"></a>&nbsp;
-						<a href="#" class="b-social b-social__facebook action" onclick="return {action:'login',provider:'facebook'}"></a>&nbsp;
-						<a href="http://oauth.vk.com/authorize?client_id={info.social.vk}&display=popup&response_type=code&redirect_uri={info.retpath}vkontakt" class="b-social b-social__vk action" onclick="return {action:'login',provider:'vkontakt',client:{info.social.vk}}"></a>&nbsp;
-						или&nbsp;
-						<a href="#" class="b-social b-social__mail"></a>
-					</span>
-				</div>
+				{>userinfo/}
 			{/info.beta}
 		</div>
 	</div>
