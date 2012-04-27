@@ -543,6 +543,9 @@ g_actions = {
 						sys.log('onauth');
 						data = data ? JSON.parse(data) || 0 : 0;
 
+						sys.log('err '+sys.inspect(err));
+						sys.log('data '+sys.inspect(data));
+
 						if (err || !data || data.error) {
 						sys.log('onauth err');
 							Interface.template = 'auth';
@@ -565,6 +568,7 @@ g_actions = {
 					},
 					oninfo:function(err,data,token) {
 						sys.log('oninfo');
+						sys.log(sys.inspect(data));
 						if (err || !data) {
 						sys.log('oninfo err');
 							Interface.template = 'auth';
