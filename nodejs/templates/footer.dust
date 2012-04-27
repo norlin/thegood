@@ -1,29 +1,3 @@
-	</div>    
-	<div class="g-all b-footer">
-		<div class="b-copyright">
-			Разработка: <a href="http://twitter.com/norlin_ru" target="_blank">Алексей Макаров</a>, дизайн: <a href="http://twitter.com/info_rombick" target="_blank">Макс Подкосов<br />
-			<a href="http://ru-vederko.livejournal.com" target="_blank">Синие Ведёрки</a>, <a href="http://rospil.info" target="_blank">rospil.info</a>, <a href="http://rosvybory.org" target="_blank">rosvybory.org</a>, <a href="http://rosyama.ru" target="_blank">rosyama.ru</a>, <a href="http://www.rosagit.info" target="_blank">rosagit.info</a>
-		</div>
-		
-		<ul class="b-menu b-foot-menu">
-			{?info.admin}
-				<li class="b-menu-item b-head-menu-item">
-					<a class="b-head-link action" href="/">На главную</a>
-				</li>
-			{:else}
-				<li class="b-menu-item b-foot-menu-item b-admin-link{^user.is_admin} g-hidden{/user.is_admin}">
-					<a class="b-foot-link" onclick="return {action:'page',page:'admin'}" href="/admin">Админка</a>
-				</li>
-				<li class="b-menu-item b-foot-menu-item">
-					<a class="b-foot-link action" onclick="return {action:'page',page:'news',title:'Новости'}" href="/news">Новости</a>
-				</li>
-				{#pages}
-				<li class="b-menu-item b-foot-menu-item">
-					<a class="b-foot-link action" onclick="return {action:'page',page:'{url}',title:'{title}'}" href="/{url}">{title}</a>
-				</li>
-				{/pages}
-			{/info.admin}
-		</ul>
-	</div>
+
 </body>
 </html>

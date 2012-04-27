@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html id="nojs">
+<html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>Добрая Машина Правды №4</title>
-	
+
 	<meta name="description" content="Добрая Машина Правды №4, твиттер: @the_outreach" />
 	<meta name="keywords" content="навальный,машина,правда,пропаганда,путин,путинвор,вор,президент,премьер,коррупция,закон,агитация,россия,будущее" />
 	<meta name="author" lang="ru" content="Алексей Макаров" />
@@ -15,7 +15,7 @@
 	<!--[if gt IE 7]><!--><link rel="stylesheet" href="{info.domain}/css/_styles.css?ver={info.version}"/><!--<![endif]-->
 	<!--[if lte IE 7]><link rel=stylesheet href="{info.domain}/css/_styles-ie.css?ver={info.version}"/><![endif]-->
 	
-	<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="{info.domain}/js/jquery.js"></script>
 	
 	<script type="text/javascript">
 		document.getElementById('nojs').id="js"; /*всякие анимашки и аяксики*/
@@ -26,75 +26,14 @@
 			g_user{?user} = {
 				name:'{user.name}',
 				status:'{user.status}'
-			}{/user},
-			g_params = {
-				page:window.location.pathname.replace(/^\//,''),
-				title:'{+page_title/}'
-			},
-			g_admin{?info.admin}{^info.second} = true{/info.second}{/info.admin};
+			}{/user};
 	</script>
 
 	<script src="{info.domain}/js/_scripts.js?ver={info.version}" type="text/javascript"></script>
-	{?info.admin}
-		<link rel="stylesheet" href="{info.domain}/css/_admin.css?ver={info.version}"/>
-		
-		{?info.second}
-		   <script src="{info.domain}/js/_admin_news.js?ver={info.version}" type="text/javascript"></script>
-		{:else}
-		   <script src="{info.domain}/js/_admin.js?ver={info.version}" type="text/javascript"></script>
-		{/info.second}
-	{/info.admin}
 </head>
-<body id="body">
+<body>
 
-<!-- Yandex.Metrika counter -->
+<!-- Yandex.Metrika counter --><script type="text/javascript">(function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter13810699 = new Ya.Metrika({id:13810699}); } catch(e) {} }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f); } else { f(); } })(document, window, "yandex_metrika_callbacks");</script><noscript><div><img src="//mc.yandex.ru/watch/13810699" style="position:absolute; left:-9999px;" alt="" /></div></noscript><!-- /Yandex.Metrika counter -->
+	<div class="b-print"></div>
+	<div class="b-block-light"></div>
 
-<!-- /Yandex.Metrika counter -->
-
-	<div class="g-all b-header" id="head">
-		<h1 class="b-logo-text b-logo-span">Добрая Машина<span class="b-logo-img"></span></h1>
-		<h1 class="b-logo-text b-logo-link">Добрая Машина<a href="/" class="b-logo-img{^info.admin} action{/info.admin}"{^info.admin} onclick="return {action:'page',page:'',title:''}"{/info.admin}></a></h1>
-		
-		<div class="b-share-container yashare-auto-init" data-yashareL10n="ru" data-yashareType="link" data-yashareQuickServices="vkontakte,facebook,twitter,lj"></div> 
-		
-		<ul class="b-menu b-head-menu">
-			{?info.admin}
-				{+admin_pages/}
-				<li class="b-menu-item b-head-menu-item">
-					<a class="b-head-link" href="/">На главную</a>
-				</li>
-			{:else}
-				<li class="b-menu-item b-head-menu-item b-admin-link{^user.is_admin} g-hidden{/user.is_admin}">
-					<a class="b-head-link" onclick="return {action:'page',page:'admin'}" href="/admin">Админка</a>
-				</li>
-				<li class="b-menu-item b-head-menu-item">
-					<a class="b-head-link action" onclick="return {action:'page',page:'news',template:'news_list',title:'Новости'}" href="/news">Новости</a>
-				</li>
-				{#pages}
-				<li class="b-menu-item b-head-menu-item">
-					<a class="b-head-link action" onclick="return {action:'page',page:'{url}',title:'{title}'}" href="/{url}">{title}</a>
-				</li>
-				{/pages}
-			{/info.admin}
-		</ul>
-	</div>
-	
-	<div class="g-all">
-
-		<span class="b-logo b-logo-span">
-			<img src="/i/logo.jpg" title="Добрая Машина Правды" />
-		</span>
-		<a href="/" class="b-logo b-logo-link{^info.admin} action{/info.admin}"{^info.admin} onclick="return {action:'page',page:'',title:''}"{/info.admin}>
-			<img src="/i/logo.jpg" title="На главную" />
-		</a>
-		
-		{>userinfo/}
-		
-		<h2 class="b-page-title">{+page_title/}</h2>
-		
-		<i class="g-clear"></i>
-	</div>
-	
-	<div id="index" class="b-index-content">
-		
-	</div>
