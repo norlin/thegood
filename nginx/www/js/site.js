@@ -32,7 +32,7 @@
 				g_inited = true;
 			}
 			*/
-			
+
 			g_actions.init();
 		}
 
@@ -72,7 +72,7 @@
 				
 				mark.draw(map);
 			},
-			page:function (params,no_state) {
+			/*page:function (params,no_state) {
 				var page = params.page === '' ? 'index' : params.page,
 					template = params.template || page;
 
@@ -101,7 +101,7 @@
 				},function () {
 					window.location = g_domain + '/'+params.page;
 				});
-			},
+			},*/
 			updateIndex:function () {
 				/* */
 			},
@@ -109,7 +109,7 @@
 				window.location.reload();
 
 				return;
-				if (g_user) {
+				/*if (g_user) {
 					$('.b-username').html(g_user.name);
 					$('.b-userinfo').removeClass('g-hidden');
 					$('.b-login').addClass('g-hidden');
@@ -127,7 +127,7 @@
 				
 				Init();
 				
-				g_actions.init();
+				g_actions.init();*/
 			},
 			writeHistory:function (params,no_state) {
 				if (window.history && !no_state) {
