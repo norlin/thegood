@@ -244,3 +244,56 @@ exports.accessToken = function(data,cb){
 	
 	request.end();
 }
+request.end();
+}
+
+exports.getUserData = function(data,cb){
+	if (false){
+		return;
+	}
+	
+	var options = {
+		hostname: 'api.twitter.com',
+		path: '/oauth/access_token',
+		method: 'POST'
+	},
+	post_data = [],
+	request,
+	oauth = generateOAuth({
+		request:{
+			method:options.method,
+			url:'https://'+options.hostname+options.path
+		},
+		params:{
+			oauth_verifier: data.oauth_verifier
+		},
+		oauth:{
+			token:data.oauth_token,
+			secret:data.oauth_token_secret
+		}
+	});
+	
+	options.headers = {
+		'Authorization':oauth
+	};
+
+	request = https.request(options,function(response){
+		response.setEncoding('utf8');
+		
+		response.on('data', function (chunk) {
+			if (typeof(cb) == 'function'){
+				cb(null,chunk);
+			}
+		});
+	});
+	
+	request.on('error', function(err) {
+		sys.log('twitter exeption: ' + err.message);
+		
+		if (typeof(cb) == 'function'){
+			cb(e);
+		}
+	});
+	
+	request.end();
+}

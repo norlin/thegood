@@ -646,10 +646,15 @@ g_actions = {
 									});
 
 									if (oauth.oauth_callback_confirmed === 'true') {
+										sys.log('yeap! catch request token');
 										g_twitter_tokens[oauth_token] = oauth_token_secret;
+
+										sys.log('yeap! save token secret');
 
 										Interface.template = 'auth';
 										Interface.status = 302;
+
+										sys.log('redirect to twitter auth');
 										Interface.headers['Location'] = 'https://'+providers[provider].host+providers[provider].authUrl+'?oauth_token='+oauth.oauth_token;
 									} else {
 										Interface.status = 403;
