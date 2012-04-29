@@ -691,7 +691,7 @@ g_actions = {
 							};
 
 							g_data.saveSocialUser(provider,data,{
-								token:oauth.access_token,
+								token:oauth.oauth_token,
 								secret:oauth.oauth_token_secret
 							},function(user,cookie) {
 								Interface.headers['Set-Cookie'] = 'login='+cookie+'; path=/;';
