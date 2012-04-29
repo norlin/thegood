@@ -320,23 +320,35 @@ Database.prototype.saveSocialUser = function(provider,data,token,cb){
 		if (err){
 			if (err.error === 'not_found'){
 				user = {
-				   _id:'user_'+provider+data.id,
-				   login:provider+data.id,
-				   name:data.name,
-				   status:10,
-				   sys_type:'user',
-				   provider:provider,
-				   token:{}
+					_id:'user_'+provider+data.id,
+					login:provider+data.id,
+					name:data.name,
+					status:10,
+					social_id: data.id,
+					sys_type:'user',
+					provider:provider,
+					token:{}
 				};
 				
-				user.token = token;
+				if (typeof(token) === 'object') {
+					user.token = token.token;
+					user.token_secret = token.secret;
+				} else {
+					user.token = token;
+				}
 			}else{
 				cb({status:0});
 			}
 		}else{
 			user = response;
 			user.name = data.name;
-			user.token = token;
+				
+			if (typeof(token) === 'object') {
+				user.token = token.token;
+				user.token_secret = token.secret;
+			} else {
+				user.token = token;
+			}
 		}
 		
 		user.passwd = makePassword(user.login,user.token);

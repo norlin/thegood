@@ -252,18 +252,14 @@ exports.getUserData = function(data,cb){
 	
 	var options = {
 		hostname: 'api.twitter.com',
-		path: '/oauth/access_token',
-		method: 'POST'
+		path: '/1/users/show.json?screen_name='+data.screen_name,
+		method: 'GET'
 	},
-	post_data = [],
 	request,
 	oauth = generateOAuth({
 		request:{
 			method:options.method,
 			url:'https://'+options.hostname+options.path
-		},
-		params:{
-			oauth_verifier: data.oauth_verifier
 		},
 		oauth:{
 			token:data.oauth_token,
