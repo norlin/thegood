@@ -244,8 +244,6 @@ exports.accessToken = function(data,cb){
 	
 	request.end();
 }
-request.end();
-}
 
 exports.getUserData = function(data,cb){
 	if (false){
