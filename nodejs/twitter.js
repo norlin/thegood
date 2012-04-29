@@ -24,13 +24,13 @@ function percentEncode(str){
 	return encodeURIComponent(str).replace(/\!/g, "%21").replace(/\'/g, "%27").replace(/\(/g, "%28").replace(/\)/g, "%29").replace(/\*/g, "%2A");
 }
 
-function makeSign(oauth,data){
+function makeSign(oauth,data,tokenRequest){
 	var params_string = [],
 		sign_string = [],
 		tmp,
-		token_secret = config.token_secret,
+		token_secret = tokenRequest ? false : config.token_secret,
 		consumer_secret = config.consumer_secret,
-		key_string = percentEncode(consumer_secret) + '&' + percentEncode(token_secret),
+		key_string = percentEncode(consumer_secret) + '&' + (token_secret ? percentEncode(token_secret) : ''),
 		hmac;
 	
 		
@@ -76,7 +76,7 @@ function generateOAuth(data,oauth_callback){
 		delete oauth.oauth_token;
 	}
 	
-	oauth.oauth_signature = makeSign(oauth,data);
+	oauth.oauth_signature = makeSign(oauth,data,oauth_callback);
 	
 	for (tmp in oauth){
 		oauth_params.push(
@@ -156,7 +156,7 @@ exports.requestToken = function(oauth_callback,cb){
 	
 	var options = {
 		hostname: 'api.twitter.com',
-		path: '/oauth/request_token ',
+		path: '/oauth/request_token',
 		method: 'POST'
 	},
 	post_data = [],
@@ -165,13 +165,17 @@ exports.requestToken = function(oauth_callback,cb){
 		request:{
 			method:options.method,
 			url:'https://'+options.hostname+options.path
-		}
+		},
+        params:{}
 	},oauth_callback);
 	
 	options.headers = {
 		'Authorization':oauth
 	};
-	
+
+
+    sys.log(sys.inspect(options));
+
 	request = https.request(options,function(response){
 		response.setEncoding('utf8');
 		
