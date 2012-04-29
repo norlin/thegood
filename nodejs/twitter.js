@@ -1,6 +1,7 @@
 var sys = require('util'),
 	crypto = require('crypto'),
 	http = require('http'),
+	https = require('https'),
 	config = require('./config').config.twitter;
 
 var symbols = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
@@ -57,7 +58,7 @@ function makeSign(oauth,data){
 	return hmac.update(sign_string).digest('base64');
 }
 
-function generateOAuth(data){
+function generateOAuth(data,oauth_callback){
 	var oauth = {
 			oauth_consumer_key: config.oauth_consumer_key,
 			oauth_nonce: makeHash(),
@@ -69,6 +70,10 @@ function generateOAuth(data){
 		oauth_params = [],
 		sign = '',
 		tmp;
+
+	if (oauth_callback) {
+		oauth.oauth_callback = oauth_callback;
+	}
 	
 	oauth.oauth_signature = makeSign(oauth,data);
 	
@@ -102,7 +107,7 @@ exports.sendTweet = function(data,cb){
 	oauth = generateOAuth({
 		request:{
 			method:options.method,
-			url:'http://'+options.hostname+options.path
+			url:'https://'+options.hostname+options.path
 		},
 		params:tweet
 	});
@@ -111,7 +116,7 @@ exports.sendTweet = function(data,cb){
 		'Authorization':oauth
 	};
 	
-	request = http.request(options,function(response){
+	request = https.request(options,function(response){
 		response.setEncoding('utf8');
 		
 		response.on('data', function (chunk) {
@@ -139,6 +144,51 @@ exports.sendTweet = function(data,cb){
 	post_data = post_data.join('&');
 	
 	request.write(post_data);
+	
+	request.end();
+}
+
+exports.requestToken = function(oauth_callback,cb){
+	if (false){
+		return;
+	}
+	
+	var options = {
+		hostname: 'api.twitter.com',
+		path: '/oauth/request_token ',
+		method: 'POST'
+	},
+	post_data = [],
+	request,
+	oauth = generateOAuth({
+		request:{
+			method:options.method,
+			url:'https://'+options.hostname+options.path
+		},
+		params:tweet
+	},oauth_callback);
+	
+	options.headers = {
+		'OAuth':oauth
+	};
+	
+	request = https.request(options,function(response){
+		response.setEncoding('utf8');
+		
+		response.on('data', function (chunk) {
+			if (typeof(cb) == 'function'){
+				cb(null,chunk);
+			}
+		});
+	});
+	
+	request.on('error', function(err) {
+		sys.log('twitter exeption: ' + err.message);
+		
+		if (typeof(cb) == 'function'){
+			cb(e);
+		}
+	});
 	
 	request.end();
 }

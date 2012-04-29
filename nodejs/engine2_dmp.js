@@ -600,6 +600,41 @@ g_actions = {
 							
 						}
 					}
+				},
+				twitter:{
+					protocol:https,
+					host:'api.twitter.com',
+					tokenUrl:'/oauth/request_token',
+
+					onauth:function(err,data) {
+						var token,
+							expires,
+							uid;
+
+						data = data ? JSON.parse(data) || 0 : 0;
+
+						if (err || !data || data.error) {
+							twitter.requestToken(g_auth_retpath+provider,function(err,data){
+								sys.log(sys,inspect(err));
+								sys.log(sys,inspect(data));
+							});
+
+							Interface.template = 'auth';
+							Interface.print();
+						} else {
+							token = data.access_token;
+							expires = data.expires_in;
+							uid = data.user_id;
+
+							getData(
+								providers[provider].protocol,
+								providers[provider].hostInfo,
+								providers[provider].infoUrl+uid+providers[provider].infoUrlEnd+token,
+								[token,expires,uid],
+								providers[provider].oninfo
+							);
+						}
+					}
 				}
 			};
 			
