@@ -607,7 +607,6 @@ g_actions = {
 					host:'api.twitter.com',
 					tokenUrl:'/oauth/request_token',
 					authUrl:'/oauth/authenticate',
-					infoUrl:'/oauth/'
 					onauth:function(err,data) {
 						var token,
 							expires,
