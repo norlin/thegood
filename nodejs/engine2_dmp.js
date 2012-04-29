@@ -603,6 +603,7 @@ g_actions = {
 					}
 				},
 				twitter:{
+					/* make all this things more better */
 					protocol:https,
 					host:'api.twitter.com',
 					tokenUrl:'/oauth/request_token',

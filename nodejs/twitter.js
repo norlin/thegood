@@ -149,6 +149,8 @@ exports.sendTweet = function(data,cb){
 	request.end();
 }
 
+
+/* TODO: copy-paste is bad. */
 exports.requestToken = function(oauth_callback,cb){
 	if (false){
 		return;
