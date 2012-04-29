@@ -612,14 +612,19 @@ g_actions = {
 						var token,
 							expires,
 							uid,
-							oauth;
+							oauth = {};
 
 						data = data ? JSON.parse(data) || 0 : 0;
-
+sys.log('twi onauth 1');
 						if (err || !data || data.error) {
+sys.log('twi onauth 2');
 							if (Interface.url.query && Interface.url.query.oauth_token && Interface.url.query.oauth_verifier) {
+
+sys.log('twi onauth 3');
 								token = Interface.url.query.oauth_token;
 								if (g_twitter_tokens[token]) {
+
+sys.log('twi onauth 4');
 									twitter.accessToken({
 										oauth_verifier: Interface.url.query.oauth_verifier,
 										oauth_token: token,
@@ -630,20 +635,26 @@ g_actions = {
 									Interface.template = '500';
 									Interface.print();
 								}
+
+sys.log('twi onauth 5');
 							} else {
+sys.log('twi onauth 2.1');
 								twitter.requestToken(g_auth_retpath+provider,function(err,data){
+sys.log('twi onauth 2.1.1');
 									if (err) {
 										Interface.status = 502;
 										Interface.template = '500';
 										Interface.print();
 										return;
 									}
+sys.log('twi onauth 2.1.2');
 
 									data = data.split('&');
 									data.forEach(function(val,i){
 										data[i] = val.split('=');
 										oauth[data[i][0]] = data[i][1];
 									});
+sys.log('twi onauth 2.1.3');
 
 									if (oauth.oauth_callback_confirmed === 'true') {
 										sys.log('yeap! catch request token');
@@ -663,6 +674,7 @@ g_actions = {
 
 									Interface.print();
 								});
+sys.log('twi onauth 2.2');
 							}
 						} else {
 							token = data.access_token;
