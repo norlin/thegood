@@ -161,6 +161,11 @@ function makeAuthWindow(provider,client,retpath,callback){
 				width:600,
 				height:300
 			},
+			twitter:{
+				url:retpath+provider,
+				width: 600,
+				height: 400
+			},
 			logout:{
 				url:'http://theoutreach.info/logout',
 				width:600,

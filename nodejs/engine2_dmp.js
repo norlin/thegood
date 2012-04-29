@@ -253,7 +253,7 @@ Resolver.prototype.authDone = function(cookie) {
 		retpath:g_auth_retpath,
 		social:{
 			vk:g_config.oauth.vk[0],
-			fb:g_config.oauth.fb[0],
+			fb:g_config.oauth.fb[0]
 		}
 	};
 		
@@ -686,7 +686,7 @@ g_actions = {
 							}
 
 							data = {
-								id:data.screen_name,
+								id:data.id,
 								name:data.name
 							};
 
