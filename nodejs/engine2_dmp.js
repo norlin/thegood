@@ -28,7 +28,8 @@ var g_domain = g_config.host,
 	g_actions,
 	g_ajax_actions,
 	g_pages,
-	g_pages_hash;
+	g_pages_hash,
+	g_twitter_tokens = {};
 	
 sys.print('loading');	
 
@@ -605,22 +606,59 @@ g_actions = {
 					protocol:https,
 					host:'api.twitter.com',
 					tokenUrl:'/oauth/request_token',
+					authUrl:'/oauth/authenticate',
 
 					onauth:function(err,data) {
 						var token,
 							expires,
-							uid;
+							uid,
+							oauth;
 
 						data = data ? JSON.parse(data) || 0 : 0;
 
 						if (err || !data || data.error) {
-							twitter.requestToken(g_auth_retpath+provider,function(err,data){
-								sys.log(sys.inspect(err));
-								sys.log(sys.inspect(data));
-							});
+							if (Interface.url.query && Interface.url.query.oauth_token && Interface.url.query.oauth_verifier) {
+								token = Interface.url.query.oauth_token;
+								if (g_twitter_tokens[token]) {
+									twitter.accessToken({
+										oauth_verifier: Interface.url.query.oauth_verifier,
+										oauth_token: token,
+										oauth_token_secret: g_twitter_tokens[token]
+									},providers[provider].oninfo);
+								} else {
+									Interface.status = 403;
+									Interface.template = '500';
+									Interface.print();
+								}
+							} else {
+								twitter.requestToken(g_auth_retpath+provider,function(err,data){
+									if (err) {
+										Interface.status = 502;
+										Interface.template = '500';
+										Interface.print();
+										return;
+									}
 
-							Interface.template = 'auth';
-							Interface.print();
+									data = data.split('&');
+									data.forEach(function(val,i){
+										data[i] = val.split('=');
+										oauth[data[i][0]] = data[i][1];
+									});
+
+									if (oauth.oauth_callback_confirmed === 'true') {
+										g_twitter_tokens[oauth_token] = oauth_token_secret;
+
+										Interface.template = 'auth';
+										Interface.status = 302;
+										Interface.headers['Location'] = 'https://'+providers[provider].host+providers[provider].authUrl+'?oauth_token='+oauth.oauth_token;
+									} else {
+										Interface.status = 403;
+										Interface.template = '500';
+									}
+
+									Interface.print();
+								});
+							}
 						} else {
 							token = data.access_token;
 							expires = data.expires_in;
@@ -634,6 +672,25 @@ g_actions = {
 								providers[provider].oninfo
 							);
 						}
+					},
+					oninfo:function (err,data){
+						if (err) {
+							Interface.status = 502;
+							Interface.template = '500';
+							Interface.print();
+							return;
+						}
+
+						data = data.split('&');
+						data.forEach(function(val,i){
+							data[i] = val.split('=');
+							oauth[data[i][0]] = data[i][1];
+						});
+
+						sys.log(sys.inspect(oauth));
+
+						Interface.template = 'index';
+						Interface.print();
 					}
 				}
 			};

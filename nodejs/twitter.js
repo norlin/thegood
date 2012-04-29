@@ -28,7 +28,7 @@ function makeSign(oauth,data,tokenRequest){
 	var params_string = [],
 		sign_string = [],
 		tmp,
-		token_secret = tokenRequest ? false : config.token_secret,
+		token_secret = tokenRequest ? false : (data.oauth ? data.oauth.secret : config.token_secret),
 		consumer_secret = config.consumer_secret,
 		key_string = percentEncode(consumer_secret) + '&' + (token_secret ? percentEncode(token_secret) : ''),
 		hmac;
@@ -64,7 +64,7 @@ function generateOAuth(data,oauth_callback){
 			oauth_nonce: makeHash(),
 			oauth_signature_method: 'HMAC-SHA1',
 			oauth_timestamp: Math.floor((new Date()).getTime() / 1000),
-			oauth_token:config.oauth_token,
+			oauth_token:data.oauth ? data.oauth.token : config.oauth_token,
 			oauth_version: '1.0'
 		},
 		oauth_params = [],
@@ -166,15 +166,63 @@ exports.requestToken = function(oauth_callback,cb){
 			method:options.method,
 			url:'https://'+options.hostname+options.path
 		},
-        params:{}
+		params:{}
 	},oauth_callback);
 	
 	options.headers = {
 		'Authorization':oauth
 	};
 
+	request = https.request(options,function(response){
+		response.setEncoding('utf8');
+		
+		response.on('data', function (chunk) {
+			if (typeof(cb) == 'function'){
+				cb(null,chunk);
+			}
+		});
+	});
+	
+	request.on('error', function(err) {
+		sys.log('twitter exeption: ' + err.message);
+		
+		if (typeof(cb) == 'function'){
+			cb(e);
+		}
+	});
+	
+	request.end();
+}
 
-    sys.log(sys.inspect(options));
+exports.accessToken = function(data,cb){
+	if (false){
+		return;
+	}
+	
+	var options = {
+		hostname: 'api.twitter.com',
+		path: '/oauth/access_token',
+		method: 'POST'
+	},
+	post_data = [],
+	request,
+	oauth = generateOAuth({
+		request:{
+			method:options.method,
+			url:'https://'+options.hostname+options.path
+		},
+		params:{
+			oauth_verifier: data.oauth_verifier
+		},
+		oauth:{
+			token:data.oauth_token,
+			secret:data.oauth_token_secret
+		}
+	});
+	
+	options.headers = {
+		'Authorization':oauth
+	};
 
 	request = https.request(options,function(response){
 		response.setEncoding('utf8');
