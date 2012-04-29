@@ -615,65 +615,68 @@ g_actions = {
 							oauth;
 
 						data = data ? JSON.parse(data) || 0 : 0;
-
-						if (err || !data || data.error) {
-							if (Interface.url.query && Interface.url.query.oauth_token && Interface.url.query.oauth_verifier) {
-								token = Interface.url.query.oauth_token;
-								if (g_twitter_tokens[token]) {
-									twitter.accessToken({
-										oauth_verifier: Interface.url.query.oauth_verifier,
-										oauth_token: token,
-										oauth_token_secret: g_twitter_tokens[token]
-									},providers[provider].oninfo);
-								} else {
-									Interface.status = 403;
-									Interface.template = '500';
-									Interface.print();
-								}
+sys.log(1);
+						if (!err && 
+							Interface.url.query && 
+							Interface.url.query.oauth_token && 
+							Interface.url.query.oauth_verifier
+						) {
+sys.log(2);
+							token = Interface.url.query.oauth_token;
+							if (g_twitter_tokens[token]) {
+sys.log(3);
+								twitter.accessToken({
+									oauth_verifier: Interface.url.query.oauth_verifier,
+									oauth_token: token,
+									oauth_token_secret: g_twitter_tokens[token]
+								},providers[provider].oninfo);
+sys.log(4);
 							} else {
-								twitter.requestToken(g_auth_retpath+provider,function(err,data){
-									if (err) {
-										Interface.status = 502;
-										Interface.template = '500';
-										Interface.print();
-										return;
-									}
-
-									data = data.split('&');
-									data.forEach(function(val,i){
-										data[i] = val.split('=');
-										oauth[data[i][0]] = data[i][1];
-									});
-
-									if (oauth.oauth_callback_confirmed === 'true') {
-										g_twitter_tokens[oauth.oauth_token] = oauth.oauth_token_secret;
-
-										Interface.template = 'auth';
-										Interface.status = 302;
-										Interface.headers['Location'] = 'https://'+providers[provider].host+providers[provider].authUrl+'?oauth_token='+oauth.oauth_token;
-									} else {
-										Interface.status = 403;
-										Interface.template = '500';
-									}
-
-									Interface.print();
-								});
+sys.log(5);
+								Interface.status = 403;
+								Interface.template = '500';
+								Interface.print();
 							}
 						} else {
-							token = data.access_token;
-							expires = data.expires_in;
-							uid = data.user_id;
+sys.log(6);
+							twitter.requestToken(g_auth_retpath+provider,function(err,data){
+sys.log(7);
+								if (err) {
+									Interface.status = 502;
+									Interface.template = '500';
+									Interface.print();
+									return;
+								}
+sys.log(8);
 
-							getData(
-								providers[provider].protocol,
-								providers[provider].hostInfo,
-								providers[provider].infoUrl+uid+providers[provider].infoUrlEnd+token,
-								[token,expires,uid],
-								providers[provider].oninfo
-							);
+								data = data.split('&');
+								data.forEach(function(val,i){
+									data[i] = val.split('=');
+									oauth[data[i][0]] = data[i][1];
+								});
+sys.log(9);
+
+								if (oauth.oauth_callback_confirmed === 'true') {
+sys.log(10);
+									g_twitter_tokens[oauth.oauth_token] = oauth.oauth_token_secret;
+
+									Interface.template = 'auth';
+									Interface.status = 302;
+									Interface.headers['Location'] = 'https://'+providers[provider].host+providers[provider].authUrl+'?oauth_token='+oauth.oauth_token;
+								} else {
+sys.log(11);
+									Interface.status = 403;
+									Interface.template = '500';
+								}
+sys.log(12);
+
+								Interface.print();
+							});
 						}
+
 					},
 					oninfo:function (err,data){
+sys.log(13);
 						if (err) {
 							Interface.status = 502;
 							Interface.template = '500';
