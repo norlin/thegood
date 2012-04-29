@@ -675,7 +675,7 @@ sys.log(12);
 						}
 
 					},
-					oninfo:function (err,data){,
+					oninfo:function (err,data){
 						var oauth = {};
 sys.log(13);
 						if (err) {
