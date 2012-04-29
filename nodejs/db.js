@@ -483,8 +483,8 @@ Database.prototype.getTopFacts = function(cb){
 */
 
 Database.prototype.getStat = function(cb){
-	var Interface = this;
-	var result = false;
+	var Interface = this,
+		result = false;
 	
 	function emit(){
 		//if (result[0] && result[1]){
@@ -518,7 +518,7 @@ Database.prototype.getStat = function(cb){
 		emit();
 	});
 */
-}
+};
 
 //внешние интерфейсы
 exports.createDatabase = function(port,host,login,pass,db){

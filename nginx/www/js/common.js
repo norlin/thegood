@@ -1,37 +1,38 @@
-if (typeof(Array.forEach) != "function"){
-	Array.prototype.forEach = function(fn, thisObj) {
+/*jslint browser: true, sloppy: true, white: true, maxerr: 50, indent: 4 */
+if (typeof (Array.forEach) !== "function") {
+	Array.prototype.forEach = function (fn, thisObj) {
 		var i, l;
 		
-		for (i = 0, l = this.length; i < l; i++) {
+		for (i = 0, l = this.length; i < l; i=i+1) {
 			if (i in this) {
 				fn.call(thisObj, this[i], i, this);
 			}
 		}
 	};
 }
-if (typeof(Array.indexOf) != "function"){
-	Array.prototype.indexOf = function(elt /*, from*/){
+if (typeof (Array.indexOf) !== "function") {
+	Array.prototype.indexOf = function (elt /*, from*/) {
 		var len = this.length,
 			from = Number(arguments[1]) || 0;
 			
 		from = (from < 0) ? Math.ceil(from): Math.floor(from);
-		if (from < 0){
+		if (from < 0) {
 			from += len;
 		}
 		
-		for (; from < len; from++){
-			if (from in this && this[from] === elt){
+		for (; from < len; from=from+1) {
+			if (from in this && this[from] === elt) {
 				return from;
 			}
 		}
 		return -1;
 	};
 }
-Array.prototype.unique = function(){
+Array.prototype.unique = function () {
 	var result = [];
 	
-	this.forEach(function(val){
-		if (val && result.indexOf(val) == -1){
+	this.forEach(function (val) {
+		if (val && result.indexOf(val) === -1) {
 			result.push(val);
 		}
 	});
@@ -41,7 +42,7 @@ Array.prototype.unique = function(){
 
 var g_months = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 
-function transform_date(timestamp,without_date,exact){
+function transform_date(timestamp,without_date,exact) {
 	var date = new Date(timestamp),
 		year = date.getFullYear(),
 		month = date.getMonth(),
@@ -51,8 +52,8 @@ function transform_date(timestamp,without_date,exact){
 		second = date.getSeconds(),
 		now_year, now_month, now_day;
 		
-	function make_time(time){
-		if (time < 10){
+	function make_time(time) {
+		if (time < 10) {
 			time = '0'+time;
 		}
 		return time;
@@ -65,28 +66,28 @@ function transform_date(timestamp,without_date,exact){
 	
 	date = '';
 	
-	if (exact){
+	if (exact) {
 		date = make_time(now_day) +'.'+make_time(now_month+1)+'.'+now_year;
-	}else{
-		if (now_year == year){
-			if (now_month == month){
-				if (now_day == day){
+	} else{
+		if (now_year === year) {
+			if (now_month === month) {
+				if (now_day === day) {
 					date+='сегодня';
-				}else if (now_day-1 == day){
+				} else if (now_day-1 === day) {
 					date+='вчера';
-				}else if (now_day+1 == day){
+				} else if (now_day+1 === day) {
 					date+='завтра';
-				}else{
+				} else{
 					date+=day+' '+g_months[month];
 				}
-			}else{
+			} else{
 				date+=day+' '+g_months[month];
 			}
-		}else{
+		} else{
 			date+=day+' '+g_months[month]+' '+year;
 		}
 		
-		if (!without_date){
+		if (!without_date) {
 			date+=', '+make_time(hour)+':'+make_time(minute)+':'+make_time(second);	
 		}
 	}
@@ -94,36 +95,36 @@ function transform_date(timestamp,without_date,exact){
 	return date;
 }
 
-function word_end(word,num){
+function word_end(word,num) {
 	//word = ['сайтов','сайта','сайт']
 	var num100 = num % 100;
 	
-	if (num == 0){
+	if (num == 0) {
 		return typeof(word[3]) != 'undefined' ? word[3] : word[0];
 	}
-	if (num100 > 10 && num100 < 20){
+	if (num100 > 10 && num100 < 20) {
 		return word[0];
 	}
-	if ( (num % 5 >= 5) && (num100 <= 20) ){
+	if ( (num % 5 >= 5) && (num100 <= 20) ) {
 		return word[0];
-	}else{
+	} else{
 		num = num % 10;
-		if (((num >= 5) && num <= 9) || (num == 0)){
+		if (((num >= 5) && num <= 9) || (num == 0)) {
 			return word[0];
 		}
-		if ((num >= 2) && (num <= 4)){
+		if ((num >= 2) && (num <= 4)) {
 			return word[1];
 		}
-		if (num == 1){
+		if (num == 1) {
 			return word[2];
 		}
 	}
 	return word[0];
 }
 
-function getRandom(min,max){
+function getRandom(min,max) {
 	min = min || 1;
-	if (!max){
+	if (!max) {
 		max = min;
 		min = 0;
 	}
@@ -131,15 +132,15 @@ function getRandom(min,max){
 	return Math.floor(Math.random()*(max-min) + min);
 };
 
-function parseHash(hash){
+function parseHash(hash) {
 	var result = {},
 		item;
 	
-	if (typeof(hash) == 'string'){
+	if (typeof(hash) == 'string') {
 		hash = hash.replace('^#','');
 		hash = hash.split('&');
 		
-		hash.forEach(function(val,i){
+		hash.forEach(function (val,i) {
 			item = val.split('=');
 			
 			hash[item[0]] = item[1];
@@ -149,7 +150,7 @@ function parseHash(hash){
 	return result;
 }
 
-function makeAuthWindow(provider,client,retpath,callback){
+function makeAuthWindow(provider,client,retpath,callback) {
 	var providers = {
 			facebook:{
 				url:'https://www.facebook.com/dialog/oauth?client_id='+client+'&redirect_uri='+retpath+provider,

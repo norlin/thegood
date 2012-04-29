@@ -1,43 +1,14 @@
 /*jslint browser: true, sloppy: true, white: true, maxerr: 50, indent: 4 */
+var g_actions;
 (function (window, $) {
 	$().ready(function () {
 		var nojs = $("#nojs").length,
 			$body = $('body'),
 			// создаём объект для общения с сервером
 			g_inited = false;
-			
-		function Init() {
-			/*
-			if (!g_inited) {
-				window.addEventListener('popstate', function (e) {
-					var params = e.state || {
-						page:'',
-						title:''
-					};
-					
-					if (e.state || window.location.pathname === '/') {
-						g_actions.page(params,true);
-					}
-				}, false);
-				
-				//инициализируем линки действий
-				g_actions.init();
-
-				if ($body.is('.b-index') || g_admin) {
-					window.setTimeout(function () {
-						g_actions.updatePage({page:'',title:g_admin ? 'Админка' : ''});
-					},1000);
-				}
-				
-				g_inited = true;
-			}
-			*/
-
-			g_actions.init();
-		}
 
 		//разные функции
-		window.g_actions = {
+		g_actions = {
 			init:function () {
 				$('.action').unbind('click').bind('click',function () {
 					var params = {};
@@ -138,7 +109,37 @@
 		
 		window.g_server = new Server('/ajax/');
 		
+		function initAll() {
+			/*
+			if (!g_inited) {
+				window.addEventListener('popstate', function (e) {
+					var params = e.state || {
+						page:'',
+						title:''
+					};
+					
+					if (e.state || window.location.pathname === '/') {
+						g_actions.page(params,true);
+					}
+				}, false);
+				
+				//инициализируем линки действий
+				g_actions.init();
+
+				if ($body.is('.b-index') || g_admin) {
+					window.setTimeout(function () {
+						g_actions.updatePage({page:'',title:g_admin ? 'Админка' : ''});
+					},1000);
+				}
+				
+				g_inited = true;
+			}
+			*/
+
+			g_actions.init();
+		}
+
 		//Поехали!
-		Init();
+		initAll();
 	});
 }(window,jQuery));

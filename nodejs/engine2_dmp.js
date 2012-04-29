@@ -20,7 +20,7 @@ var g_domain = g_config.host,
 	g_node_path = g_config.node,
 	g_www_path = g_config.www,
 	g_tmp_path = g_config.tmp,
-	g_version = '0.0.1',
+	g_version = '0.0.2',
 	g_auth_retpath = 'http://' + g_domain + '/auth/',
 	g_node_port = g_config.port,
 	g_data = db.createDatabase(g_config.db.port, g_domain, g_config.db.user, g_config.db.password, g_config.db.name, 12),
@@ -355,7 +355,7 @@ g_actions = {
 		this.data.info.second = true;
 
 		function callback(err,data) {
-			if (data) {
+			if (!err && data) {
 				Interface.data.news = data;
 				if (Interface.action[1]) {
 					Interface.template = 'admin_news';
@@ -390,7 +390,7 @@ g_actions = {
 		this.data.userCount = false;
 		
 		function callback(err,data) {
-			if (typeof(data) !== 'undefined') {
+			if (!err && typeof(data) !== 'undefined') {
 				Interface.data.userCount = data;
 			}
 			if (ajax) {
@@ -610,8 +610,6 @@ g_actions = {
 					authUrl:'/oauth/authenticate',
 					onauth:function(err,data) {
 						var token,
-							expires,
-							uid,
 							oauth = {};
 
 						data = data ? JSON.parse(data) || 0 : 0;
@@ -652,7 +650,7 @@ g_actions = {
 
 									Interface.template = 'auth';
 									Interface.status = 302;
-									Interface.headers['Location'] = 'https://'+providers[provider].host+providers[provider].authUrl+'?oauth_token='+oauth.oauth_token;
+									Interface.headers.Location = 'https://'+providers[provider].host+providers[provider].authUrl+'?oauth_token='+oauth.oauth_token;
 								} else {
 									Interface.status = 403;
 									Interface.template = '500';
@@ -682,7 +680,7 @@ g_actions = {
 							var name = oauth.screen_name;
 							data = data ? JSON.parse(data) : null;
 
-							if (data && data.name){
+							if (!err && data && data.name){
 								name = data.name;
 							}
 
@@ -997,7 +995,7 @@ function Init() {
 		if (type && type.match('multipart/form-data')) {
 			form = new formidable.IncomingForm();
 			form.uploadDir = g_tmp_path;
-			form.maxFieldsSize = 5 * 1024 * 1024
+			form.maxFieldsSize = 5 * 1024 * 1024;
 			form.parse(req, onRequestEnd);
 		} else {
 			req.on('data', onData);

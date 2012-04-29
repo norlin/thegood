@@ -1,3 +1,4 @@
+/*jslint node: true, sloppy: true, white: true, maxerr: 50, indent: 4 */
 var sys = require('util'),
 	crypto = require('crypto'),
 	http = require('http'),
@@ -10,9 +11,10 @@ var symbols = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','
 
 function makeHash(){
 	var hash='',
-		tmp;
+		tmp,
+		i;
 
-	for (var i=0;i<32;i++){
+	for (i=0; i < 32; i=i+1){
 		tmp = Math.floor(Math.random()*62);
 		hash+=symbols[tmp];
 	}
@@ -35,15 +37,19 @@ function makeSign(oauth,data,tokenRequest){
 	
 		
 	for (tmp in oauth){
-		params_string.push(
-			percentEncode(tmp)+'='+percentEncode(oauth[tmp])
-		);
+		if (oauth.hasOwnProperty(tmp)) {
+			params_string.push(
+				percentEncode(tmp)+'='+percentEncode(oauth[tmp])
+			);
+		}
 	}
 	  
 	for (tmp in data.params){
-		params_string.push(
-			percentEncode(tmp)+'='+percentEncode(data.params[tmp])
-		);
+		if (data.params.hasOwnProperty(tmp)) {
+			params_string.push(
+				percentEncode(tmp)+'='+percentEncode(data.params[tmp])
+			);
+		}
 	}
 	
 	params_string.sort();
@@ -79,24 +85,22 @@ function generateOAuth(data,oauth_callback){
 	oauth.oauth_signature = makeSign(oauth,data,oauth_callback);
 	
 	for (tmp in oauth){
-		oauth_params.push(
-			percentEncode(tmp)+'='+'"'+percentEncode(oauth[tmp])+'"'
-		);
+		if (oauth.hasOwnProperty(tmp)) {
+			oauth_params.push(
+				percentEncode(tmp)+'='+'"'+percentEncode(oauth[tmp])+'"'
+			);
+		}
 	}
 	
 	oauth_params.sort();
 	oauth_params = oauth_params.join(', ');
 	
-	sign = 'OAuth '+oauth_params
+	sign = 'OAuth '+oauth_params;
 	
 	return sign;
 }
 
 exports.sendTweet = function(data,cb){
-	if (false){
-		return;
-	}
-	
 	var options = {
 		hostname: 'api.twitter.com',
 		path: '/1/statuses/update.json',
@@ -111,7 +115,8 @@ exports.sendTweet = function(data,cb){
 			url:'https://'+options.hostname+options.path
 		},
 		params:tweet
-	});
+	}),
+	tmp;
 	
 	options.headers = {
 		'Authorization':oauth
@@ -121,7 +126,7 @@ exports.sendTweet = function(data,cb){
 		response.setEncoding('utf8');
 		
 		response.on('data', function (chunk) {
-			if (typeof(cb) == 'function'){
+			if (typeof(cb) === 'function'){
 				cb(null,chunk);
 			}
 		});
@@ -130,16 +135,18 @@ exports.sendTweet = function(data,cb){
 	request.on('error', function(err) {
 		sys.log('twitter exeption: ' + err.message);
 		
-		if (typeof(cb) == 'function'){
-			cb(e);
+		if (typeof(cb) === 'function'){
+			cb(err);
 		}
 	});
 	
 		
 	for (tmp in tweet){
-		post_data.push(
-			tmp+'='+percentEncode(tweet[tmp])
-		);
+		if (tweet.hasOwnProperty(tmp)) {
+			post_data.push(
+				tmp+'='+percentEncode(tweet[tmp])
+			);
+		}
 	}
 	
 	post_data = post_data.join('&');
@@ -147,21 +154,16 @@ exports.sendTweet = function(data,cb){
 	request.write(post_data);
 	
 	request.end();
-}
+};
 
 
 /* TODO: copy-paste is bad. */
 exports.requestToken = function(oauth_callback,cb){
-	if (false){
-		return;
-	}
-	
 	var options = {
 		hostname: 'api.twitter.com',
 		path: '/oauth/request_token',
 		method: 'POST'
 	},
-	post_data = [],
 	request,
 	oauth = generateOAuth({
 		request:{
@@ -179,7 +181,7 @@ exports.requestToken = function(oauth_callback,cb){
 		response.setEncoding('utf8');
 		
 		response.on('data', function (chunk) {
-			if (typeof(cb) == 'function'){
+			if (typeof(cb) === 'function'){
 				cb(null,chunk);
 			}
 		});
@@ -188,25 +190,20 @@ exports.requestToken = function(oauth_callback,cb){
 	request.on('error', function(err) {
 		sys.log('twitter exeption: ' + err.message);
 		
-		if (typeof(cb) == 'function'){
-			cb(e);
+		if (typeof(cb) === 'function'){
+			cb(err);
 		}
 	});
 	
 	request.end();
-}
+};
 
 exports.accessToken = function(data,cb){
-	if (false){
-		return;
-	}
-	
 	var options = {
 		hostname: 'api.twitter.com',
 		path: '/oauth/access_token',
 		method: 'POST'
 	},
-	post_data = [],
 	request,
 	oauth = generateOAuth({
 		request:{
@@ -230,7 +227,7 @@ exports.accessToken = function(data,cb){
 		response.setEncoding('utf8');
 		
 		response.on('data', function (chunk) {
-			if (typeof(cb) == 'function'){
+			if (typeof(cb) === 'function'){
 				cb(null,chunk);
 			}
 		});
@@ -239,19 +236,15 @@ exports.accessToken = function(data,cb){
 	request.on('error', function(err) {
 		sys.log('twitter exeption: ' + err.message);
 		
-		if (typeof(cb) == 'function'){
-			cb(e);
+		if (typeof(cb) === 'function'){
+			cb(err);
 		}
 	});
 	
 	request.end();
-}
+};
 
 exports.getUserData = function(data,cb){
-	if (false){
-		return;
-	}
-	
 	var options = {
 		hostname: 'api.twitter.com',
 		path: '/1/users/show.json?screen_name='+data.screen_name,
@@ -277,7 +270,7 @@ exports.getUserData = function(data,cb){
 		response.setEncoding('utf8');
 		
 		response.on('data', function (chunk) {
-			if (typeof(cb) == 'function'){
+			if (typeof(cb) === 'function'){
 				cb(null,chunk);
 			}
 		});
@@ -286,10 +279,10 @@ exports.getUserData = function(data,cb){
 	request.on('error', function(err) {
 		sys.log('twitter exeption: ' + err.message);
 		
-		if (typeof(cb) == 'function'){
-			cb(e);
+		if (typeof(cb) === 'function'){
+			cb(err);
 		}
 	});
 	
 	request.end();
-}
+};
