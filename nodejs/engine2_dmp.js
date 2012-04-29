@@ -705,7 +705,7 @@ sys.log('twi oninfo 2');
 			!this.url.query.code
 		) {
 			if (providers[provider]) {
-				providers[provider].onauth(1);
+				providers[provider].onauth();
 			} else {
 				sys.log('! -- unknown provider: '+provider+' user: ' + this.user.login);
 				g_actions['500'].call(Interface);
