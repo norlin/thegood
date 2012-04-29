@@ -625,6 +625,7 @@ g_actions = {
 									oauth_token: token,
 									oauth_token_secret: g_twitter_tokens[token]
 								},providers[provider].oninfo);
+								delete g_twitter_tokens[token];
 							} else {
 								Interface.status = 403;
 								Interface.template = '500';
