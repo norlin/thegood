@@ -164,8 +164,7 @@ exports.requestToken = function(oauth_callback,cb){
 		request:{
 			method:options.method,
 			url:'https://'+options.hostname+options.path
-		},
-		params:tweet
+		}
 	},oauth_callback);
 	
 	options.headers = {
