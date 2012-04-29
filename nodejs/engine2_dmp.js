@@ -615,8 +615,8 @@ g_actions = {
 
 						if (err || !data || data.error) {
 							twitter.requestToken(g_auth_retpath+provider,function(err,data){
-								sys.log(sys,inspect(err));
-								sys.log(sys,inspect(data));
+								sys.log(sys.inspect(err));
+								sys.log(sys.inspect(data));
 							});
 
 							Interface.template = 'auth';

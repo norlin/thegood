@@ -73,6 +73,7 @@ function generateOAuth(data,oauth_callback){
 
 	if (oauth_callback) {
 		oauth.oauth_callback = oauth_callback;
+		delete oauth.oauth_token;
 	}
 	
 	oauth.oauth_signature = makeSign(oauth,data);
@@ -168,7 +169,7 @@ exports.requestToken = function(oauth_callback,cb){
 	},oauth_callback);
 	
 	options.headers = {
-		'OAuth':oauth
+		'Authorization':oauth
 	};
 	
 	request = https.request(options,function(response){
