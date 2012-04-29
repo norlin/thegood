@@ -612,7 +612,7 @@ g_actions = {
 						var token,
 							expires,
 							uid,
-							oauth;
+							oauth = {};
 
 						data = data ? JSON.parse(data) || 0 : 0;
 sys.log(1);
