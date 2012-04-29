@@ -658,7 +658,7 @@ sys.log('twi onauth 2.1.3');
 
 									if (oauth.oauth_callback_confirmed === 'true') {
 										sys.log('yeap! catch request token');
-										g_twitter_tokens[oauth_token] = oauth_token_secret;
+										g_twitter_tokens[oauth.oauth_token] = oauth.oauth_token_secret;
 
 										sys.log('yeap! save token secret');
 
