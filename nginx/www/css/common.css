@@ -298,7 +298,12 @@
 
 		.b-laststand {
 			display: inline-block;
+			float: right;
 
 			width: 250px;
 			text-align: left;
+
+			font-weight: normal;
+			color: #9A9A9A !important;
+			font-size: 15px;
 		}
