@@ -44,7 +44,7 @@
 			{/info.beta}
 			{?userCount}
 			<div class="b-epigraph">
-				p.s. нас уже {userCount}.
+				p.s. за рулём Доброй Машины уже {userCount}.
 			</div>
 			{/userCount}
 			<i class="g-clear"></i>
