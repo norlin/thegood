@@ -310,3 +310,12 @@
 			line-height: 18px;
 			margin-bottom: 3px;
 		}
+
+.b-debug {
+	position: absolute;
+	bottom: 5px;
+	left: 5px;
+
+	color: #fff;
+	font-size: 10px;
+}

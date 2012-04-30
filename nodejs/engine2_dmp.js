@@ -256,6 +256,10 @@ Resolver.prototype.authDone = function(cookie) {
 			fb:g_config.oauth.fb[0]
 		}
 	};
+
+	if (this.debugMode) {
+		this.data.info.debug = true;
+	}
 		
 	if (this.user && this.user.status > 0) {
 		this.data.user = {
@@ -294,15 +298,10 @@ Resolver.prototype.print = function() {
 
 Resolver.prototype.printEnd = function(err) {
 	var time;
-	
-	if (this.debugMode === 2 && 
-		this.template !== 'ajax' &&
-		this.template !== 'ajax_page'
-	) {
-		time = getTime() - this.time1;
-		time = time.toString();
-		this.response.write(time);
-	}
+
+	time = getTime() - this.time1;
+	this.data.info.time = time.toString();
+
 	this.response.end();
 	
 	if (this.cb) {

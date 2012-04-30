@@ -1,3 +1,5 @@
-
+{?info.debug}
+	<div class="b-debug">{info.time}</div>
+{/info.debug}
 </body>
 </html>
