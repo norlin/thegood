@@ -302,7 +302,7 @@ Resolver.prototype.printEnd = function(err) {
 	if (this.debugMode) {
 		time = getTime() - this.time1;
 		time = time.toString();
-		this.response.write('<div class="b-debug">'+time+'</div>');
+		this.response.write('<div class="b-debug">'+time+'ms</div>');
 	}
 
 	this.response.end();
