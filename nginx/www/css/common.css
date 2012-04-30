@@ -295,3 +295,10 @@
 			background-position: -137px -100px !important;
 			cursor: default;
 		}
+
+		.b-laststand {
+			display: inline-block;
+
+			width: 250px;
+			text-align: left;
+		}

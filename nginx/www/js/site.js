@@ -147,10 +147,12 @@ var g_actions;
 				hours = Math.floor(minutes/60);
 				minutes = Math.floor(minutes - (hours*60));
 				
-				$('#lastStanding').html('До Марша Миллионов осталось '+
+				$('#lastStanding').html('До Марша Миллионов осталось <br />'+
+					'<span class="b-laststand">'+
 					hours+' '+word_end(['часов','часа','час'],hours)+' '+
 					minutes+' '+word_end(['минут','минуты','минута'],minutes)+' '+
-					seconds+' '+word_end(['секунд','секунды','секунда'],seconds)+'<br />'+
+					seconds+' '+word_end(['секунд','секунды','секунда'],seconds)+
+					'</span><br />'+
 					'Начало 6 мая в 15:00, в центре Москвы.'
 				);
 			}
