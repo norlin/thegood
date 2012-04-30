@@ -57,7 +57,7 @@
 			position: relative;
 
 			width: 831px;
-			height: 715px;
+			height: 800px;
 			margin: 0 auto;
 
 			z-index: 2;
@@ -69,7 +69,7 @@
 			position: relative;
 			
 			width: 670px;
-			margin: -680px auto;
+			margin: -770px auto;
 
 			background: #f3f3f3 url('../i/block_bg.gif') 0 0 repeat;
 			color: #4b4b4b;
