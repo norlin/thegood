@@ -152,7 +152,7 @@ var g_actions;
 					hours+' '+word_end(['часов','часа','час'],hours)+' '+
 					minutes+' '+word_end(['минут','минуты','минута'],minutes)+' '+
 					seconds+' '+word_end(['секунд','секунды','секунда'],seconds)+
-					'</span><br />'+
+					'</span><i class="g-clear"></i>'+
 					'Начало 6 мая в 15:00, в центре Москвы.'
 				);
 			}
