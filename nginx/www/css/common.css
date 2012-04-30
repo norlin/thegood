@@ -220,6 +220,7 @@
 				height: 30px;
 
 				text-align: center;
+				white-space: nowrap;
 			}
 
 	.b-social {
