@@ -62,7 +62,7 @@
 
 			z-index: 2;
 
-			background: url('../i/block_light.png') 0 0 no-repeat;
+			background: url('../i/block_light.png') center bottom no-repeat;
 		}
 		
 		.b-block {
