@@ -136,6 +136,23 @@ var g_actions;
 			}
 			*/
 
+			window.setInterval(function(){
+				var date1 = new Date(2012,4,6,15),
+					date2 = new Date(),
+					minutes,
+					hours;
+
+				minutes = ((date1.getTime() - date2.getTime()) / 1000)/60;
+				hours = Math.floor(minutes/60);
+				minutes = Math.floor(minutes - (hours*60));
+				
+				$('#lastStanding').html('До Марша Миллионов осталось '+
+					hours+' '+word_end(['часов','часа','час'],hours)+' '+
+					minutes+' '+word_end(['минут','минуты','минута'],minutes)+'<br />'+
+					'Начало 6 мая в 15:00, в центре Москвы.'
+				);
+			},30000);
+
 			g_actions.init();
 		}
 
