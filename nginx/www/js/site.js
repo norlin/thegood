@@ -137,21 +137,25 @@ var g_actions;
 			*/function lastStanding(){
 				var date1 = new Date(2012,4,6,15),
 					date2 = new Date(),
+					seconds,
 					minutes,
 					hours;
 
-				minutes = ((date1.getTime() - date2.getTime()) / 1000)/60;
+				seconds = (date1.getTime() - date2.getTime()) / 1000;
+				minutes = Math.floor(seconds/60);
+				seconds = Math.floor(seconds - (minutes*60));
 				hours = Math.floor(minutes/60);
 				minutes = Math.floor(minutes - (hours*60));
 				
 				$('#lastStanding').html('До Марша Миллионов осталось '+
 					hours+' '+word_end(['часов','часа','час'],hours)+' '+
-					minutes+' '+word_end(['минут','минуты','минута'],minutes)+'<br />'+
+					minutes+' '+word_end(['минут','минуты','минута'],minutes)+' '+
+					seconds+' '+word_end(['секунд','секунды','секунда'],seconds)+'<br />'+
 					'Начало 6 мая в 15:00, в центре Москвы.'
 				);
 			}
 
-			window.setInterval(lastStanding,30000);
+			window.setInterval(lastStanding,1000);
 			lastStanding();
 
 			g_actions.init();
