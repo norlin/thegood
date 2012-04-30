@@ -134,9 +134,7 @@ var g_actions;
 				
 				g_inited = true;
 			}
-			*/
-
-			window.setInterval(function(){
+			*/function lastStanding(){
 				var date1 = new Date(2012,4,6,15),
 					date2 = new Date(),
 					minutes,
@@ -149,9 +147,12 @@ var g_actions;
 				$('#lastStanding').html('До Марша Миллионов осталось '+
 					hours+' '+word_end(['часов','часа','час'],hours)+' '+
 					minutes+' '+word_end(['минут','минуты','минута'],minutes)+'<br />'+
-					'Начало 6 мая в 15:00, в центре Москвы.'
+					'Начало 6 мая в 15:00, в центре Москвы.<i class="g-clear"></i>'
 				);
-			},30000);
+			}
+
+			window.setInterval(lastStanding,30000);
+			lastStanding();
 
 			g_actions.init();
 		}
