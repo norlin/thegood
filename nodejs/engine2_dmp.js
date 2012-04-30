@@ -299,8 +299,11 @@ Resolver.prototype.print = function() {
 Resolver.prototype.printEnd = function(err) {
 	var time;
 
-	time = getTime() - this.time1;
-	this.data.info.time = time.toString();
+	if (this.debugMode) {
+		time = getTime() - this.time1;
+		time = time.toString();
+		this.response.write('<div class="b-debug">'+time+'</div>');
+	}
 
 	this.response.end();
 	
