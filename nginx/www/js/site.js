@@ -135,26 +135,30 @@ var g_actions;
 				g_inited = true;
 			}
 			*/function lastStanding(){
-				var date1 = new Date(2012,4,6,15),
+				var date1 = new Date(2012,5,12,10),
 					date2 = new Date(),
 					seconds,
 					minutes,
 					hours;
 
 				seconds = (date1.getTime() - date2.getTime()) / 1000;
+                if (seconds > 0){
 				minutes = Math.floor(seconds/60);
 				seconds = Math.floor(seconds - (minutes*60));
 				hours = Math.floor(minutes/60);
 				minutes = Math.floor(minutes - (hours*60));
 				
-				$('#lastStanding').html('До Марша Миллионов осталось <br />'+
+				$('#lastStanding').html('Власть жуликов и воров кончится через <br />'+
 					'<span class="b-laststand">'+
 					hours+' '+word_end(['часов','часа','час'],hours)+' '+
 					minutes+' '+word_end(['минут','минуты','минута'],minutes)+' '+
 					seconds+' '+word_end(['секунд','секунды','секунда'],seconds)+
 					'</span><i class="g-clear"></i>'+
-					'Начало 6 мая в 15:00, на Калужской площади.<br /> В 19:00 - на Манежке.'
+					'12 июня на улицу надо выйти абсолютно всем и каждому.'
 				);
+                } else {
+                    $('#lastStanding').html('Россия без путина!');
+                }
 			}
 
 			window.setInterval(lastStanding,1000);
