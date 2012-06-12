@@ -135,7 +135,7 @@ var g_actions;
 				g_inited = true;
 			}
 			*/function lastStanding(){
-				var date1 = new Date(2012,5,12,10),
+				var date1 = new Date(2012,5,12,12),
 					date2 = new Date(),
 					seconds,
 					minutes,
