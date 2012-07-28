@@ -13,8 +13,6 @@ var sys = require('util'),
 
 /*
 глобальные настройки
-
-ps. test new sftp plugin
 */
 
 var g_domain = g_config.host,
