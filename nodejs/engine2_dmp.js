@@ -3,7 +3,6 @@ var sys = require('util'),
 	http = require('http'),
 	https = require('https'),
 	formidable = require('formidable'),
-	im = require('imagemagick'),
 	url = require('url'),
 	fs = require('fs'),
 	dust = require('dust'),
@@ -14,6 +13,8 @@ var sys = require('util'),
 
 /*
 глобальные настройки
+
+ps. test new sftp plugin
 */
 
 var g_domain = g_config.host,
@@ -31,7 +32,7 @@ var g_domain = g_config.host,
 	g_pages_hash,
 	g_twitter_tokens = {};
 	
-sys.print('loading');	
+sys.print('loading');
 
 function logError(err) {
 	if (err) {
@@ -45,12 +46,15 @@ function getTime() {
 	return (new Date()).getTime();
 }
 
-function word_end(word,num) {
+function word_end(word, num) {
 	var num100 = num % 100;
 	if (num100 > 10 && num100 < 20) {
 		return word[0];
 	}
-	if ( (num % 5 >= 5) && (num100 <= 20) ) {
+
+	if (
+		(num % 5 >= 5) && (num100 <= 20)
+	) {
 		return word[0];
 	}
 
@@ -70,19 +74,19 @@ function word_end(word,num) {
 	return word[0];
 }
 
-function getData(protocol,host,path,token,callback) {
+function getData(protocol, host, path, token, callback) {
 	var response = '';
 	
 	protocol.get({
-		host:host,
-		path:path
-	}, function(res) {
-		res.on('data', function(d) {
+		host: host,
+		path: path
+	}, function (res) {
+		res.on('data', function (d) {
 			response += d;
-		}).on('end',function() {
-			callback(null,response,token);
+		}).on('end', function () {
+			callback(null, response, token);
 		});
-	}).on('error', function(e) {
+	}).on('error', function (e) {
 		callback(e);
 	});
 }
@@ -97,13 +101,13 @@ function checkAdmin(user) {
 function textValidate(text) {
 	
 	//меняем англ. c на русскую с ;)
-	text = text.replace('<sc','<sс');
-	text = text.replace('</sc','</sс');
+	text = text.replace('<sc', '<sс');
+	text = text.replace('</sc', '</sс');
 	
 	return text;
 }
 
-var Resolver = function(req, resp, files, callback) {
+var Resolver = function (req, resp, files, callback) {
 	var Interface = this;
 	/*
 	основная внешняя функция
@@ -121,11 +125,13 @@ var Resolver = function(req, resp, files, callback) {
 	this.status = 500;
 	this.template = 'error';
 	this.headers = {
-		'Content-Type':'text/html; charset=utf-8'
+		'Content-Type': 'text/html; charset=utf-8'
 	};
 	
-	this.cookies = {};
-	(req.headers.cookie || '').split('; ').forEach(function(val) {
+	this.cookies = {
+		//test:(new Date()).getTime()
+	};
+	(req.headers.cookie || '').split('; ').forEach(function (val) {
 		if (!val) {
 			return;
 		}
@@ -136,14 +142,14 @@ var Resolver = function(req, resp, files, callback) {
 	if (typeof(callback) === 'function') {
 		Interface.cb = callback;
 		
-		process.on('uncaughtException', function(err) {
-			Interface.debug('exeption!' + ((err ? sys.inspect(err) : 'no error') + console.trace()).replace(/\n/g,' '));
+		process.on('uncaughtException', function (err) {
+			Interface.debug('exeption!' + ((err ? sys.inspect(err) : 'no error') + console.trace()).replace(/\n/g, ' '));
 			Interface.print();
 		});
 	}
 	
 	if (req.post_data && !req.multipart) {
-		this.post = url.parse('http://'+g_domain+'/?'+req.post_data,true).query || {};
+		this.post = url.parse('http://' + g_domain + '/?' + req.post_data, true).query || {};
 	} else {
 		this.post = {};
 	}
@@ -154,9 +160,9 @@ var Resolver = function(req, resp, files, callback) {
 		this.post.json = {};
 	}
 
-	this.url = url.parse(req.url,true)||{};
-	this.url.pathname = this.url.pathname.replace(/\/+/g,'/');
-	this.url.pathname = this.url.pathname.replace(/(^\/)|(\/$)/g,'');
+	this.url = url.parse(req.url, true) || {};
+	this.url.pathname = this.url.pathname.replace(/\/ + /g, '/');
+	this.url.pathname = this.url.pathname.replace(/(^\/)|(\/$)/g, '');
 	
 	if (this.url.pathname && this.url.pathname !== '/') {
 		this.action = this.url.pathname.split('/');
@@ -166,11 +172,11 @@ var Resolver = function(req, resp, files, callback) {
 		this.action = ['index'];
 	}
 
-	function onAuth(user,cookie) {
+	function onAuth(user, cookie) {
 		Interface.user = user;
 		Interface.user.name = user.name || user.login;
-		Interface.authDone.call(Interface,cookie);
-	}	
+		Interface.authDone.call(Interface, cookie);
+	}
 	
 	this.is_action = (typeof(g_actions[Interface.action[0]]) === 'function');
 	
@@ -182,13 +188,13 @@ var Resolver = function(req, resp, files, callback) {
 		Interface.status = 200;
 
 		if (this.action[0] === 'auth') {
-		   onAuth({status:0});
-		}else if (this.post.login && this.post.pass) {
-			g_data.makeAuth(this.post.login,this.post.pass,onAuth);
-		}else if (this.cookies.login) {
-			g_data.checkAuth(this.cookies.login,onAuth);
+			onAuth({status: 0});
+		} else if (this.post.login && this.post.pass) {
+			g_data.makeAuth(this.post.login, this.post.pass, onAuth);
+		} else if (this.cookies.login) {
+			g_data.checkAuth(this.cookies.login, onAuth);
 		} else {
-		   onAuth({status:0});
+			onAuth({status: 0});
 		}
 	} else {
 		g_actions['404'].call(Interface);
@@ -197,24 +203,24 @@ var Resolver = function(req, resp, files, callback) {
 	return this;
 };
 
-Resolver.prototype.authFail = function() {
+Resolver.prototype.authFail = function () {
 	g_actions['404'].call(this);
 };
 
-Resolver.prototype.debug = function(msg) {
+Resolver.prototype.debug = function (msg) {
 	if (this.debugMode) {
 		msg = msg || '';
 		sys.log(
-			msg+'; '+
-			sys.inspect(this.action)+' '+(this.user ? this.user.login+' '+this.user.status : 'undef')+'; '+
-			'GET: '+sys.inspect(this.url.query)+'; '+
-			//'POST: '+sys.inspect(this.post)+
-			'cookie: '+sys.inspect(this.cookie)
+			msg + '; ' +
+			sys.inspect(this.action) + ' ' + (this.user ? this.user.login + ' ' + this.user.status : 'undef') + '; ' +
+			'GET: ' + sys.inspect(this.url.query) + '; ' +
+			//'POST: ' + sys.inspect(this.post) +
+			'cookie: ' + sys.inspect(this.cookie)
 		);
 	}
 };
 
-Resolver.prototype.authDone = function(cookie) {
+Resolver.prototype.authDone = function (cookie) {
 	var Interface = this;
 	/*if (this.user.status == -1) {
 		//если авторизация провалилась - посылаем
@@ -223,15 +229,15 @@ Resolver.prototype.authDone = function(cookie) {
 	}*/
 
 	if (cookie && !this.cookies.login) {
-		this.headers['Set-Cookie'] = 'login='+cookie+'; path=/;';
+		this.headers['Set-Cookie'] = 'login=' + cookie + '; path=/;';
 	}
 	//если всё ок - работаем дальше
 	//if (Interface.action[0] == 'index') {
-	//	sys.log('index > user: '+Interface.user.login+', status: '+Interface.user.status);
+	//	sys.log('index > user: ' + Interface.user.login + ', status: ' + Interface.user.status);
 	//}
 	
 	if (!Interface.post.json) {
-	   Interface.post.json = {};
+		Interface.post.json = {};
 	}
 	
 	/*
@@ -246,14 +252,14 @@ Resolver.prototype.authDone = function(cookie) {
 	*/
 	
 	this.data.info = {
-		domain:'http://'+g_domain,
-		action:this.action,
-		query:sys.inspect(this.url.query),
-		version:g_version,
-		retpath:g_auth_retpath,
-		social:{
-			vk:g_config.oauth.vk[0],
-			fb:g_config.oauth.fb[0]
+		domain: 'http://' + g_domain,
+		action: this.action,
+		query: sys.inspect(this.url.query),
+		version: g_version,
+		retpath: g_auth_retpath,
+		social: {
+			vk: g_config.oauth.vk[0],
+			fb: g_config.oauth.fb[0]
 		}
 	};
 
@@ -263,9 +269,9 @@ Resolver.prototype.authDone = function(cookie) {
 		
 	if (this.user && this.user.status > 0) {
 		this.data.user = {
-			name:this.user.name,
-			status:this.user.status,
-			is_admin:checkAdmin(this.user)
+			name: this.user.name,
+			status: this.user.status,
+			is_admin: checkAdmin(this.user)
 		};
 	}
 	
@@ -276,19 +282,19 @@ Resolver.prototype.authDone = function(cookie) {
 	g_actions[Interface.action[0]].call(Interface);
 };
 
-Resolver.prototype.print = function() {
+Resolver.prototype.print = function () {
 	var Interface = this;
 
-	Interface.response.writeHead(Interface.status,Interface.headers);
+	Interface.response.writeHead(Interface.status, Interface.headers);
 
 	dust.stream(Interface.template, Interface.data)
-		.on('data', function(data) {
+		.on('data', function (data) {
 			Interface.response.write(data);
 		})
-		.on('end', function() {
+		.on('end', function () {
 			Interface.printEnd();
 		})
-		.on('error', function(err) {
+		.on('error', function (err) {
 			Interface.response.write('Что-то пошло не так!');
 			Interface.response.write(sys.inspect(err));
 			
@@ -296,13 +302,13 @@ Resolver.prototype.print = function() {
 		});
 };
 
-Resolver.prototype.printEnd = function(err) {
+Resolver.prototype.printEnd = function (err) {
 	var time;
 
 	if (this.debugMode) {
 		time = getTime() - this.time1;
 		time = time.toString();
-		this.response.write('<div class="b-debug">'+time+'ms</div>');
+		this.response.write('<div class="b-debug">' + time + 'ms</div>');
 	}
 
 	this.response.end();
@@ -320,10 +326,10 @@ g_actions = {
 /*
 обработчики
 */
-	'admin':function(ajax) {
+	'admin': function (ajax) {
 		var Interface = this;
 		
-		function callback(err,data) {
+		function callback(err, data) {
 			if (!err && data) {
 				Interface.data.marks = JSON.stringify(data);
 				Interface.data.adminMarks = data;
@@ -342,12 +348,12 @@ g_actions = {
 		
 		if (checkAdmin(this.user)) {
 			this.data.info.admin = true;
-			//g_data.getMarks({state:'adminMarks'},callback);
+			//g_data.getMarks({state: 'adminMarks'},callback);
 		} else {
 			callback();
 		}
 	},
-	'admin_news':function(ajax) {
+	'admin_news': function (ajax) {
 		var Interface = this,
 			params = {};
 		
@@ -356,7 +362,7 @@ g_actions = {
 		this.template = 'admin_news_list';
 		this.data.info.second = true;
 
-		function callback(err,data) {
+		function callback(err, data) {
 			if (!err && data) {
 				Interface.data.news = data;
 				if (Interface.action[1]) {
@@ -373,16 +379,16 @@ g_actions = {
 		
 		if (checkAdmin(this.user)) {
 			if (this.action[1]) {
-				params.news_id = this.action[1].replace('news_','');
+				params.news_id = this.action[1].replace('news_', '');
 			}
 			
 			this.data.info.admin = true;
-			g_data.getNews(params,callback);
+			g_data.getNews(params, callback);
 		} else {
 			callback();
 		}
 	},
-	'index':function(ajax) {
+	'index': function (ajax) {
 		var Interface = this;
 		
 		this.debug('log_index');
@@ -391,7 +397,7 @@ g_actions = {
 		this.data.index = true;
 		this.data.userCount = false;
 		
-		function callback(err,data) {
+		function callback(err, data) {
 			if (!err && typeof(data) !== 'undefined') {
 				Interface.data.userCount = data;
 			}
@@ -404,7 +410,12 @@ g_actions = {
 
 		g_data.getStat(callback);
 	},
-	'upload':function() {
+	'test': function () {
+		this.template = 'test';
+		this.headers['Set-Cookie'] = 'test=' + (new Date()).getTime();
+		this.print();
+	},
+	'upload': function () {
 		var Interface = this,
 			i,
 			data,
@@ -412,26 +423,26 @@ g_actions = {
 			files = [],
 			count = 0;
 
-		function metadataCallback(err, metadata){
+		function metadataCallback(err, metadata) {
 			files.push(metadata);
 			count = count - 1;
 
 			// 55/1	5085/100	0/1
-			// 
+			//
 			// 50	50.85		0
 			//
 			// 50 + (50.85/60) + (0/3600)
 			//
 			// Если S или W - то минус
 
-			if (!count){
+			if (!count) {
 				sys.log(sys.inspect(files));
 				Interface.print();
 			}
 		}
 
-		for (file in this.files){
-			if (this.files.hasOwnProperty(file)){
+		for (file in this.files) {
+			if (this.files.hasOwnProperty(file)) {
 				count = count + 1;
 
 				im.readMetadata(this.files[file].path, metadataCallback);
@@ -440,7 +451,7 @@ g_actions = {
 
 		this.template = 'index';
 	},
-	'news':function(ajax) {
+	'news': function (ajax) {
 		var Interface = this,
 			params = {};
 		
@@ -448,7 +459,7 @@ g_actions = {
 
 		this.template = 'news_list';
 		
-		function callback(err,data) {
+		function callback(err, data) {
 			if (!err && data) {
 				Interface.data.news = data;
 
@@ -469,24 +480,24 @@ g_actions = {
 		}
 		
 		if (this.action[1]) {
-			params.news_id = this.action[1].replace('news_','');
+			params.news_id = this.action[1].replace('news_', '');
 		}
 		
-		g_data.getNews(params,callback);
+		g_data.getNews(params, callback);
 	},
-	'auth':function() {
+	'auth': function () {
 	
 		this.debug('log_auth');
 		
 		var Interface = this,
 			provider = this.action[1],
 			providers = {
-				facebook:{
-					protocol:https,
-					host:'graph.facebook.com',
-					authUrl:'/oauth/access_token?client_id='+g_config.oauth.fb[0]+'&redirect_uri='+g_auth_retpath+provider+'&client_secret='+g_config.oauth.fb[1]+'&code=',
-					infoUrl:'/me?method=GET&format=json&fields=id,name&access_token=',
-					onauth:function(err,data) {
+				facebook: {
+					protocol: https,
+					host: 'graph.facebook.com',
+					authUrl: '/oauth/access_token?client_id=' + g_config.oauth.fb[0] + '&redirect_uri=' + g_auth_retpath + provider + '&client_secret=' + g_config.oauth.fb[1] + '&code=',
+					infoUrl: '/me?method=GET&format=json&fields=id,name&access_token=',
+					onauth: function (err, data) {
 						var token,
 							expires;
 							
@@ -506,17 +517,17 @@ g_actions = {
 							getData(
 								providers[provider].protocol,
 								providers[provider].host,
-								providers[provider].infoUrl+token,
-								[token,expires],
+								providers[provider].infoUrl + token,
+								[token, expires],
 								providers[provider].oninfo
 							);
 						}
 					},
-					oninfo:function(err,data,token) {
+					oninfo: function (err, data, token) {
 						if (err || !data) {
 							g_actions['500'].call(Interface);
 						} else {
-							data = JSON.parse(data)||0;
+							data = JSON.parse(data) || 0;
 							
 							if (!data) {
 								Interface.template = 'auth';
@@ -524,13 +535,13 @@ g_actions = {
 								return false;
 							}
 							
-							g_data.saveSocialUser(provider,data,token[0],function(user,cookie) {
-								Interface.headers['Set-Cookie'] = 'login='+cookie+'; path=/;';
+							g_data.saveSocialUser(provider, data, token[0], function (user, cookie) {
+								Interface.headers['Set-Cookie'] = 'login=' + cookie + '; path=/;';
 								Interface.template = 'auth';
 								
 								Interface.data.user = {
-									name:user.name||user.login,
-									status:user.status
+									name: user.name || user.login,
+									status: user.status
 								};
 								
 								Interface.print();
@@ -539,14 +550,14 @@ g_actions = {
 						}
 					}
 				},
-				vkontakt:{
-					protocol:https,
-					host:'oauth.vk.com',
-					hostInfo:'api.vk.com',
-					authUrl:'/access_token?client_id='+g_config.oauth.vk[0]+'&client_secret='+g_config.oauth.vk[1]+'&scope=notify,friends,offline&code=',
-					infoUrl:'/method/getProfiles?uid=',
-					infoUrlEnd:'&access_token=',
-					onauth:function(err,data) {
+				vkontakt: {
+					protocol: https,
+					host: 'oauth.vk.com',
+					hostInfo: 'api.vk.com',
+					authUrl: '/access_token?client_id=' + g_config.oauth.vk[0] + '&client_secret=' + g_config.oauth.vk[1] + '&scope=notify,friends,offline&code=',
+					infoUrl: '/method/getProfiles?uid=',
+					infoUrlEnd: '&access_token=',
+					onauth: function (err, data) {
 						var token,
 							expires,
 							uid;
@@ -564,13 +575,13 @@ g_actions = {
 							getData(
 								providers[provider].protocol,
 								providers[provider].hostInfo,
-								providers[provider].infoUrl+uid+providers[provider].infoUrlEnd+token,
-								[token,expires,uid],
+								providers[provider].infoUrl + uid + providers[provider].infoUrlEnd + token,
+								[token, expires, uid],
 								providers[provider].oninfo
 							);
 						}
 					},
-					oninfo:function(err,data,token) {
+					oninfo: function (err, data, token) {
 						if (err || !data) {
 							Interface.template = 'auth';
 							Interface.print();
@@ -586,17 +597,17 @@ g_actions = {
 							data = data.response[0];
 							
 							data = {
-								id:data.uid,
-								name:[data.first_name,data.last_name].join(' ')
+								id: data.uid,
+								name: [data.first_name, data.last_name].join(' ')
 							};
 
-							g_data.saveSocialUser(provider,data,token[0],function(user,cookie) {
-								Interface.headers['Set-Cookie'] = 'login='+cookie+'; path=/;';
+							g_data.saveSocialUser(provider, data, token[0], function (user, cookie) {
+								Interface.headers['Set-Cookie'] = 'login=' + cookie + '; path=/;';
 								Interface.template = 'auth';
 								
 								Interface.data.user = {
-									name:user.name||user.login,
-									status:user.status
+									name: user.name || user.login,
+									status: user.status
 								};
 								Interface.print();
 							});
@@ -604,20 +615,20 @@ g_actions = {
 						}
 					}
 				},
-				twitter:{
+				twitter: {
 					/* make all this things more better */
-					protocol:https,
-					host:'api.twitter.com',
-					tokenUrl:'/oauth/request_token',
-					authUrl:'/oauth/authenticate',
-					onauth:function(err,data) {
+					protocol: https,
+					host: 'api.twitter.com',
+					tokenUrl: '/oauth/request_token',
+					authUrl: '/oauth/authenticate',
+					onauth: function (err, data) {
 						var token,
 							oauth = {};
 
 						data = data ? JSON.parse(data) || 0 : 0;
-						if (!err && 
-							Interface.url.query && 
-							Interface.url.query.oauth_token && 
+						if (!err &&
+							Interface.url.query &&
+							Interface.url.query.oauth_token &&
 							Interface.url.query.oauth_verifier
 						) {
 							token = Interface.url.query.oauth_token;
@@ -626,7 +637,7 @@ g_actions = {
 									oauth_verifier: Interface.url.query.oauth_verifier,
 									oauth_token: token,
 									oauth_token_secret: g_twitter_tokens[token]
-								},providers[provider].oninfo);
+								}, providers[provider].oninfo);
 								delete g_twitter_tokens[token];
 							} else {
 								Interface.status = 403;
@@ -634,7 +645,7 @@ g_actions = {
 								Interface.print();
 							}
 						} else {
-							twitter.requestToken(g_auth_retpath+provider,function(err,data){
+							twitter.requestToken(g_auth_retpath + provider, function (err, data) {
 								if (err) {
 									Interface.status = 502;
 									Interface.template = '500';
@@ -643,7 +654,7 @@ g_actions = {
 								}
 
 								data = data.split('&');
-								data.forEach(function(val,i){
+								data.forEach(function (val, i) {
 									data[i] = val.split('=');
 									oauth[data[i][0]] = data[i][1];
 								});
@@ -653,7 +664,7 @@ g_actions = {
 
 									Interface.template = 'auth';
 									Interface.status = 302;
-									Interface.headers.Location = 'https://'+providers[provider].host+providers[provider].authUrl+'?oauth_token='+oauth.oauth_token;
+									Interface.headers.Location = 'https://' + providers[provider].host + providers[provider].authUrl + '?oauth_token=' + oauth.oauth_token;
 								} else {
 									Interface.status = 403;
 									Interface.template = '500';
@@ -664,7 +675,7 @@ g_actions = {
 						}
 
 					},
-					oninfo:function (err,data){
+					oninfo: function (err, data) {
 						var oauth = {};
 
 						if (err) {
@@ -674,34 +685,34 @@ g_actions = {
 							return;
 						}
 						data = data.split('&');
-						data.forEach(function(val,i){
+						data.forEach(function (val, i) {
 							data[i] = val.split('=');
 							oauth[data[i][0]] = data[i][1];
 						});
 
-						twitter.getUserData(oauth,function(err,data){
+						twitter.getUserData(oauth, function (err, data) {
 							var name = oauth.screen_name;
 							data = data ? JSON.parse(data) : null;
 
-							if (!err && data && data.name){
+							if (!err && data && data.name) {
 								name = data.name;
 							}
 
 							data = {
-								id:data.id,
-								name:data.name
+								id: data.id,
+								name: data.name
 							};
 
-							g_data.saveSocialUser(provider,data,{
-								token:oauth.oauth_token,
-								secret:oauth.oauth_token_secret
-							},function(user,cookie) {
-								Interface.headers['Set-Cookie'] = 'login='+cookie+'; path=/;';
+							g_data.saveSocialUser(provider, data, {
+								token: oauth.oauth_token,
+								secret: oauth.oauth_token_secret
+							}, function (user, cookie) {
+								Interface.headers['Set-Cookie'] = 'login=' + cookie + '; path=/;';
 								Interface.template = 'auth';
 								
 								Interface.data.user = {
-									name:user.name||user.login,
-									status:user.status
+									name: user.name || user.login,
+									status: user.status
 								};
 								Interface.print();
 							});
@@ -710,14 +721,14 @@ g_actions = {
 				}
 			};
 			
-		if (!provider || 
-			!this.url.query || 
+		if (!provider ||
+			!this.url.query ||
 			!this.url.query.code
 		) {
 			if (providers[provider]) {
 				providers[provider].onauth();
 			} else {
-				sys.log('! -- unknown provider: '+provider+' user: ' + this.user.login);
+				sys.log('! -- unknown provider: ' + provider + ' user: ' + this.user.login);
 				g_actions['500'].call(Interface);
 			}
 			return false;
@@ -726,32 +737,32 @@ g_actions = {
 		getData(
 			providers[provider].protocol,
 			providers[provider].host,
-			providers[provider].authUrl+this.url.query.code,
+			providers[provider].authUrl + this.url.query.code,
 			0,
 			providers[provider].onauth
 		);
 	},
-	'logout':function() {
+	'logout': function () {
 		this.debug('log_logout');
 		
 		delete this.data.user;
 		
-		this.headers['Set-Cookie'] = 'login=; expires='+(new Date(getTime()-3600000)).toString()+'; path=/;';
-		this.template='auth';
+		this.headers['Set-Cookie'] = 'login=; expires=' + (new Date(getTime() - 3600000)).toString() + '; path=/;';
+		this.template = 'auth';
 		this.print();
 	},
-	'ajax':function() {
+	'ajax': function () {
 		var Interface = this;
 		
-		function callback(err,data) {
+		function callback(err, data) {
 			Interface.headers['Content-Type'] = 'application/json';
 			Interface.template = 'ajax';
 			Interface.data.ajax[Interface.action[1]] = 1;
 			
 			if (err) {
 				Interface.data.ajax = {
-					error:1,
-					status:err.msg||err.message||'ошибка'
+					error: 1,
+					status: err.msg || err.message || 'ошибка'
 				};
 			} else {
 				Interface.data.data = JSON.stringify(data);
@@ -780,46 +791,46 @@ g_actions = {
 			//убираем первый элемент 'ajax' из массива action
 			Interface.action.shift();
 			
-			g_actions[Interface.action[0]].call(Interface,callbackPage);
-		}else if(g_pages_hash[Interface.action[1]]) {
+			g_actions[Interface.action[0]].call(Interface, callbackPage);
+		} else if (g_pages_hash[Interface.action[1]]) {
 			//отдача странички в аякс запросе
 			Interface.data.ajax = 1;
 			Interface.data.full = false;
-			g_actions.page.call(Interface,callbackPage);
+			g_actions.page.call(Interface, callbackPage);
 		} else {
 			//выполнение аякс-действия
 			if (
-				!Interface.user || 
-				Interface.user.status < 0 || 
+				!Interface.user ||
+				Interface.user.status < 0 ||
 				typeof(g_ajax_actions[this.action[1]]) !== 'function'
 			) {
 				g_actions['404'].call(Interface);
 				return false;
 			}
 	
-			g_ajax_actions[this.action[1]].call(this,callback);
+			g_ajax_actions[this.action[1]].call(this, callback);
 		}
 
 	},
-	'404':function() {
+	'404': function () {
 		this.debug('log_404');
 		
 		this.status = 404;
 		this.data.info = {
-			action:this.action,
-			query:sys.inspect(this.url.query)
+			action: this.action,
+			query: sys.inspect(this.url.query)
 		};
 		this.template = '404';
 		this.print();
 	},
-	'500':function() {
+	'500': function () {
 		this.debug('log_500');
 		
 		this.status = 500;
 		this.template = 'error';
 		this.print();
 	},
-	'page':function(ajax) {
+	'page': function (ajax) {
 		this.debug('log_page');
 		
 		this.template = this.action[1];
@@ -833,51 +844,51 @@ g_actions = {
 };
 
 g_ajax_actions = {
-	'wait':function(callback) {
-		callback({msg:'wait'});
+	'wait': function (callback) {
+		callback({msg: 'wait'});
 	},
-	'notifyall':function(callback) {
-		callback({msg:'what\'s up??'});
+	'notifyall': function (callback) {
+		callback({msg: 'what\'s up??'});
 		return;
 		//g_data.sendNotification(callback);
 	},
-	'save_mark':function(callback) {
+	'save_mark': function (callback) {
 		var Interface = this;
-		g_data.saveMark(this.post.json.mark,this.user.login,function(err,mark) {
+		g_data.saveMark(this.post.json.mark, this.user.login, function (err, mark) {
 			var text;
 			
 			if (!err && Interface.user.status >= 10 && mark.tweet) {
-				text = mark.title.length > 100 ? mark.title.slice(0,100)+'...' : mark.title;
-				text+= ' #перекрыли #bot';
+				text = mark.title.length > 100 ? mark.title.slice(0, 100) + '...' : mark.title;
+				text += ' #перекрыли #bot';
 				
 				twitter.sendTweet({
-					status:text,
-					lat:mark.sys_lat,
-					long:mark.sys_lng
+					status: text,
+					lat: mark.sys_lat,
+					long: mark.sys_lng
 				});
 			}
 			
-			callback(err,mark);
+			callback(err, mark);
 		});
 	},
 	//админка
-	'admin_update_marks':function(callback) {
+	'admin_update_marks': function (callback) {
 		if (!checkAdmin(this.user)) {
-			callback({msg:'нет прав'});
+			callback({msg: 'нет прав'});
 			return false;
 		}
 		
 		this.data.ajax.is_action = 1;
 		
-		g_data.saveMarkStatus(this.post.json.marks,this.user.login,callback);
+		g_data.saveMarkStatus(this.post.json.marks, this.user.login, callback);
 	},
-	'save_news':function(callback) {
+	'save_news': function (callback) {
 		var news = this.post.json.news,
 			text,
 			newNews = !news.id;
 			
 		if (!checkAdmin(this.user) || !news || !news.text) {
-			callback({msg:'нет прав'});
+			callback({msg: 'нет прав'});
 			return false;
 		}
 		
@@ -887,34 +898,34 @@ g_ajax_actions = {
 		news.title = textValidate(news.title);
 		news.author_name = this.user.name;
 		
-		g_data.saveNews(news,this.user.login,function(err,news) {
+		g_data.saveNews(news, this.user.login, function (err, news) {
 			if (newNews) {
-				text = news.title.length > 100 ? news.title.slice(0,97)+'...' : news.title;
-				text+= ' http://' + g_domain + '/news/' + news._id;
-				text+= ' #новости #bot';
+				text = news.title.length > 100 ? news.title.slice(0, 97) + '...' : news.title;
+				text += ' http://' + g_domain + '/news/' + news._id;
+				text += ' #новости #bot';
 				
 				twitter.sendTweet({
 					status: text
 				});
 			}
 			
-			callback(err,news);
+			callback(err, news);
 		});
 	}
 };
 
 g_pages = [
 	{
-		url:'about',
-		title:'О проекте'
+		url: 'about',
+		title: 'О проекте'
 	},
 	{
-		url:'faq',
-		title:'FAQ'
+		url: 'faq',
+		title: 'FAQ'
 	},
 	{
-		url:'contacts',
-		title:'Контакты'
+		url: 'contacts',
+		title: 'Контакты'
 	}
 ];
 
@@ -925,34 +936,34 @@ function getTemplates(callback) {
 		templates = '';
 	sys.print('.');
 
-	g_pages.forEach(function(val) {
+	g_pages.forEach(function (val) {
 		g_pages_hash[val.url] = 1;
 	});
 	
-	fs.readdir(path,function(err,files) {
+	fs.readdir(path, function (err, files) {
 		var cnt = files.length,
 			i = 0;
 		
-		if (err || !files){
+		if (err || !files) {
 			return;
 		}
 
-		files.forEach(function(val) {
+		files.forEach(function (val) {
 			var file_path = path + '/' + val;
 			
-			fs.readFile(file_path,'utf8',function(err,data) {
+			fs.readFile(file_path, 'utf8', function (err, data) {
 				var compiled,
-					name = val.replace('.dust','');
+					name = val.replace('.dust', '');
 				
-				if (err){
+				if (err) {
 					return;
 				}
 
 				sys.print('.');
-				compiled = dust.compile(data,name);
+				compiled = dust.compile(data, name);
 				
 				//if (g_pages_hash[name]) {
-					templates+= compiled;
+				templates += compiled;
 				//}
 				
 				dust.loadSource(compiled);
@@ -961,7 +972,7 @@ function getTemplates(callback) {
 				if (i === cnt) {
 					sys.print('.');
 					
-					fs.writeFile(g_www_path + '/js/templates.js', templates, function() {
+					fs.writeFile(g_www_path + '/js/templates.js', templates, function () {
 						jsmin(g_www_path + '/js/scripts.js');
 						jsmin(g_www_path + '/js/admin.js');
 						jsmin(g_www_path + '/js/admin_news.js');
@@ -986,7 +997,7 @@ function Init() {
 			form;
 	
 		function onData(chunk) {
-			post+= chunk;
+			post += chunk;
 		}
 		
 		function onRequestEnd(err, fields, files) {
