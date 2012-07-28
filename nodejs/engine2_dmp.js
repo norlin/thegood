@@ -185,9 +185,7 @@ var Resolver = function (req, resp, files, callback) {
 	if (Interface.action.length > 0 && typeof(g_actions[Interface.action[0]]) === 'function') {
 		Interface.status = 200;
 
-		if (this.action[0] === 'auth') {
-			onAuth({status: 0});
-		} else if (this.post.login && this.post.pass) {
+		if (this.post.login && this.post.pass) {
 			g_data.makeAuth(this.post.login, this.post.pass, onAuth);
 		} else if (this.cookies.login) {
 			g_data.checkAuth(this.cookies.login, onAuth);
@@ -533,18 +531,8 @@ g_actions = {
 								return false;
 							}
 							
-							g_data.saveSocialUser(provider, data, token[0], function (user, cookie) {
-								Interface.headers['Set-Cookie'] = 'login=' + cookie + '; path=/;';
-								Interface.template = 'auth';
-								
-								Interface.data.user = {
-									name: user.name || user.login,
-									status: user.status
-								};
-								
-								Interface.print();
-							});
-							
+
+							saveSocialUser(data, {oauth_token: token[0]});
 						}
 					}
 				},
@@ -599,17 +587,8 @@ g_actions = {
 								name: [data.first_name, data.last_name].join(' ')
 							};
 
-							g_data.saveSocialUser(provider, data, token[0], function (user, cookie) {
-								Interface.headers['Set-Cookie'] = 'login=' + cookie + '; path=/;';
-								Interface.template = 'auth';
-								
-								Interface.data.user = {
-									name: user.name || user.login,
-									status: user.status
-								};
-								Interface.print();
-							});
 							
+							saveSocialUser(data, {oauth_token: token[0]});
 						}
 					}
 				},
@@ -701,23 +680,36 @@ g_actions = {
 								name: data.name
 							};
 
-							g_data.saveSocialUser(provider, data, {
-								token: oauth.oauth_token,
-								secret: oauth.oauth_token_secret
-							}, function (user, cookie) {
-								Interface.headers['Set-Cookie'] = 'login=' + cookie + '; path=/;';
-								Interface.template = 'auth';
-								
-								Interface.data.user = {
-									name: user.name || user.login,
-									status: user.status
-								};
-								Interface.print();
-							});
+							saveSocialUser(data, oauth);
 						});
 					}
 				}
 			};
+
+		function saveSocialUser(data, oauth) {
+			if (Interface.user) {
+				sys.log(sys.inspect(Interface.user));
+				sys.log(sys.inspect(data));
+				
+				g_actions['500'].call(Interface);
+
+				return false;
+			}
+
+			g_data.saveSocialUser(provider, data, {
+				token: oauth.oauth_token,
+				secret: oauth.oauth_token_secret
+			}, function (user, cookie) {
+				Interface.headers['Set-Cookie'] = 'login=' + cookie + '; path=/;';
+				Interface.template = 'auth';
+				
+				Interface.data.user = {
+					name: user.name || user.login,
+					status: user.status
+				};
+				Interface.print();
+			});
+		}
 			
 		if (!provider ||
 			!this.url.query ||
