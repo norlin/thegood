@@ -688,12 +688,9 @@ g_actions = {
 
 		function saveSocialUser(data, oauth) {
 			if (Interface.user) {
-				sys.log(sys.inspect(Interface.user));
-				sys.log(sys.inspect(data));
-				
-				g_actions['500'].call(Interface);
+				data = data || {};
 
-				return false;
+				data.existingUser = Interface.user;
 			}
 
 			g_data.saveSocialUser(provider, data, {

@@ -4,23 +4,23 @@ var sys = require('util'),
 	couchdb = require('felix-couchdb');
 
 //служебные функци
-function getTime(){
+function getTime() {
 	return (new Date()).getTime();
 }
 
-function doNothing(){}
+function doNothing() {}
 
-function copyObj(obj){
+function copyObj(obj) {
 	var key,
 		copy;
 
-	if (typeof(obj) !== 'object' || (obj instanceof Array)){
+	if (typeof(obj) !== 'object' || (obj instanceof Array)) {
 		return obj;
 	}
 	copy = {};
 	
-	for (key in obj){
-		if (obj.hasOwnProperty(key)){
+	for (key in obj) {
+		if (obj.hasOwnProperty(key)) {
 			copy[key] = copyObj(obj[key]);
 		}
 	}
@@ -28,16 +28,16 @@ function copyObj(obj){
 	return copy;
 }
 
-function equalsObj(obj1,obj2){
-	if (typeof(obj1) === 'object' && typeof(obj2) === 'object'){
+function equalsObj(obj1, obj2) {
+	if (typeof(obj1) === 'object' && typeof(obj2) === 'object') {
 		return (JSON.stringify(obj1) === JSON.stringify(obj2));
 	}
 	sys.log('ERROR: cant compare objs! WTF??');
 }
 
-function is_true(user,fact){
-	if (user.id === fact.from){
-		if (fact.no){
+function is_true(user, fact) {
+	if (user.id === fact.from) {
+		if (fact.no) {
 			return -1;
 		}
 		return 1;
@@ -47,43 +47,43 @@ function is_true(user,fact){
 }
 
 //работа с БД
-function getDoc(id,cb){
-	if (!id){
-		cb({error:'not enough params to get doc!'});
+function getDoc(id, cb) {
+	if (!id) {
+		cb({error: 'not enough params to get doc!'});
 		return false;
 	}
-	this._db.getDoc(id,cb);
+	this._db.getDoc(id, cb);
 }
 	
-function saveDoc(id,doc,cb){
-	if (!id || !doc){
-		cb({error:'not enough params to save doc!'});
+function saveDoc(id, doc, cb) {
+	if (!id || !doc) {
+		cb({error: 'not enough params to save doc!'});
 		return false;
 	}
-	//setTimeout(cb,1000);
+	//setTimeout(cb, 1000);
 	
-	this._db.saveDoc(id,doc,cb);
+	this._db.saveDoc(id, doc, cb);
 }
 
-function errorCallback(err,cb){
+function errorCallback(err, cb) {
 	cb(err);
 }
 
 //авторизация
-function makePassword(login,password){
+function makePassword(login, password) {
 	var secret = 'q2k3jriuyefvgi8msuey4gtri8w3ygfowuy83',
 		password_hash = password + '-' + secret + login;
 	
-	password_hash = crypto.createHash('md5').update(password_hash,'utf-8').digest('hex');
+	password_hash = crypto.createHash('md5').update(password_hash, 'utf-8').digest('hex');
 	
 	return password_hash;
 }
 
-var Database = function(){
+var Database = function () {
 	
 };
 
-Database.prototype.saveMark = function(mark,login,cb){
+Database.prototype.saveMark = function (mark, login, cb) {
 	var Interface = this;
 	
 	mark.sys_type = 'mark';
@@ -93,104 +93,104 @@ Database.prototype.saveMark = function(mark,login,cb){
 	mark.author = login;
 	mark._id = 'mark' + mark.sys_date;
 	
-	function callbackMark(err){
-		if (err){
+	function callbackMark(err) {
+		if (err) {
 			cb(err);
 			return false;
 		}
 		
-		cb(null,mark);
+		cb(null, mark);
 	}
 	
-	function callbackUser(err,user){
-		if (err){
+	function callbackUser(err, user) {
+		if (err) {
 			return;
 		}
 		
 		user.marks = user.marks || [];
 		user.marks.push(mark._id);
 		
-		saveDoc.apply(Interface,[user._id,user,doNothing]);
+		saveDoc.apply(Interface, [user._id, user, doNothing]);
 	}
 	
-	saveDoc.apply(Interface,[mark._id,mark,callbackMark]);
+	saveDoc.apply(Interface, [mark._id, mark, callbackMark]);
 	
-	getDoc.apply(Interface,['user_'+login,callbackUser]);
+	getDoc.apply(Interface, ['user_' + login, callbackUser]);
 };
 
-Database.prototype.getMarks = function(params,cb){
+Database.prototype.getMarks = function (params, cb) {
 	var request = {};
 	params = params || {};
 	params.state = params.state || 'marks';
 	
 	//метки от такой даты
-	request.startkey = params.from || (new Date()).getTime()-7200000;
+	request.startkey = params.from || (new Date()).getTime() - 7200000;
 	
 	//до такой
-	request.endkey = params.till || request.startkey+7200000;
+	request.endkey = params.till || request.startkey + 7200000;
 
-	this._db.view('marks',params.state,request,function(err,doc){
-		if (err){
+	this._db.view('marks', params.state, request, function (err, doc) {
+		if (err) {
 			sys.log(sys.inspect(err));
 			cb(err);
 			return false;
 		}
 		
 		//sys.log(sys.inspect(doc.rows));
-		cb(null,doc.rows);
+		cb(null, doc.rows);
 	});
 };
 
-Database.prototype.saveMarkStatus = function(marks,login,cb){
+Database.prototype.saveMarkStatus = function (marks, login, cb) {
 	var Interface = this,
 		id,
 		saved = [],
 		count = 0;
 	
-	function saveMarkCallback(){
-		if (count <= 0){
-			cb(null,saved);
+	function saveMarkCallback() {
+		if (count <= 0) {
+			cb(null, saved);
 		}
 	}
 	
-	function getMarkCallback(err,mark){
-		count = count-1;
+	function getMarkCallback(err, mark) {
+		count = count - 1;
 		
-		if (err){
+		if (err) {
 			saveMarkCallback();
 			return false;
 		}
 		
-		if (typeof(marks[mark._id]) === 'number'){
+		if (typeof(marks[mark._id]) === 'number') {
 			mark.sys_status = marks[mark._id] || -1;
 			mark.admined = login;
 			saved.push(mark._id);
-			saveDoc.apply(Interface,[mark._id,mark,saveMarkCallback]);
-		}else{
+			saveDoc.apply(Interface, [mark._id, mark, saveMarkCallback]);
+		} else {
 			saveMarkCallback();
 		}
 		
 	}
 	
-	for (id in marks){
-		if (marks.hasOwnProperty(id)){
-			count = count+1;
-			getDoc.apply(Interface,[id,getMarkCallback]);
+	for (id in marks) {
+		if (marks.hasOwnProperty(id)) {
+			count = count + 1;
+			getDoc.apply(Interface, [id, getMarkCallback]);
 		}
 	}
 	
-	if (count === 0){
+	if (count === 0) {
 		saveMarkCallback();
 	}
 };
 
-Database.prototype.getNews = function(params,cb){
+Database.prototype.getNews = function (params, cb) {
 	var request = {};
 	params = params || {};
 	
-	if (params.news_id){
-		getDoc.apply(this,['news_'+params.news_id,function(err,doc){
-			if (err || !doc){
+	if (params.news_id) {
+		getDoc.apply(this, ['news_' + params.news_id, function (err, doc) {
+			if (err || !doc) {
 				cb(err);
 				return false;
 			}
@@ -198,37 +198,37 @@ Database.prototype.getNews = function(params,cb){
 			delete doc.description;
 			delete doc._rev;
 			
-			cb(null, [{value:doc}]);
+			cb(null, [{value: doc}]);
 		}]);
-	}else{
+	} else {
 		params.page = params.page || 0;
 		
 		request.limit = params.limit || 10;
 		request.skip = params.page * request.limit;
 		request.descending = true;
 		
-		this._db.view('marks','news',request,function(err,doc){
-			if (err){
+		this._db.view('marks', 'news', request, function (err, doc) {
+			if (err) {
 				sys.log(sys.inspect(err));
 				cb(err);
 				return false;
 			}
 			
-			cb(null,doc.rows);
+			cb(null, doc.rows);
 		});
 	}
 };
 
-Database.prototype.saveNews = function(news,login,cb){
+Database.prototype.saveNews = function (news, login, cb) {
 	var Interface = this,
 		news_to_save = {};
 	
 	delete news._rev;
 	news_to_save.sys_type = 'news';
-	if (!news.id){
+	if (!news.id) {
 		news_to_save.sys_date = getTime();
 		news_to_save._id = 'news_' + news_to_save.sys_date;
-	}else{
+	} else {
 		news_to_save._id = news.id;
 	}
 
@@ -241,107 +241,129 @@ Database.prototype.saveNews = function(news,login,cb){
 	news_to_save.description = news.description;
 
 	//прописываем пользователя
-	function callbackUser(err,user){
-		if (err){
+	function callbackUser(err, user) {
+		if (err) {
 			return;
 		}
 		
 		user.news = user.news || [];
 		user.news.push(news_to_save._id);
 		
-		saveDoc.apply(Interface,[user._id,user,doNothing]);
+		saveDoc.apply(Interface, [user._id, user, doNothing]);
 	}
 	
-	function callbackSaveNews(err){
-		if (err){
+	function callbackSaveNews(err) {
+		if (err) {
 			cb(err);
 			return false;
 		}
 		
-		cb(null,news_to_save);
+		cb(null, news_to_save);
 	}
 
-	function callbackGetNews(err,data){
-		if (err){
-			if (err.error === 'not_found'){
-				callbackGetNews(null,news);
-			}else{
+	function callbackGetNews(err, data) {
+		if (err) {
+			if (err.error === 'not_found') {
+				callbackGetNews(null, news);
+			} else {
 				cb(err);
 			}
 			
 			return;
 		}
 		
-		if (data._rev){
+		if (data._rev) {
 			news_to_save.sys_date = data.sys_date;
 			news_to_save._rev = data._rev;
 		}
 		
-		saveDoc.apply(Interface,[news_to_save._id,news_to_save,callbackSaveNews]);
+		saveDoc.apply(Interface, [news_to_save._id, news_to_save, callbackSaveNews]);
 	}
 	
-	getDoc.apply(Interface,[news_to_save._id,callbackGetNews]);
+	getDoc.apply(Interface, [news_to_save._id, callbackGetNews]);
 	
-	getDoc.apply(Interface,['user_'+login,callbackUser]);
+	getDoc.apply(Interface, ['user_' + login, callbackUser]);
 };
 
-Database.prototype.makeAuth = function(login,pass,cb){
-	function callback(err,user){
-		//makePassword(login,pass);
-		if (err){
-			cb({status:0});
+Database.prototype.makeAuth = function (login, pass, cb) {
+	function callback(err, user) {
+		//makePassword(login, pass);
+		if (err) {
+			cb({status: 0});
 			return;
 		}
 		
-		if (user.passwd === makePassword(login,pass)){
-			cb({status:user.status,login:user.login,name:user.name},login+'__'+makePassword(login,user.passwd));
-		}else{
-			cb({status:-1});
+		if (user.passwd === makePassword(login, pass)) {
+			cb({status: user.status, login: user.login, name: user.name}, login + '__' + makePassword(login, user.passwd));
+		} else {
+			cb({status: -1});
 		}
 	}
 	
-	getDoc.apply(this,['user_'+login,callback]);
+	getDoc.apply(this, ['user_' + login, callback]);
 };
 
-Database.prototype.saveSocialUser = function(provider,data,token,cb){
+Database.prototype.saveSocialUser = function (provider, data, token, cb) {
 	var Interface = this,
-		user;
+		user,
+		existingUser = data.existingUser;
 	
-	function callback(err){
-		if (err){
-			cb({status:0});
+	function callback(err) {
+		if (err) {
+			cb({status: 0});
 			return;
 		}
+
+		if (existingUser) {
+			user = existingUser;
+		}
 		
-		cb({status:user.status,login:user.login,name:user.name},user.login+'__'+makePassword(user.login,user.passwd));
+		cb(
+			{
+				status: user.status,
+				login: user.login,
+				name: user.name
+			},
+			user.login + '__' + makePassword(user.login, user.passwd)
+		);
 	}
 	
-	function getUserCallback(err,response){
-		if (err){
-			if (err.error === 'not_found'){
+	function getUserCallback(err, response) {
+		var twink;
+		if (err) {
+			if (err.error === 'not_found') {
 				user = {
-					_id:'user_'+provider+data.id,
-					login:provider+data.id,
-					name:data.name,
-					status:10,
+					_id: 'user_' + provider + data.id,
+					login: provider + data.id,
+					name: data.name,
 					social_id: data.id,
-					sys_type:'user',
-					provider:provider,
-					token:{}
+					sys_type: 'user',
+					provider: provider,
+					token: {}
 				};
-				
-				if (typeof(token) === 'object') {
-					user.token = token.token;
-					user.token_secret = token.secret;
+
+				if (existingUser) {
+					user.db_link = existingUser._id;
 				} else {
-					user.token = token;
+					user.status = 10;
 				}
-			}else{
-				cb({status:0});
+				
+				user.token = token.token;
+				if (token.secret) {
+					user.token_secret = token.secret;
+				}
+			} else {
+				cb({status: 0});
 			}
-		}else{
+		} else {
 			user = response;
 			user.name = data.name;
+
+			if (existingUser) {
+				user.db_link = existingUser._id;
+
+				delete user.status;
+			}
 				
 			if (typeof(token) === 'object') {
 				user.token = token.token;
@@ -350,163 +372,215 @@ Database.prototype.saveSocialUser = function(provider,data,token,cb){
 				user.token = token;
 			}
 		}
+
+		if (existingUser) {
+			if (!existingUser.db_twinks) {
+				existingUser.db_twinks = [];
+			}
+
+			twink = {
+				provider: provider,
+				id: user._id
+			};
+
+			existingUser.db_twinks.push(twink);
+		}
 		
-		user.passwd = makePassword(user.login,user.token);
-		saveDoc.apply(Interface,[user._id,user,callback]);
+		user.passwd = makePassword(user.login, user.token);
+		saveDoc.apply(Interface, [user._id, user, callback]);
 	}
-	
-	getDoc.apply(Interface,['user_'+provider+data.id,getUserCallback]);
+
+	function existingUserCallback(err, response) {
+		existingUser = response;
+		getDoc.apply(Interface, ['user_' + provider + data.id, getUserCallback]);
+	}
+
+	if (existingUser) {
+		getDoc.call(Interface, data.existingUser.login, existingUserCallback);
+	} else {
+		getDoc.apply(Interface, ['user_' + provider + data.id, getUserCallback]);
+	}
 };
 
-Database.prototype.checkAuth = function(cookie,cb){
-	var login;
+Database.prototype.checkAuth = function (cookie, cb) {
+	var login,
+		Interface = this;
 	
-	cookie = cookie ? cookie.split('__') : [0,0];
+	cookie = cookie ? cookie.split('__') : [0, 0];
 	login = cookie[0];
 	cookie = cookie[1];
 		
-	function callback(err,user){
-		if (err){
-			cb({status:0});
+	function callback(err, user) {
+		if (err) {
+			cb({status: 0});
 			return;
 		}
 		
-		if (cookie === makePassword(login,user.passwd)){
+		if (cookie === makePassword(login, user.passwd)) {
+
+			if (user.db_link) {
+				getDoc.call(Interface, user.db_link, getMainCallback);
+			} else {
+				getMainCallback(null, user);
+			}
+
+
 			cb({
-				status:user.status,
-				login:user.login,
-				name:user.name,
-				token:user.token
-			},login+'__'+cookie);
-		}else{
-			cb({status:-1});
+				status: user.status,
+				login: user.login,
+				name: user.name,
+				token: user.token
+			}, login + '__' + cookie);
+		} else {
+			cb({status: -1});
+		}
+	}
+
+	function getMainCallback(err, user) {
+		var twinks = {},
+			twinkCount = 0,
+			provider;
+
+		function getTwinkCallback(twink, provider) {
+			twinkCount = twinkCount - 1;
+			twinks[provider] = twink;
+		}
+
+		if (user.db_twinks && user.db_twinks.length > 0) {
+			twinkCount = user.db_twinks.length;
+			
+			user.db_twinks.forEach(function (twink, i){
+				getDoc.call(Interface, twink.id, function(){
+					getTwinkCallback
+				});
+			});
 		}
 	}
 	
-	getDoc.apply(this,['user_'+login,callback]);
+	getDoc.apply(this, ['user_' + login, callback]);
 };
 
 /*
-Database.prototype.getPointsByUid = function(uid,cb){
+Database.prototype.getPointsByUid = function(uid, cb) {
 	var Interface = this;
 
 	Interface._db.request({
-		method:'POST',
-		path:'/_design/outreach/_view/getUserPoints',
-		data:JSON.stringify({keys:[uid.toString(10)]})
-	},function(err,doc){
-		if (err){
-			errorCallback(err,cb);
+		method: 'POST',
+		path: '/_design/outreach/_view/getUserPoints',
+		data: JSON.stringify({keys: [uid.toString(10)]})
+	}, function(err, doc) {
+		if (err) {
+			errorCallback(err, cb);
 			return false;
 		}
 
-		cb(null,doc.rows[0].value);
+		cb(null, doc.rows[0].value);
 	});
 };
 
-Database.prototype.makeAuth = function(data,cb){
+Database.prototype.makeAuth = function(data, cb) {
 	var Interface = this;
 
-	if (!checkAuth(data)){
+	if (!checkAuth(data)) {
 		cb(false);
 	}
 
-	function getUserCallback(err,user){
-		if (err){
+	function getUserCallback(err, user) {
+		if (err) {
 			cb(false);
 			return;
 		}
 		
-		user.auth = vk.makeCookie(user._id,data.secret);
+		user.auth = vk.makeCookie(user._id, data.secret);
 		user.last_date = getTime();
 		
-		function callback(err,data){
-			if (err){
+		function callback(err, data) {
+			if (err) {
 				cb(false);
 				return;
 			}
-			cb(true,user.auth);
+			cb(true, user.auth);
 		}
 		
-		saveDoc.apply(Interface,[user._id,user,callback]);
+		saveDoc.apply(Interface, [user._id, user, callback]);
 	}
 
-	getDoc.apply(Interface,[data.viewer_id,getUserCallback]);
+	getDoc.apply(Interface, [data.viewer_id, getUserCallback]);
 }
 
-Database.prototype.checkAuth = function(query,cb){
+Database.prototype.checkAuth = function(query, cb) {
 	var Interface = this;
 
-	if (!query || !query.viewer_id || !query.cookie){
+	if (!query || !query.viewer_id || !query.cookie) {
 		cb(false);
 		return;
 	}
 	var uid = query.viewer_id.toString(10);
 	Interface._db.request({
-		method:'POST',
-		path:'/_design/outreach/_view/getUserAuth',
-		data:JSON.stringify({keys:[uid],limit:1})
-	},authRender);
+		method: 'POST',
+		path: '/_design/outreach/_view/getUserAuth',
+		data: JSON.stringify({keys: [uid], limit: 1})
+	}, authRender);
 	
-	function authRender(err,doc){
-		if (err || !doc || !doc.rows || !doc.rows[0] || !doc.rows[0].value){
+	function authRender(err, doc) {
+		if (err || !doc || !doc.rows || !doc.rows[0] || !doc.rows[0].value) {
 			cb(false);
 			return;
 		}
 
-		if (doc.rows[0].value === query.cookie){
+		if (doc.rows[0].value === query.cookie) {
 			cb(true);
-		}else{
+		} else {
 			cb(false);
 		}
 	}
 }
 
-Database.prototype.getTopFacts = function(cb){
+Database.prototype.getTopFacts = function(cb) {
 	var Interface = this;
-	Interface._db.view('outreach','getTopFacts',function(err,doc){
-		if (err){
-			errorCallback(err,cb);
+	Interface._db.view('outreach', 'getTopFacts', function(err, doc) {
+		if (err) {
+			errorCallback(err, cb);
 			return false;
 		}
 
-		function sort(b,a){
+		function sort(b, a) {
 			return a['key'] - b['key'];
 		}
 
 		var result = doc.rows.sort(sort);
-		result = result.splice(0,10);
-		cb(null,result);
+		result = result.splice(0, 10);
+		cb(null, result);
 		
 	});
 }
 */
 
-Database.prototype.getStat = function(cb){
+Database.prototype.getStat = function (cb) {
 	var Interface = this,
 		result = false;
 	
-	function emit(){
-		//if (result[0] && result[1]){
-			cb(null,result);
+	function emit() {
+		//if (result[0] && result[1]) {
+		cb(null, result);
 		//}
 	}
 	
-	Interface._db.view('outreach','getUsersCount',function(err,doc){
-		if (err){
+	Interface._db.view('outreach', 'getUsersCount', function (err, doc) {
+		if (err) {
 			sys.log(sys.inspect(err));
 			result = false;
 			emit();
 			return false;
 		}
 
-		result = doc.rows[0].value||false;
+		result = doc.rows[0].value || false;
 		
 		emit();
 	});
 /*
-	Interface._db.view('outreach','getFactsCount',function(err,doc){
-		if (err){
+	Interface._db.view('outreach', 'getFactsCount', function(err, doc) {
+		if (err) {
 			sys.log(sys.inspect(err));
 			result[1]=-1;
 			emit();
@@ -521,7 +595,7 @@ Database.prototype.getStat = function(cb){
 };
 
 //внешние интерфейсы
-exports.createDatabase = function(port,host,login,pass,db){
+exports.createDatabase = function (port, host, login, pass, db) {
 	var Interface = new Database(),
 		client;
 	
