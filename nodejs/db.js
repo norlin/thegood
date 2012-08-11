@@ -1,4 +1,5 @@
 /*jslint node: true, sloppy: true, white: true, nomen: true, maxerr: 50, indent: 4 */
+/*jshint node: true, strict: false, white: true, maxerr: 50, indent: 4 */
 var sys = require('util'),
 	crypto = require('crypto'),
 	couchdb = require('felix-couchdb');
@@ -417,20 +418,11 @@ Database.prototype.checkAuth = function (cookie, cb) {
 		}
 		
 		if (cookie === makePassword(login, user.passwd)) {
-
 			if (user.db_link) {
 				getDoc.call(Interface, user.db_link, getMainCallback);
 			} else {
 				getMainCallback(null, user);
 			}
-
-
-			cb({
-				status: user.status,
-				login: user.login,
-				name: user.name,
-				token: user.token
-			}, login + '__' + cookie);
 		} else {
 			cb({status: -1});
 		}
@@ -441,19 +433,35 @@ Database.prototype.checkAuth = function (cookie, cb) {
 			twinkCount = 0,
 			provider;
 
-		function getTwinkCallback(twink, provider) {
+		function getTwinkCallback(twink) {
 			twinkCount = twinkCount - 1;
-			twinks[provider] = twink;
+			if (twink && twink.provider) {
+				twinks[twink.provider] = twink;
+			}
+
+			if (twinkCount <= 0) {
+				cb({
+					status: user.status,
+					login: user.login,
+					name: user.name,
+					token: user.token,
+					twinks: twinks
+				}, login + '__' + cookie);
+			}
 		}
 
 		if (user.db_twinks && user.db_twinks.length > 0) {
 			twinkCount = user.db_twinks.length;
 			
-			user.db_twinks.forEach(function (twink, i){
-				getDoc.call(Interface, twink.id, function(){
-					getTwinkCallback
+			user.db_twinks.forEach(function (twink, i) {
+				//TODO: получать всех твинков одним запросом! 
+				getDoc.call(Interface, twink.id, function (err, doc) {
+					getTwinkCallback(doc);
 				});
 			});
+		} else {
+			twinkCount = 0;
+			getTwinkCallback();
 		}
 	}
 	
@@ -477,64 +485,6 @@ Database.prototype.getPointsByUid = function(uid, cb) {
 		cb(null, doc.rows[0].value);
 	});
 };
-
-Database.prototype.makeAuth = function(data, cb) {
-	var Interface = this;
-
-	if (!checkAuth(data)) {
-		cb(false);
-	}
-
-	function getUserCallback(err, user) {
-		if (err) {
-			cb(false);
-			return;
-		}
-		
-		user.auth = vk.makeCookie(user._id, data.secret);
-		user.last_date = getTime();
-		
-		function callback(err, data) {
-			if (err) {
-				cb(false);
-				return;
-			}
-			cb(true, user.auth);
-		}
-		
-		saveDoc.apply(Interface, [user._id, user, callback]);
-	}
-
-	getDoc.apply(Interface, [data.viewer_id, getUserCallback]);
-}
-
-Database.prototype.checkAuth = function(query, cb) {
-	var Interface = this;
-
-	if (!query || !query.viewer_id || !query.cookie) {
-		cb(false);
-		return;
-	}
-	var uid = query.viewer_id.toString(10);
-	Interface._db.request({
-		method: 'POST',
-		path: '/_design/outreach/_view/getUserAuth',
-		data: JSON.stringify({keys: [uid], limit: 1})
-	}, authRender);
-	
-	function authRender(err, doc) {
-		if (err || !doc || !doc.rows || !doc.rows[0] || !doc.rows[0].value) {
-			cb(false);
-			return;
-		}
-
-		if (doc.rows[0].value === query.cookie) {
-			cb(true);
-		} else {
-			cb(false);
-		}
-	}
-}
 
 Database.prototype.getTopFacts = function(cb) {
 	var Interface = this;

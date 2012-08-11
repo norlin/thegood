@@ -9,32 +9,32 @@ var g_actions;
 
 		//разные функции
 		g_actions = {
-			init:function () {
-				$('.action').unbind('click').bind('click',function () {
+			init: function () {
+				$('.action').unbind('click').bind('click', function () {
 					var params = {};
-						 
+						
 					if (typeof(this.onclick) === 'function') {
 						params = this.onclick();
 					
 						if (params.action && typeof(g_actions[params.action]) === 'function') {
-							g_actions[params.action].call(this,params);
+							g_actions[params.action].call(this, params);
 						}
 					}
 					
 					return false;
 				});
 			},
-			login:function (params) {
-				makeAuthWindow(params.provider,params.client,g_auth_retpath,function (user) {
+			login: function (params) {
+				makeAuthWindow(params.provider, params.client, g_auth_retpath, function (user) {
 					g_user = user;
 
 					g_actions.updatePage();
 				});
 			},
-			logout:function () {
-				g_actions.login({provider:'logout'});
+			logout: function () {
+				g_actions.login({provider: 'logout'});
 			},
-			addPoint: function (map,point,params) {
+			addPoint: function (map, point, params) {
 				var mark = new Mark(point);
 				
 				mark.setServer(g_server);
@@ -73,10 +73,10 @@ var g_actions;
 					window.location = g_domain + '/'+params.page;
 				});
 			},*/
-			updateIndex:function () {
+			updateIndex: function () {
 				/* */
 			},
-			updatePage:function (params,html) {
+			updatePage: function (params, html) {
 				window.location.reload();
 
 				return;
@@ -100,9 +100,9 @@ var g_actions;
 				
 				g_actions.init();*/
 			},
-			writeHistory:function (params,no_state) {
+			writeHistory: function (params, no_state) {
 				if (window.history && !no_state) {
-					window.history.pushState(params, params.title, '/'+params.page);
+					window.history.pushState(params, params.title, '/' + params.page);
 				}
 			}
 		};
@@ -134,34 +134,35 @@ var g_actions;
 				
 				g_inited = true;
 			}
-			*/function lastStanding(){
-				var date1 = new Date(2012,5,12,12),
+			*/
+			function lastStanding() {
+				var date1 = new Date(2012, 5, 12, 12),
 					date2 = new Date(),
 					seconds,
 					minutes,
 					hours;
 
 				seconds = (date1.getTime() - date2.getTime()) / 1000;
-                if (seconds > 0){
-				minutes = Math.floor(seconds/60);
-				seconds = Math.floor(seconds - (minutes*60));
-				hours = Math.floor(minutes/60);
-				minutes = Math.floor(minutes - (hours*60));
-				
-				$('#lastStanding').html('Власть жуликов и воров кончится через <br />'+
-					'<span class="b-laststand">'+
-					hours+' '+word_end(['часов','часа','час'],hours)+' '+
-					minutes+' '+word_end(['минут','минуты','минута'],minutes)+' '+
-					seconds+' '+word_end(['секунд','секунды','секунда'],seconds)+
-					'</span><i class="g-clear"></i>'+
-					'12 июня на улицу надо выйти абсолютно всем и каждому.'
-				);
-                } else {
-                    $('#lastStanding').html('Россия без путина!');
-                }
+				if (seconds > 0) {
+					minutes = Math.floor(seconds / 60);
+					seconds = Math.floor(seconds - (minutes * 60));
+					hours = Math.floor(minutes / 60);
+					minutes = Math.floor(minutes - (hours * 60));
+					
+					$('#lastStanding').html('Власть жуликов и воров кончится через <br />' +
+						'<span class="b-laststand">' +
+						hours + ' ' + word_end(['часов', 'часа', 'час'], hours) + ' ' +
+						minutes + ' ' + word_end(['минут', 'минуты', 'минута'], minutes) + ' ' +
+						seconds + ' ' + word_end(['секунд', 'секунды', 'секунда'], seconds) +
+						'</span><i class="g-clear"></i>' +
+						'12 июня на улицу надо выйти абсолютно всем и каждому.'
+					);
+				} else {
+					$('#lastStanding').html('Россия без путина!');
+				}
 			}
 
-			window.setInterval(lastStanding,1000);
+			window.setInterval(lastStanding, 1000);
 			lastStanding();
 
 			g_actions.init();
@@ -170,4 +171,4 @@ var g_actions;
 		//Поехали!
 		initAll();
 	});
-}(window,jQuery));
+}(window, jQuery));

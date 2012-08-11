@@ -1,4 +1,5 @@
 /*jslint node: true, sloppy: true, white: true, maxerr: 50, indent: 4 */
+/*jshint node: true, strict: false, white: true, maxerr: 50, indent: 4 */
 var sys = require('util'),
 	http = require('http'),
 	https = require('https'),

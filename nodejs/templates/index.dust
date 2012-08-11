@@ -42,11 +42,11 @@
 			{:else}
 				{>userinfo/}
 			{/info.beta}
-			{?userCount}
 			<div class="b-epigraph">
+			{?userCount}
 				p.s. за рулём Доброй Машины уже {userCount}.
-			</div>
 			{/userCount}
+			</div>
 			<i class="g-clear"></i>
 		</div>
 	</div>
