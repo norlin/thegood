@@ -9,188 +9,259 @@ function getTime() {
 	return (new Date()).getTime();
 }
 
-function doNothing() {}
-
-function copyObj(obj) {
-	var key,
-		copy;
-
-	if (typeof(obj) !== 'object' || (obj instanceof Array)) {
-		return obj;
-	}
-	copy = {};
-	
-	for (key in obj) {
-		if (obj.hasOwnProperty(key)) {
-			copy[key] = copyObj(obj[key]);
-		}
-	}
-	
-	return copy;
-}
-
-function equalsObj(obj1, obj2) {
-	if (typeof(obj1) === 'object' && typeof(obj2) === 'object') {
-		return (JSON.stringify(obj1) === JSON.stringify(obj2));
-	}
-	sys.log('ERROR: cant compare objs! WTF??');
-}
-
-function is_true(user, fact) {
-	if (user.id === fact.from) {
-		if (fact.no) {
-			return -1;
-		}
-		return 1;
-	}
-
-	return 0;
-}
-
-//работа с БД
-function getDoc(id, cb) {
-	if (!id) {
-		cb({error: 'not enough params to get doc!'});
-		return false;
-	}
-	this._db.getDoc(id, cb);
-}
-	
-function saveDoc(id, doc, cb) {
-	if (!id || !doc) {
-		cb({error: 'not enough params to save doc!'});
-		return false;
-	}
-	//setTimeout(cb, 1000);
-	
-	this._db.saveDoc(id, doc, cb);
-}
-
 function errorCallback(err, cb) {
 	cb(err);
 }
 
+var Database = function (secret) {
+	this.secret = secret;
+
+	//работа с БД
+	this.getDoc = function getDoc(id, cb) {
+		if (!id) {
+			cb({error: 'not enough params to get doc!'});
+			return false;
+		}
+		this._db.getDoc(id, cb);
+	};
+		
+	this.saveDoc = function saveDoc(id, doc, cb) {
+		if (typeof(cb) !== 'function') {
+			cb = function () {};
+		}
+
+		if (!id || !doc) {
+			cb({error: 'not enough params to save doc!'});
+			return false;
+		}
+		//setTimeout(cb, 1000);
+		//TODO: error!
+		this._db.saveDoc(id, doc, cb);
+	};
+
+	return this;
+};
+
 //авторизация
-function makePassword(login, password) {
-	var secret = 'q2k3jriuyefvgi8msuey4gtri8w3ygfowuy83',
-		password_hash = password + '-' + secret + login;
+Database.prototype.makePassword = function (login, password) {
+	var password_hash = password + '-' + this.secret + login;
 	
 	password_hash = crypto.createHash('md5').update(password_hash, 'utf-8').digest('hex');
 	
 	return password_hash;
-}
-
-var Database = function () {
-	
 };
 
-Database.prototype.saveMark = function (mark, login, cb) {
+Database.prototype.makeAuth = function (login, pass, cb) {
 	var Interface = this;
-	
-	mark.sys_type = 'mark';
-	mark.sys_date = getTime();
-
-	mark.sys_status = 0;
-	mark.author = login;
-	mark._id = 'mark' + mark.sys_date;
-	
-	function callbackMark(err) {
+	function callback(err, user) {
+		//Interface.makePassword(login, pass);
 		if (err) {
-			cb(err);
-			return false;
-		}
-		
-		cb(null, mark);
-	}
-	
-	function callbackUser(err, user) {
-		if (err) {
+			//юзер не найден
+			cb({status: 0});
 			return;
 		}
 		
-		user.marks = user.marks || [];
-		user.marks.push(mark._id);
-		
-		saveDoc.apply(Interface, [user._id, user, doNothing]);
-	}
-	
-	saveDoc.apply(Interface, [mark._id, mark, callbackMark]);
-	
-	getDoc.apply(Interface, ['user_' + login, callbackUser]);
-};
-
-Database.prototype.getMarks = function (params, cb) {
-	var request = {};
-	params = params || {};
-	params.state = params.state || 'marks';
-	
-	//метки от такой даты
-	request.startkey = params.from || (new Date()).getTime() - 7200000;
-	
-	//до такой
-	request.endkey = params.till || request.startkey + 7200000;
-
-	this._db.view('marks', params.state, request, function (err, doc) {
-		if (err) {
-			sys.log(sys.inspect(err));
-			cb(err);
-			return false;
-		}
-		
-		//sys.log(sys.inspect(doc.rows));
-		cb(null, doc.rows);
-	});
-};
-
-Database.prototype.saveMarkStatus = function (marks, login, cb) {
-	var Interface = this,
-		id,
-		saved = [],
-		count = 0;
-	
-	function saveMarkCallback() {
-		if (count <= 0) {
-			cb(null, saved);
-		}
-	}
-	
-	function getMarkCallback(err, mark) {
-		count = count - 1;
-		
-		if (err) {
-			saveMarkCallback();
-			return false;
-		}
-		
-		if (typeof(marks[mark._id]) === 'number') {
-			mark.sys_status = marks[mark._id] || -1;
-			mark.admined = login;
-			saved.push(mark._id);
-			saveDoc.apply(Interface, [mark._id, mark, saveMarkCallback]);
+		if (user.passwd === Interface.makePassword(login, pass)) {
+			cb({status: user.status, login: user.login, name: user.name}, login + '__' + Interface.makePassword(login, user.passwd));
 		} else {
-			saveMarkCallback();
+			//юзер найден, но пароль не подходит
+			cb({status: -1});
+		}
+	}
+	
+	this.getDoc('user_' + login, callback);
+};
+
+Database.prototype.saveSocialUser = function (provider, data, token, cb) {
+	var Interface = this,
+		existingUser = data.existingUser;
+
+	function makeUser(provider, data) {
+		return {
+			_id: 'user_' + provider + data.id,
+			login: provider + data.id,
+			name: data.name,
+			social_id: data.id,
+			sys_type: 'user',
+			status: 10,
+			provider: provider,
+			token: {}
+		};
+	}
+
+	function callback(err) {
+		if (err) {
+			cb({status: 0});
+			return;
+		}
+
+		cb(
+			{
+				status: this.status,
+				login: this.login,
+				name: this.name
+			},
+			this.login + '__' + Interface.makePassword(this.login, this.passwd)
+		);
+	}
+	
+	function getUserCallback(err, response) {
+		var user,
+			twink,
+			mainUser,
+			twinkUser;
+
+		if (err) {
+			if (err.error === 'not_found') {
+				user = makeUser(provider, data);
+			} else {
+				cb({status: 0});
+			}
+		} else {
+			user = response;
+			user.name = data.name;
+		}
+
+		if (existingUser) {
+			if (user.db_twinks || existingUser.db_link) {
+				//ранее залогиненный - твинк,
+				//новый - основной
+				existingUser.db_link = user._id;
+				delete existingUser.status;
+
+				twinkUser = existingUser;
+				mainUser = user;
+			} else {
+				//новый юзер - твинк,
+				//ранее залогиненный - основной
+				user.db_link = existingUser._id;
+				delete user.status;
+
+				twinkUser = user;
+				mainUser = existingUser;
+			}
+
+			twink = {};
+			twink.id = mainUser._id;
+			twink.provider = twinkUser.provider; //TODO: надо это протестировать
+
+			if (!mainUser.db_twinks) {
+				mainUser.db_twinks = {};
+			}
+			mainUser.db_twinks[twink.id] = twink;
+
+			Interface.saveDoc(twinkUser._id, twinkUser);
+		} else {
+			mainUser = user;
+
+			if (mainUser.db_link) {
+				//если этот юзер - твинк, то надо получить основного
+				existingUser = mainUser;
+				Interface.getDoc(mainUser.db_link, getUserCallback);
+
+				return;
+			}
 		}
 		
-	}
-	
-	for (id in marks) {
-		if (marks.hasOwnProperty(id)) {
-			count = count + 1;
-			getDoc.apply(Interface, [id, getMarkCallback]);
+		if (typeof(token) === 'object') {
+			mainUser.token = token.token;
+
+			if (token.secret) {
+				mainUser.token_secret = token.secret;
+			}
+		} else {
+			mainUser.token = token;
 		}
+
+		mainUser.passwd = Interface.makePassword(mainUser.login, mainUser.token);
+		Interface.saveDoc(mainUser._id, mainUser, callback.bind(mainUser));
 	}
-	
-	if (count === 0) {
-		saveMarkCallback();
+
+	function existingUserCallback(err, response) {
+		existingUser = response;
+		Interface.getDoc('user_' + provider + data.id, getUserCallback);
+	}
+
+	if (existingUser && existingUser.login) {
+		Interface.getDoc('user_' + existingUser.login, existingUserCallback);
+	} else {
+		Interface.getDoc('user_' + provider + data.id, getUserCallback);
 	}
 };
 
+Database.prototype.checkAuth = function (cookie, cb) {
+	var login,
+		Interface = this;
+	
+	cookie = cookie ? cookie.split('__') : [0, 0];
+	login = cookie[0];
+	cookie = cookie[1];
+		
+	function callback(err, user) {
+		if (err) {
+			cb({status: 0});
+			return;
+		}
+		
+		if (cookie === Interface.makePassword(login, user.passwd)) {
+			if (user.db_link) {
+				sys.log('ERROR: -> этого не должно было случиться! db.js checkAuth callback user.db_link');
+				Interface.getDoc(user.db_link, getMainCallback);
+			} else {
+				getMainCallback(null, user);
+			}
+		} else {
+			cb({status: -1});
+		}
+	}
+
+	function getMainCallback(err, user) {
+		var twinks = {},
+			twinkCount = 0,
+			provider,
+			tmp;
+
+		function getTwinkCallback(err, twink) {
+			twinkCount = twinkCount - 1;
+			if (twink && twink.provider) {
+				twinks[twink.provider] = twink;
+			}
+
+			if (twinkCount <= 0) {
+				cb({
+					status: user.status,
+					login: user.login,
+					name: user.name,
+					token: user.token,
+					twinks: twinks
+				}, login + '__' + cookie);
+			}
+		}
+
+		if (user.db_twinks) {
+			for (tmp in user.db_twinks) {
+				if (user.db_twinks.hasOwnProperty(tmp)) {
+					twinkCount = twinkCount + 1;
+					//TODO: сделать балковый запрос!
+					Interface.getDoc(user.db_twinks[tmp].id, getTwinkCallback);
+				}
+			}
+		} else {
+			twinkCount = 0;
+			getTwinkCallback();
+		}
+	}
+	
+	this.getDoc('user_' + login, callback);
+};
+
+//Новости
 Database.prototype.getNews = function (params, cb) {
 	var request = {};
 	params = params || {};
 	
 	if (params.news_id) {
-		getDoc.apply(this, ['news_' + params.news_id, function (err, doc) {
+		this.getDoc('news_' + params.news_id, function (err, doc) {
 			if (err || !doc) {
 				cb(err);
 				return false;
@@ -200,7 +271,7 @@ Database.prototype.getNews = function (params, cb) {
 			delete doc._rev;
 			
 			cb(null, [{value: doc}]);
-		}]);
+		});
 	} else {
 		params.page = params.page || 0;
 		
@@ -250,7 +321,7 @@ Database.prototype.saveNews = function (news, login, cb) {
 		user.news = user.news || [];
 		user.news.push(news_to_save._id);
 		
-		saveDoc.apply(Interface, [user._id, user, doNothing]);
+		Interface.saveDoc(user._id, user);
 	}
 	
 	function callbackSaveNews(err) {
@@ -278,194 +349,11 @@ Database.prototype.saveNews = function (news, login, cb) {
 			news_to_save._rev = data._rev;
 		}
 		
-		saveDoc.apply(Interface, [news_to_save._id, news_to_save, callbackSaveNews]);
+		Interface.saveDoc(news_to_save._id, news_to_save, callbackSaveNews);
 	}
 	
-	getDoc.apply(Interface, [news_to_save._id, callbackGetNews]);
-	
-	getDoc.apply(Interface, ['user_' + login, callbackUser]);
-};
-
-Database.prototype.makeAuth = function (login, pass, cb) {
-	function callback(err, user) {
-		//makePassword(login, pass);
-		if (err) {
-			cb({status: 0});
-			return;
-		}
-		
-		if (user.passwd === makePassword(login, pass)) {
-			cb({status: user.status, login: user.login, name: user.name}, login + '__' + makePassword(login, user.passwd));
-		} else {
-			cb({status: -1});
-		}
-	}
-	
-	getDoc.apply(this, ['user_' + login, callback]);
-};
-
-Database.prototype.saveSocialUser = function (provider, data, token, cb) {
-	var Interface = this,
-		user,
-		existingUser = data.existingUser;
-	
-	function callback(err) {
-		if (err) {
-			cb({status: 0});
-			return;
-		}
-
-		if (existingUser) {
-			user = existingUser;
-		}
-		
-		cb(
-			{
-				status: user.status,
-				login: user.login,
-				name: user.name
-			},
-			user.login + '__' + makePassword(user.login, user.passwd)
-		);
-	}
-	
-	function getUserCallback(err, response) {
-		var twink;
-		if (err) {
-			if (err.error === 'not_found') {
-				user = {
-					_id: 'user_' + provider + data.id,
-					login: provider + data.id,
-					name: data.name,
-					social_id: data.id,
-					sys_type: 'user',
-					provider: provider,
-					token: {}
-				};
-
-				if (existingUser) {
-					user.db_link = existingUser._id;
-				} else {
-					user.status = 10;
-				}
-				
-				user.token = token.token;
-				if (token.secret) {
-					user.token_secret = token.secret;
-				}
-			} else {
-				cb({status: 0});
-			}
-		} else {
-			user = response;
-			user.name = data.name;
-
-			if (existingUser) {
-				user.db_link = existingUser._id;
-
-				delete user.status;
-			}
-				
-			if (typeof(token) === 'object') {
-				user.token = token.token;
-				user.token_secret = token.secret;
-			} else {
-				user.token = token;
-			}
-		}
-
-		if (existingUser) {
-			if (!existingUser.db_twinks) {
-				existingUser.db_twinks = [];
-			}
-
-			twink = {
-				provider: provider,
-				id: user._id
-			};
-
-			existingUser.db_twinks.push(twink);
-		}
-		
-		user.passwd = makePassword(user.login, user.token);
-		saveDoc.apply(Interface, [user._id, user, callback]);
-	}
-
-	function existingUserCallback(err, response) {
-		existingUser = response;
-		getDoc.apply(Interface, ['user_' + provider + data.id, getUserCallback]);
-	}
-
-	if (existingUser) {
-		getDoc.call(Interface, data.existingUser.login, existingUserCallback);
-	} else {
-		getDoc.apply(Interface, ['user_' + provider + data.id, getUserCallback]);
-	}
-};
-
-Database.prototype.checkAuth = function (cookie, cb) {
-	var login,
-		Interface = this;
-	
-	cookie = cookie ? cookie.split('__') : [0, 0];
-	login = cookie[0];
-	cookie = cookie[1];
-		
-	function callback(err, user) {
-		if (err) {
-			cb({status: 0});
-			return;
-		}
-		
-		if (cookie === makePassword(login, user.passwd)) {
-			if (user.db_link) {
-				getDoc.call(Interface, user.db_link, getMainCallback);
-			} else {
-				getMainCallback(null, user);
-			}
-		} else {
-			cb({status: -1});
-		}
-	}
-
-	function getMainCallback(err, user) {
-		var twinks = {},
-			twinkCount = 0,
-			provider;
-
-		function getTwinkCallback(twink) {
-			twinkCount = twinkCount - 1;
-			if (twink && twink.provider) {
-				twinks[twink.provider] = twink;
-			}
-
-			if (twinkCount <= 0) {
-				cb({
-					status: user.status,
-					login: user.login,
-					name: user.name,
-					token: user.token,
-					twinks: twinks
-				}, login + '__' + cookie);
-			}
-		}
-
-		if (user.db_twinks && user.db_twinks.length > 0) {
-			twinkCount = user.db_twinks.length;
-			
-			user.db_twinks.forEach(function (twink, i) {
-				//TODO: получать всех твинков одним запросом! 
-				getDoc.call(Interface, twink.id, function (err, doc) {
-					getTwinkCallback(doc);
-				});
-			});
-		} else {
-			twinkCount = 0;
-			getTwinkCallback();
-		}
-	}
-	
-	getDoc.apply(this, ['user_' + login, callback]);
+	Interface.getDoc(news_to_save._id, callbackGetNews);
+	Interface.getDoc('user_' + login, callbackUser);
 };
 
 /*
@@ -545,10 +433,10 @@ Database.prototype.getStat = function (cb) {
 };
 
 //внешние интерфейсы
-exports.createDatabase = function (port, host, login, pass, db) {
-	var Interface = new Database(),
+exports.createDatabase = function (port, host, login, pass, db, secret) {
+	var Interface = new Database(secret),
 		client;
-	
+
 	client = couchdb.createClient(port, host, login, pass, 100);
 	Interface._db = client.db(db);
 	

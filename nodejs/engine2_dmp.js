@@ -20,10 +20,10 @@ var g_domain = g_config.host,
 	g_node_path = g_config.node,
 	g_www_path = g_config.www,
 	g_tmp_path = g_config.tmp,
-	g_version = '0.0.4',
+	g_version = '0.0.5',
 	g_auth_retpath = 'http://' + g_domain + '/auth/',
 	g_node_port = g_config.port,
-	g_data = db.createDatabase(g_config.db.port, g_domain, g_config.db.user, g_config.db.password, g_config.db.name, 12),
+	g_data = db.createDatabase(g_config.db.port, g_domain, g_config.db.user, g_config.db.password, g_config.db.name, g_config.db.secret),
 	g_requests = {},
 	g_actions,
 	g_ajax_actions,
@@ -393,6 +393,8 @@ g_actions = {
 		this.template = 'index';
 		this.data.index = true;
 		this.data.userCount = false;
+
+		sys.log(sys.inspect(Interface.user));
 		
 		function callback(err, data) {
 			if (!err && typeof(data) !== 'undefined') {
@@ -525,14 +527,13 @@ g_actions = {
 							g_actions['500'].call(Interface);
 						} else {
 							data = JSON.parse(data) || 0;
-							
+
 							if (!data) {
 								Interface.template = 'auth';
 								Interface.print();
 								return false;
 							}
 							
-
 							saveSocialUser(data, {oauth_token: token[0]});
 						}
 					}
