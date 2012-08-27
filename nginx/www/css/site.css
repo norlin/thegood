@@ -1,2 +1,69 @@
 @import url("common.css");
 
+.b-block__full {
+	width: auto;
+	margin: 0;
+}
+
+	.b-block-content {
+		width: auto;
+	}
+
+.b-element {
+	border-radius: 5px;
+
+	background: #000;
+	background: rgba(0, 0, 0, 0.3);
+
+	box-shadow: 0 0 20px rgba(255, 255, 255, 0.70);
+
+	color: #fff;
+}
+
+	.b-element a {
+		color: #eee;
+	}
+
+	.b-element a:hover {
+		color: #fff;
+	}
+
+.b-header,
+.b-footer {
+	width: 100%;
+	height: 70px;
+}
+
+.b-header {
+	margin-bottom: 30px;
+
+	border-radius: 0 0 5px 5px;
+}
+	
+	.b-logout-link {
+		float: right;
+
+		display: block;
+		margin: 0 30px;
+
+		line-height: 60px;
+	}
+
+.b-main {
+	height: 500px;
+}
+
+.b-footer {
+	height: 30px;
+	line-height: 30px;
+
+	margin-top: 30px;
+
+	border-radius: 5px 5px 0 0;
+
+	font-size: 10px;
+}
+
+.b-link {
+	margin: 0 5px;
+}

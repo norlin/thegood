@@ -1,0 +1,68 @@
+{?full}
+	{>header/}
+{/full}
+	<div class="b-light"></div>
+	<div class="b-block-light"></div>
+	<div class="b-block">
+		<div class="b-block-shadow"></div>
+		<div class="b-block-content">
+			<div class="b-message">
+				<h2 class="b-title">Друзья!</h2>
+
+				<div class="b-epigraph">
+					<div id="lastStanding"></div>
+				</div>
+				<i class="g-clear"></i>
+
+				<p>Добрая машина правды №4 собирается на заводе и скоро будет запущена.</p>
+				<p>Будьте готовы, нам потребуется ваша помощь, а точнее — именно вы понесёте всю правду про воров и жуликов своим родным и друзьям, знакомым и коллегам, соседям по дому и попутчикам в общественном транспорте.</p>
+
+				<p>Вся страна и весь мир должны узнать, что происходит на самом деле. Нам ежедневно врут по телевизору, государственные СМИ рассказывают только то, что им разрешают сами жулики и воры.</p>
+
+				<p>Пора это менять.</p>
+
+				<div class="b-epigraph">
+					&laquo;Носителем суверенитета и единственным источником власти в Российской Федерации является её многонациональный народ&raquo;
+					<span>Конституция Российской Федерации, ст. 3, п. 1.</span>
+				</div>
+				<i class="g-clear"></i>
+			</div>
+
+			{?info.beta}
+			<div class="b-stripe">
+				<i class="b-stripe__left"></i>
+				<i class="b-stripe__right"></i>
+				<span class="b-stripe__text">Проект в разработке</span>
+			</div>
+			<div class="b-stripe b-stripe__mini">
+				<i class="b-stripe__left b-stripe__left-mini"></i>
+				<i class="b-stripe__right b-stripe__right-mini"></i>
+				<span class="b-stripe__text">
+					Скоро всё будет
+				</span>
+			</div>
+			{:else}
+				{>userinfo/}
+			{/info.beta}
+			<div class="b-epigraph">
+			{?userCount}
+				p.s. за рулём Доброй Машины уже {userCount}.
+			{/userCount}
+			</div>
+			<i class="g-clear"></i>
+
+			{?info.debug.login}
+			<div class="b-stripe">
+				<i class="b-stripe__left"></i>
+				<i class="b-stripe__right"></i>
+				<span class="b-stripe__text">debug login</span>
+			</div>
+			<form action="/" method="POST">
+				<input type="text" name="login" value="" />
+				<input type="password" name="pass" value="" />
+				<input type="submit" value="login" />
+			</form>
+			{/info.debug.login}
+		</div>
+	</div>
+{?full}{>footer/}{/full}

@@ -54,10 +54,9 @@ Database.prototype.makePassword = function (login, password) {
 Database.prototype.makeAuth = function (login, pass, cb) {
 	var Interface = this;
 	function callback(err, user) {
-		//Interface.makePassword(login, pass);
 		if (err) {
 			//юзер не найден
-			cb({status: 0});
+			cb({status: -1});
 			return;
 		}
 		
@@ -199,7 +198,7 @@ Database.prototype.checkAuth = function (cookie, cb) {
 		
 	function callback(err, user) {
 		if (err) {
-			cb({status: 0});
+			cb({status: -1});
 			return;
 		}
 		

@@ -1,6 +1,16 @@
 /*jslint browser: true, sloppy: true, white: true, maxerr: 50, indent: 4 */
 var g_actions;
 (function (window, $) {
+	function onResize() {
+		var block = $('#main'),
+			h = document.body.clientHeight - 200,
+			minHeight = 500;
+
+		h = Math.max(h, minHeight);
+
+		block.height(h);
+	}
+
 	$().ready(function () {
 		var nojs = $("#nojs").length,
 			$body = $('body'),
@@ -135,6 +145,16 @@ var g_actions;
 				g_inited = true;
 			}
 			*/
+
+			onResize();
+			$(window).on('resize', onResize);
+
+			$(document).on('keydown', function (e) {
+				if (e.keyCode === 27) {
+					$('.b-popup').remove();
+				}
+			});
+
 			function lastStanding() {
 				var date1 = new Date(2012, 5, 12, 12),
 					date2 = new Date(),

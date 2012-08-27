@@ -168,7 +168,7 @@ function makeAuthWindow(provider, client, retpath, callback) {
 				height: 400
 			},
 			logout: {
-				url: 'http://theoutreach.info/logout',
+				url: g_domain + '/logout',
 				width: 600,
 				height: 300
 			}
@@ -178,8 +178,10 @@ function makeAuthWindow(provider, client, retpath, callback) {
 		left = (window.outerWidth / 2) - (width / 2),
 		top = 200,
 		auth_window;
+
+	$('body').append('<div class="b-popup"><div class="b-block b-block__popup"><iframe class="b-auth-window" src="' + providers[provider].url + '"></iframe></div></div>');
 	
-	auth_window = window.open(providers[provider].url, '_blank', 'location=no,menubar=no,resizable=no,scrollbar=no,status=no,toolbar=no,left=' + left + 'px,top=' + top + 'px,width=' + width + 'px,height=' + height + 'px');
+	//auth_window = window.open(providers[provider].url, '_blank', 'location=no,menubar=no,resizable=no,scrollbar=no,status=no,toolbar=no,left=' + left + 'px,top=' + top + 'px,width=' + width + 'px,height=' + height + 'px');
 	
 	window.loginCallback = callback;
 }

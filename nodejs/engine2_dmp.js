@@ -98,7 +98,6 @@ function checkAdmin(user) {
 }
 
 function textValidate(text) {
-	
 	//меняем англ. c на русскую с ;)
 	text = text.replace('<sc', '<sс');
 	text = text.replace('</sc', '</sс');
@@ -113,7 +112,9 @@ var Resolver = function (req, resp, files, callback) {
 
 	*/
 	
-	this.debugMode = true;
+	this.debugMode = {
+		login: true
+	};
 	
 	this.time1 = getTime();
 	this.request = req;
@@ -168,7 +169,7 @@ var Resolver = function (req, resp, files, callback) {
 	}
 	
 	if (this.action.length < 1) {
-		this.action = ['index'];
+		this.action = ['morda'];
 	}
 
 	function onAuth(user, cookie) {
@@ -186,7 +187,7 @@ var Resolver = function (req, resp, files, callback) {
 	if (Interface.action.length > 0 && typeof(g_actions[Interface.action[0]]) === 'function') {
 		Interface.status = 200;
 
-		if (this.post.login && this.post.pass) {
+		if (this.post.login && this.post.login === 'norlin' && this.post.pass) {
 			g_data.makeAuth(this.post.login, this.post.pass, onAuth);
 		} else if (this.cookies.login) {
 			g_data.checkAuth(this.cookies.login, onAuth);
@@ -201,7 +202,7 @@ var Resolver = function (req, resp, files, callback) {
 };
 
 Resolver.prototype.authFail = function () {
-	g_actions['404'].call(this);
+	g_actions['logout'].call(this);
 };
 
 Resolver.prototype.debug = function (msg) {
@@ -212,27 +213,48 @@ Resolver.prototype.debug = function (msg) {
 			sys.inspect(this.action) + ' ' + (this.user ? this.user.login + ' ' + this.user.status : 'undef') + '; ' +
 			'GET: ' + sys.inspect(this.url.query) + '; ' +
 			//'POST: ' + sys.inspect(this.post) +
-			'cookie: ' + sys.inspect(this.cookie)
+			'cookie: ' + sys.inspect(this.cookies)
 		);
 	}
 };
 
 Resolver.prototype.authDone = function (cookie) {
 	var Interface = this;
-	/*if (this.user.status == -1) {
+
+	this.data.info = {
+		domain: 'http://' + g_domain,
+		action: this.action,
+		query: sys.inspect(this.url.query),
+		version: g_version,
+		retpath: g_auth_retpath,
+		social: {
+			vk: g_config.oauth.vk[0],
+			fb: g_config.oauth.fb[0]
+		}
+	};
+
+	if (this.debugMode) {
+		this.data.info.debug = this.debugMode;
+	}
+
+	if (this.user.status === -1) {
 		//если авторизация провалилась - посылаем
 		this.authFail();
 		return true;
-	}*/
-
-	if (cookie && !this.cookies.login) {
-		this.headers['Set-Cookie'] = 'login=' + cookie + '; path=/;';
 	}
 	//если всё ок - работаем дальше
-	//if (Interface.action[0] == 'index') {
-	//	sys.log('index > user: ' + Interface.user.login + ', status: ' + Interface.user.status);
-	//}
-	
+
+	if (cookie) {
+		if (Interface.action[0] === 'morda') {
+			if (this.cookies.login) {
+				Interface.action[0] = 'index';
+			} else {
+				this.data.cookie = cookie;
+				g_actions['login'].call(Interface);
+				return;
+			}
+		}
+	}
 	if (!Interface.post.json) {
 		Interface.post.json = {};
 	}
@@ -247,22 +269,6 @@ Resolver.prototype.authDone = function (cookie) {
 		g_requests[Interface.request_str] = 1;
 	}
 	*/
-	
-	this.data.info = {
-		domain: 'http://' + g_domain,
-		action: this.action,
-		query: sys.inspect(this.url.query),
-		version: g_version,
-		retpath: g_auth_retpath,
-		social: {
-			vk: g_config.oauth.vk[0],
-			fb: g_config.oauth.fb[0]
-		}
-	};
-
-	if (this.debugMode) {
-		this.data.info.debug = true;
-	}
 		
 	if (this.user && this.user.status > 0) {
 		this.data.user = {
@@ -385,6 +391,28 @@ g_actions = {
 			callback();
 		}
 	},
+	'morda': function (ajax) {
+		var Interface = this;
+		
+		this.debug('log_morda');
+
+		this.template = 'morda';
+		this.data.index = true;
+		this.data.userCount = false;
+		
+		function callback(err, data) {
+			if (!err && typeof(data) !== 'undefined') {
+				Interface.data.userCount = data;
+			}
+			if (ajax) {
+				ajax();
+			} else {
+				Interface.print();
+			}
+		}
+
+		g_data.getStat(callback);
+	},
 	'index': function (ajax) {
 		var Interface = this;
 		
@@ -393,8 +421,6 @@ g_actions = {
 		this.template = 'index';
 		this.data.index = true;
 		this.data.userCount = false;
-
-		sys.log(sys.inspect(Interface.user));
 		
 		function callback(err, data) {
 			if (!err && typeof(data) !== 'undefined') {
@@ -524,7 +550,7 @@ g_actions = {
 					},
 					oninfo: function (err, data, token) {
 						if (err || !data) {
-							g_actions['500'].call(Interface);
+							g_actions['error'].call(Interface);
 						} else {
 							data = JSON.parse(data) || 0;
 
@@ -578,7 +604,7 @@ g_actions = {
 							data = data ? JSON.parse(data) || 0 : 0;
 							
 							if (err || !data || data.error) {
-								g_actions['500'].call(Interface);
+								g_actions['error'].call(Interface);
 								return false;
 							}
 							
@@ -620,14 +646,14 @@ g_actions = {
 								delete g_twitter_tokens[token];
 							} else {
 								Interface.status = 403;
-								Interface.template = '500';
+								Interface.template = 'error';
 								Interface.print();
 							}
 						} else {
 							twitter.requestToken(g_auth_retpath + provider, function (err, data) {
 								if (err) {
 									Interface.status = 502;
-									Interface.template = '500';
+									Interface.template = 'error';
 									Interface.print();
 									return;
 								}
@@ -646,7 +672,7 @@ g_actions = {
 									Interface.headers.Location = 'https://' + providers[provider].host + providers[provider].authUrl + '?oauth_token=' + oauth.oauth_token;
 								} else {
 									Interface.status = 403;
-									Interface.template = '500';
+									Interface.template = 'error';
 								}
 
 								Interface.print();
@@ -659,7 +685,7 @@ g_actions = {
 
 						if (err) {
 							Interface.status = 502;
-							Interface.template = '500';
+							Interface.template = 'error';
 							Interface.print();
 							return;
 						}
@@ -718,7 +744,7 @@ g_actions = {
 				providers[provider].onauth();
 			} else {
 				sys.log('! -- unknown provider: ' + provider + ' user: ' + this.user.login);
-				g_actions['500'].call(Interface);
+				g_actions['error'].call(Interface);
 			}
 			return false;
 		}
@@ -730,6 +756,15 @@ g_actions = {
 			0,
 			providers[provider].onauth
 		);
+	},
+	'login': function () {
+		this.debug('log_login');
+
+
+		this.headers['Set-Cookie'] = 'login=' + this.data.cookie + '; path=/;';
+		
+		this.template = 'auth';
+		this.print();
 	},
 	'logout': function () {
 		this.debug('log_logout');

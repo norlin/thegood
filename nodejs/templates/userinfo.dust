@@ -3,9 +3,13 @@
 	<i class="b-stripe__right"></i>
 	<span class="b-stripe__text">
 		{?user}
-		Привет, {user.name}!
+			Привет, {user.name}!
 		{:else}
-		Присоединяйся, чтобы в числе первых узнать о запуске
+			{?info.noAuth}
+				Авторизационные данные не верны!
+			{:else}
+				Присоединяйся, чтобы в числе первых узнать о запуске
+			{/info.noAuth}
 		{/user}
 	</span>
 </div>

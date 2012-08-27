@@ -7,17 +7,24 @@
 	<link rel="icon" type="image/x-icon" href="{info.domain}/favicon.ico" />
 	<link rel="shortcut icon" type="image/x-icon" href="{info.domain}/favicon.ico" />
 	<script type="text/javascript">
-		var g_user;
+		var g_user,
+			opener;
 		{?user}
 		g_user = {
 			name:'{user.name}',
 			status:'{user.status}'
 		};
 		{/user}
-		window.opener && window.opener.loginCallback && window.opener.loginCallback(g_user);
-		window.opener && window.close();
+
+		opener = window.opener || window.top;
+
+		if (g_user) {
+			opener.loginCallback && opener.loginCallback(g_user);
+		} else {
+			opener.location = '{info.domain}';
+		}
 		
-		!window.opener && (window.location = '{info.domain}');
+		!opener && (window.location = '{info.domain}');
 	</script>
 </head>
 <body>

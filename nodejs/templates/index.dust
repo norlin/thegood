@@ -1,53 +1,27 @@
 {?full}
 	{>header/}
 {/full}
-	<div class="b-block">
-		<div class="b-block-shadow"></div>
+	<!--div class="b-block b-block__full">
 		<div class="b-block-content">
 			<div class="b-message">
-				<h2 class="b-title">Друзья!</h2>
+				<h2 class="b-title">Добро пожаловать{?user}, {user.name}{/user}!</h2>
 
-				<div class="b-epigraph">
-					<div id="lastStanding"></div>
-				</div>
-				<i class="g-clear"></i>
-
-				<p>Добрая машина правды №4 собирается на заводе и скоро будет запущена.</p>
-				<p>Будьте готовы, нам потребуется ваша помощь, а точнее — именно вы понесёте всю правду про воров и жуликов своим родным и друзьям, знакомым и коллегам, соседям по дому и попутчикам в общественном транспорте.</p>
-
-				<p>Вся страна и весь мир должны узнать, что происходит на самом деле. Нам ежедневно врут по телевизору, государственные СМИ рассказывают только то, что им разрешают сами жулики и воры.</p>
-
-				<p>Пора это менять.</p>
-
-				<div class="b-epigraph">
-					&laquo;Носителем суверенитета и единственным источником власти в Российской Федерации является её многонациональный народ&raquo;
-					<span>Конституция Российской Федерации, ст. 3, п. 1.</span>
-				</div>
 				<i class="g-clear"></i>
 			</div>
-
-			{?info.beta}
-			<div class="b-stripe">
-				<i class="b-stripe__left"></i>
-				<i class="b-stripe__right"></i>
-				<span class="b-stripe__text">Проект в разработке</span>
-			</div>
-			<div class="b-stripe b-stripe__mini">
-				<i class="b-stripe__left b-stripe__left-mini"></i>
-				<i class="b-stripe__right b-stripe__right-mini"></i>
-				<span class="b-stripe__text">
-					Скоро всё будет
-				</span>
-			</div>
-			{:else}
-				{>userinfo/}
-			{/info.beta}
-			<div class="b-epigraph">
-			{?userCount}
-				p.s. за рулём Доброй Машины уже {userCount}.
-			{/userCount}
-			</div>
-			<i class="g-clear"></i>
 		</div>
+	</div-->
+
+	<div class="b-element b-header">
+		<a href="#" class="b-logout-link action" onclick="return {action: 'logout'}">Выйти</a>
+	</div>
+	<div id="main" class="b-element b-main"></div>
+	<div class="b-element b-footer">
+		<span class="b-copyright">
+			<a class="b-link" href="http://twitter.com/the_outreach" target="_blank">@the_outreach</a>
+			<a class="b-link" href="http://mashina.org" target="_blank">Добрая Машина Правды</a>
+			<a class="b-link" href="http://rospil.info" target="_blank">РосПил</a>
+			<a class="b-link" href="http://navalny.livejournal.com" target="_blank">Навальный</a>
+			<a class="b-link" href="http://perekrili.org" target="_blank">"Перекрыли"</a>
+		</span>
 	</div>
 {?full}{>footer/}{/full}

@@ -1,17 +1,24 @@
-		html,body {
+		html,
+		body {
 			margin: 0;
 			padding: 0;
+
+			height: 100%;
+
+			overflow: hidden;
 		}
 		
 		html {
-			background: #0053b5 url(data:image/gif;base64,R0lGODlhKAAoAJEAAABTtTBzwz18xwAAACH5BAAAAAAALAAAAAAoACgAAAKMhGOAl6sNmQQivumy1abiDX6TEJTmiabqanrXy8Hh68b2HNf4LlLsD2TpejdiYigzKim8pDMXjEqRxeeM2qw6sEvtUQr+ca3dY/Y8QpOdpLAbNfYu4+pcXd1+6+nlHn9d9SfHplcoeNeBCGjWtzhSuKc4eNi4JdmUBwlG6UhzOfe5JjBKWmp6ippqWgAAOw==) 0 0 repeat;
+			background: #0053b5 url(data:image/gif;base64,R0lGODlhKAAoAJEAAABTtTBzwz18xwAAACH5BAAAAAAALAAAAAAoACgAAAKMhGOAl6sNmQQivumy1abiDX6TEJTmiabqanrXy8Hh68b2HNf4LlLsD2TpejdiYigzKim8pDMXjEqRxeeM2qw6sEvtUQr+ca3dY/Y8QpOdpLAbNfYu4+pcXd1+6+nlHn9d9SfHplcoeNeBCGjWtzhSuKc4eNi4JdmUBwlG6UhzOfe5JjBKWmp6ippqWgAAOw==) 1px 2px repeat;
 		}
 
 		body {
-			width: 100%;
+			position: relative;
+
 			min-width: 840px;
 			min-height: 100%;
-			padding-bottom: 1048px;
+
+			padding: 0 70px;
 			
 			font-family: "Georgia", serif;
 			font-size: 18px;
@@ -19,8 +26,9 @@
 			
 			color: #fff;
 
-
 			background: url('../i/print.png') center 0 no-repeat;
+
+			overflow: auto;
 		}
 		
 		img {
@@ -44,19 +52,24 @@
 			padding: 0;
 		}
 
-		.b-print,
 		.b-light {
-			position: relative;
-		}
+			position: fixed;
+			top: 0;
+			left: 0;
 
-		.b-light {
-			padding: 40px 60px 80px;
+			display: block;
+			width: 100%;
+			height: 1048px;
+
+			background: url('/i/light.png') center top no-repeat;
 		}
 
 		.b-block-light {
-			position: relative;
+			position: absolute;
+			top: 0;
+			left: 0;
 
-			width: 831px;
+			width: 100%;
 			height: 800px;
 			margin: 0 auto;
 
@@ -69,7 +82,7 @@
 			position: relative;
 			
 			width: 670px;
-			margin: -770px auto;
+			margin: 70px auto 0;
 
 			background: #f3f3f3 url('../i/block_bg.gif') 0 0 repeat;
 			color: #4b4b4b;
@@ -311,6 +324,33 @@
 			line-height: 18px;
 			margin-bottom: 3px;
 		}
+
+.b-popup {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	display: block;
+	width: 100%;
+	height: 500px;
+
+	margin-top: 70px;
+}
+
+	.b-block__popup {
+		padding: 50px;
+	}
+
+	.b-auth-window {
+		display: block;
+		width: 100%;
+		height: 450px;
+
+		margin: 0;
+		padding: 0;
+
+		border: 1px #000 solid;
+	}
 
 .b-debug {
 	position: fixed;
