@@ -29,6 +29,14 @@
 	}
 
 .b-header,
+.b-footer,
+.b-main {
+	max-width: 1024;
+
+	margin: 0 auto;
+}
+
+.b-header,
 .b-footer {
 	width: 100%;
 	height: 70px;
@@ -39,7 +47,7 @@
 
 	border-radius: 0 0 5px 5px;
 }
-	
+
 	.b-logout-link {
 		float: right;
 
