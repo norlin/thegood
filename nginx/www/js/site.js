@@ -3,7 +3,7 @@ var g_actions;
 (function (window, $) {
 	function onResize() {
 		var block = $('#main'),
-			h = document.body.clientHeight - 200,
+			h = document.body.clientHeight - 130,
 			minHeight = 500;
 
 		h = Math.max(h, minHeight);
@@ -22,15 +22,15 @@ var g_actions;
 			init: function () {
 				$('.action').unbind('click').bind('click', function () {
 					var params = {};
-						
+
 					if (typeof(this.onclick) === 'function') {
 						params = this.onclick();
-					
+
 						if (params.action && typeof(g_actions[params.action]) === 'function') {
 							g_actions[params.action].call(this, params);
 						}
 					}
-					
+
 					return false;
 				});
 			},
@@ -46,11 +46,11 @@ var g_actions;
 			},
 			addPoint: function (map, point, params) {
 				var mark = new Mark(point);
-				
+
 				mark.setServer(g_server);
-				
+
 				mark.params = params;
-				
+
 				mark.draw(map);
 			},
 			/*page:function (params,no_state) {
@@ -73,7 +73,7 @@ var g_actions;
 							window.setTimeout(function () {
 								g_actions.updatePage(params,html);
 							},0);
-							
+
 							g_actions.writeHistory(params,no_state);
 						}else{
 							window.location = g_domain + '/'+params.page;
@@ -99,15 +99,15 @@ var g_actions;
 					$('.b-userinfo').addClass('g-hidden');
 					$('.b-login').removeClass('g-hidden');
 				}
-				
+
 				if(g_user && g_user.status >= 100) {
 					$('.b-admin-link').removeClass('g-hidden');
 				}else{
 					$('.b-admin-link').addClass('g-hidden');
 				}
-				
+
 				Init();
-				
+
 				g_actions.init();*/
 			},
 			writeHistory: function (params, no_state) {
@@ -116,9 +116,9 @@ var g_actions;
 				}
 			}
 		};
-		
+
 		window.g_server = new Server('/ajax/');
-		
+
 		function initAll() {
 			/*
 			if (!g_inited) {
@@ -127,12 +127,12 @@ var g_actions;
 						page:'',
 						title:''
 					};
-					
+
 					if (e.state || window.location.pathname === '/') {
 						g_actions.page(params,true);
 					}
 				}, false);
-				
+
 				//инициализируем линки действий
 				g_actions.init();
 
@@ -141,7 +141,7 @@ var g_actions;
 						g_actions.updatePage({page:'',title:g_admin ? 'Админка' : ''});
 					},1000);
 				}
-				
+
 				g_inited = true;
 			}
 			*/
@@ -168,7 +168,7 @@ var g_actions;
 					seconds = Math.floor(seconds - (minutes * 60));
 					hours = Math.floor(minutes / 60);
 					minutes = Math.floor(minutes - (hours * 60));
-					
+
 					$('#lastStanding').html('Власть жуликов и воров кончится через <br />' +
 						'<span class="b-laststand">' +
 						hours + ' ' + word_end(['часов', 'часа', 'час'], hours) + ' ' +
