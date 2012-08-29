@@ -30,13 +30,13 @@ var g_domain = g_config.host,
 	g_pages,
 	g_pages_hash,
 	g_twitter_tokens = {};
-	
+
 sys.print('loading');
 
 function logError(err) {
 	if (err) {
 		sys.log('! uncaught ERROR ! ' + sys.inspect(err));
-		
+
 	}
 }
 process.on('uncaughtException', logError);
@@ -75,7 +75,7 @@ function word_end(word, num) {
 
 function getData(protocol, host, path, token, callback) {
 	var response = '';
-	
+
 	protocol.get({
 		host: host,
 		path: path
@@ -101,7 +101,7 @@ function textValidate(text) {
 	//меняем англ. c на русскую с ;)
 	text = text.replace('<sc', '<sс');
 	text = text.replace('</sc', '</sс');
-	
+
 	return text;
 }
 
@@ -111,11 +111,11 @@ var Resolver = function (req, resp, files, callback) {
 	основная внешняя функция
 
 	*/
-	
+
 	this.debugMode = {
 		login: true
 	};
-	
+
 	this.time1 = getTime();
 	this.request = req;
 	this.response = resp;
@@ -125,9 +125,10 @@ var Resolver = function (req, resp, files, callback) {
 	this.status = 500;
 	this.template = 'error';
 	this.headers = {
-		'Content-Type': 'text/html; charset=utf-8'
+		'Content-Type': 'text/html; charset=utf-8',
+		'Cache-Control': 'no-store, no-cache, must-revalidate'
 	};
-	
+
 	this.cookies = {
 		//test:(new Date()).getTime()
 	};
@@ -138,16 +139,16 @@ var Resolver = function (req, resp, files, callback) {
 		var name = val.split('=');
 		Interface.cookies[name[0]] = name[1];
 	});
-	
+
 	if (typeof(callback) === 'function') {
 		Interface.cb = callback;
-		
+
 		process.on('uncaughtException', function (err) {
 			Interface.debug('exeption!' + ((err ? sys.inspect(err) : 'no error') + console.trace()).replace(/\n/g, ' '));
 			Interface.print();
 		});
 	}
-	
+
 	if (req.post_data && !req.multipart) {
 		this.post = url.parse('http://' + g_domain + '/?' + req.post_data, true).query || {};
 	} else {
@@ -163,11 +164,11 @@ var Resolver = function (req, resp, files, callback) {
 	this.url = url.parse(req.url, true) || {};
 	this.url.pathname = this.url.pathname.replace(/\/ + /g, '/');
 	this.url.pathname = this.url.pathname.replace(/(^\/)|(\/$)/g, '');
-	
+
 	if (this.url.pathname && this.url.pathname !== '/') {
 		this.action = this.url.pathname.split('/');
 	}
-	
+
 	if (this.action.length < 1) {
 		this.action = ['morda'];
 	}
@@ -177,13 +178,13 @@ var Resolver = function (req, resp, files, callback) {
 		Interface.user.name = user.name || user.login;
 		Interface.authDone.call(Interface, cookie);
 	}
-	
+
 	this.is_action = (typeof(g_actions[Interface.action[0]]) === 'function');
-	
+
 	if (!Interface.is_action && g_pages_hash[Interface.action[0]]) {
 		Interface.action = ['page'].concat(Interface.action);
 	}
-	
+
 	if (Interface.action.length > 0 && typeof(g_actions[Interface.action[0]]) === 'function') {
 		Interface.status = 200;
 
@@ -258,7 +259,7 @@ Resolver.prototype.authDone = function (cookie) {
 	if (!Interface.post.json) {
 		Interface.post.json = {};
 	}
-	
+
 	/*
 	Interface.request_str = Interface.url.pathname + Interface.post.json + Interface.user.login;
 
@@ -269,7 +270,7 @@ Resolver.prototype.authDone = function (cookie) {
 		g_requests[Interface.request_str] = 1;
 	}
 	*/
-		
+
 	if (this.user && this.user.status > 0) {
 		this.data.user = {
 			name: this.user.name,
@@ -277,11 +278,11 @@ Resolver.prototype.authDone = function (cookie) {
 			is_admin: checkAdmin(this.user)
 		};
 	}
-	
+
 	this.data.pages = g_pages;
-	
+
 	this.data.full = true;
-	
+
 	g_actions[Interface.action[0]].call(Interface);
 };
 
@@ -300,7 +301,7 @@ Resolver.prototype.print = function () {
 		.on('error', function (err) {
 			Interface.response.write('Что-то пошло не так!');
 			Interface.response.write(sys.inspect(err));
-			
+
 			Interface.printEnd(err);
 		});
 };
@@ -315,11 +316,11 @@ Resolver.prototype.printEnd = function (err) {
 	}
 
 	this.response.end();
-	
+
 	if (this.cb) {
 		this.cb(err);
 	}
-	
+
 	if (g_requests[this.request_str]) {
 		delete g_requests[this.request_str];
 	}
@@ -331,13 +332,13 @@ g_actions = {
 */
 	'admin': function (ajax) {
 		var Interface = this;
-		
+
 		function callback(err, data) {
 			if (!err && data) {
 				Interface.data.marks = JSON.stringify(data);
 				Interface.data.adminMarks = data;
 			}
-			
+
 			if (ajax) {
 				ajax();
 			} else {
@@ -346,9 +347,9 @@ g_actions = {
 		}
 
 		this.debug('log_admin');
-		
+
 		this.template = 'admin';
-		
+
 		if (checkAdmin(this.user)) {
 			this.data.info.admin = true;
 			//g_data.getMarks({state: 'adminMarks'},callback);
@@ -359,9 +360,9 @@ g_actions = {
 	'admin_news': function (ajax) {
 		var Interface = this,
 			params = {};
-		
+
 		this.debug('log_admin_news');
-		
+
 		this.template = 'admin_news_list';
 		this.data.info.second = true;
 
@@ -372,19 +373,19 @@ g_actions = {
 					Interface.template = 'admin_news';
 				}
 			}
-			
+
 			if (ajax) {
 				ajax();
 			} else {
 				Interface.print();
 			}
 		}
-		
+
 		if (checkAdmin(this.user)) {
 			if (this.action[1]) {
 				params.news_id = this.action[1].replace('news_', '');
 			}
-			
+
 			this.data.info.admin = true;
 			g_data.getNews(params, callback);
 		} else {
@@ -393,13 +394,13 @@ g_actions = {
 	},
 	'morda': function (ajax) {
 		var Interface = this;
-		
+
 		this.debug('log_morda');
 
 		this.template = 'morda';
 		this.data.index = true;
 		this.data.userCount = false;
-		
+
 		function callback(err, data) {
 			if (!err && typeof(data) !== 'undefined') {
 				Interface.data.userCount = data;
@@ -415,13 +416,13 @@ g_actions = {
 	},
 	'index': function (ajax) {
 		var Interface = this;
-		
+
 		this.debug('log_index');
 
 		this.template = 'index';
 		this.data.index = true;
 		this.data.userCount = false;
-		
+
 		function callback(err, data) {
 			if (!err && typeof(data) !== 'undefined') {
 				Interface.data.userCount = data;
@@ -479,11 +480,11 @@ g_actions = {
 	'news': function (ajax) {
 		var Interface = this,
 			params = {};
-		
+
 		this.debug('log_news');
 
 		this.template = 'news_list';
-		
+
 		function callback(err, data) {
 			if (!err && data) {
 				Interface.data.news = data;
@@ -496,24 +497,24 @@ g_actions = {
 				g_actions['404'].call(Interface);
 				return;
 			}
-			
+
 			if (ajax) {
 				ajax();
 			} else {
 				Interface.print();
 			}
 		}
-		
+
 		if (this.action[1]) {
 			params.news_id = this.action[1].replace('news_', '');
 		}
-		
+
 		g_data.getNews(params, callback);
 	},
 	'auth': function () {
-	
+
 		this.debug('log_auth');
-		
+
 		var Interface = this,
 			provider = this.action[1],
 			providers = {
@@ -525,20 +526,20 @@ g_actions = {
 					onauth: function (err, data) {
 						var token,
 							expires;
-							
+
 						if (err || !data) {
 							Interface.template = 'auth';
 							Interface.print();
 						} else {
 							token = data.split('&');
-							
+
 							if (!token || token.length < 2) {
 								token = token[0];
 							} else {
 								expires = token[1].split('=')[1];
 								token = token[0].split('=')[1];
 							}
-							
+
 							getData(
 								providers[provider].protocol,
 								providers[provider].host,
@@ -559,7 +560,7 @@ g_actions = {
 								Interface.print();
 								return false;
 							}
-							
+
 							saveSocialUser(data, {oauth_token: token[0]});
 						}
 					}
@@ -600,22 +601,22 @@ g_actions = {
 							Interface.template = 'auth';
 							Interface.print();
 						} else {
-							
+
 							data = data ? JSON.parse(data) || 0 : 0;
-							
+
 							if (err || !data || data.error) {
 								g_actions['error'].call(Interface);
 								return false;
 							}
-							
+
 							data = data.response[0];
-							
+
 							data = {
 								id: data.uid,
 								name: [data.first_name, data.last_name].join(' ')
 							};
 
-							
+
 							saveSocialUser(data, {oauth_token: token[0]});
 						}
 					}
@@ -727,7 +728,7 @@ g_actions = {
 			}, function (user, cookie) {
 				Interface.headers['Set-Cookie'] = 'login=' + cookie + '; path=/;';
 				Interface.template = 'auth';
-				
+
 				Interface.data.user = {
 					name: user.name || user.login,
 					status: user.status
@@ -735,7 +736,7 @@ g_actions = {
 				Interface.print();
 			});
 		}
-			
+
 		if (!provider ||
 			!this.url.query ||
 			!this.url.query.code
@@ -762,27 +763,27 @@ g_actions = {
 
 
 		this.headers['Set-Cookie'] = 'login=' + this.data.cookie + '; path=/;';
-		
+
 		this.template = 'auth';
 		this.print();
 	},
 	'logout': function () {
 		this.debug('log_logout');
-		
+
 		delete this.data.user;
-		
+
 		this.headers['Set-Cookie'] = 'login=; expires=' + (new Date(getTime() - 3600000)).toString() + '; path=/;';
 		this.template = 'auth';
 		this.print();
 	},
 	'ajax': function () {
 		var Interface = this;
-		
+
 		function callback(err, data) {
 			Interface.headers['Content-Type'] = 'application/json';
 			Interface.template = 'ajax';
 			Interface.data.ajax[Interface.action[1]] = 1;
-			
+
 			if (err) {
 				Interface.data.ajax = {
 					error: 1,
@@ -793,28 +794,28 @@ g_actions = {
 			}
 			Interface.print();
 		}
-		
+
 		function callbackPage() {
 			Interface.headers['Content-Type'] = 'application/json';
 			Interface.template = 'ajax_page';
 
 			Interface.data.data = JSON.stringify(Interface.data);
-			
+
 			Interface.print();
 		}
-		
+
 		this.debug('log_ajax');
-		
+
 		Interface.data.ajax = {};
-		
+
 		if (typeof(g_actions[Interface.action[1]]) === 'function') {
 			//выполнение какого-либо действия в аякс-запроса
 			Interface.data.ajax = 1;
 			Interface.data.full = false;
-			
+
 			//убираем первый элемент 'ajax' из массива action
 			Interface.action.shift();
-			
+
 			g_actions[Interface.action[0]].call(Interface, callbackPage);
 		} else if (g_pages_hash[Interface.action[1]]) {
 			//отдача странички в аякс запросе
@@ -831,14 +832,14 @@ g_actions = {
 				g_actions['404'].call(Interface);
 				return false;
 			}
-	
+
 			g_ajax_actions[this.action[1]].call(this, callback);
 		}
 
 	},
 	'404': function () {
 		this.debug('log_404');
-		
+
 		this.status = 404;
 		this.data.info = {
 			action: this.action,
@@ -849,16 +850,16 @@ g_actions = {
 	},
 	'500': function () {
 		this.debug('log_500');
-		
+
 		this.status = 500;
 		this.template = 'error';
 		this.print();
 	},
 	'page': function (ajax) {
 		this.debug('log_page');
-		
+
 		this.template = this.action[1];
-		
+
 		if (ajax) {
 			ajax();
 		} else {
@@ -880,18 +881,18 @@ g_ajax_actions = {
 		var Interface = this;
 		g_data.saveMark(this.post.json.mark, this.user.login, function (err, mark) {
 			var text;
-			
+
 			if (!err && Interface.user.status >= 10 && mark.tweet) {
 				text = mark.title.length > 100 ? mark.title.slice(0, 100) + '...' : mark.title;
 				text += ' #перекрыли #bot';
-				
+
 				twitter.sendTweet({
 					status: text,
 					lat: mark.sys_lat,
 					long: mark.sys_lng
 				});
 			}
-			
+
 			callback(err, mark);
 		});
 	},
@@ -901,38 +902,38 @@ g_ajax_actions = {
 			callback({msg: 'нет прав'});
 			return false;
 		}
-		
+
 		this.data.ajax.is_action = 1;
-		
+
 		g_data.saveMarkStatus(this.post.json.marks, this.user.login, callback);
 	},
 	'save_news': function (callback) {
 		var news = this.post.json.news,
 			text,
 			newNews = !news.id;
-			
+
 		if (!checkAdmin(this.user) || !news || !news.text) {
 			callback({msg: 'нет прав'});
 			return false;
 		}
-		
+
 		this.data.ajax.is_action = 1;
-		
+
 		news.text = textValidate(news.text);
 		news.title = textValidate(news.title);
 		news.author_name = this.user.name;
-		
+
 		g_data.saveNews(news, this.user.login, function (err, news) {
 			if (newNews) {
 				text = news.title.length > 100 ? news.title.slice(0, 97) + '...' : news.title;
 				text += ' http://' + g_domain + '/news/' + news._id;
 				text += ' #новости #bot';
-				
+
 				twitter.sendTweet({
 					status: text
 				});
 			}
-			
+
 			callback(err, news);
 		});
 	}
@@ -963,39 +964,39 @@ function getTemplates(callback) {
 	g_pages.forEach(function (val) {
 		g_pages_hash[val.url] = 1;
 	});
-	
+
 	fs.readdir(path, function (err, files) {
 		var cnt = files.length,
 			i = 0;
-		
+
 		if (err || !files) {
 			return;
 		}
 
 		files.forEach(function (val) {
 			var file_path = path + '/' + val;
-			
+
 			fs.readFile(file_path, 'utf8', function (err, data) {
 				var compiled,
 					name = val.replace('.dust', '');
-				
+
 				if (err) {
 					return;
 				}
 
 				sys.print('.');
 				compiled = dust.compile(data, name);
-				
+
 				//if (g_pages_hash[name]) {
 				templates += compiled;
 				//}
-				
+
 				dust.loadSource(compiled);
-				
+
 				i = i + 1;
 				if (i === cnt) {
 					sys.print('.');
-					
+
 					fs.writeFile(g_www_path + '/js/templates.js', templates, function () {
 						jsmin(g_www_path + '/js/scripts.js');
 						jsmin(g_www_path + '/js/admin.js');
@@ -1003,7 +1004,7 @@ function getTemplates(callback) {
 						jsmin(g_www_path + '/css/styles.css');
 						jsmin(g_www_path + '/css/styles-ie.css');
 						jsmin(g_www_path + '/css/admin.css');
-						
+
 						callback.call();
 					});
 				}
@@ -1019,11 +1020,11 @@ function Init() {
 		var post = '',
 			type = req.headers ? req.headers['content-type'] : '',
 			form;
-	
+
 		function onData(chunk) {
 			post += chunk;
 		}
-		
+
 		function onRequestEnd(err, fields, files) {
 			req.post_data = post;
 
@@ -1041,12 +1042,12 @@ function Init() {
 		}
 	}
 	sys.print('.');
-	
+
 	var srv = http.createServer(serverCallback);
 	sys.print('.');
 	srv.listen(g_node_port);
 	sys.print('.');
-	
+
 	sys.print(' done!\n');
 }
 
