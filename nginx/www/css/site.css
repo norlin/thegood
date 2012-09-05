@@ -11,6 +11,7 @@
 
 .b-element {
 	border-radius: 5px;
+	overflow: hidden;
 
 	background: #000;
 	background: rgba(0, 0, 0, 0.3);
@@ -31,7 +32,7 @@
 .b-header,
 .b-footer,
 .b-main {
-	max-width: 1024;
+	max-width: 1024px;
 
 	margin: 0 auto;
 }
@@ -39,7 +40,7 @@
 .b-header,
 .b-footer {
 	width: 100%;
-	height: 70px;
+	height: 50px;
 }
 
 .b-header {
@@ -54,7 +55,7 @@
 		display: block;
 		margin: 0 30px;
 
-		line-height: 60px;
+		line-height: 40px;
 	}
 
 .b-main {
@@ -75,3 +76,129 @@
 .b-link {
 	margin: 0 5px;
 }
+
+.b-content-block {
+	float: left;
+
+	display: block;
+	min-width: 100px;
+
+	border: 1px solid #556;
+	background: #223;
+	background: rgba(34, 34, 51, 0.9);
+
+	text-align: left;
+}
+
+.b-user-info {
+	width: 300px;
+
+	text-align: center;
+}
+
+	.b-user-name {
+		position: relative;
+
+		display: block;
+		height: 30px;
+		line-height: 30px;
+
+		padding: 5px 10px;
+	}
+
+		.b-user-name__name {
+			padding-right: 5px;
+		}
+
+		.b-user-name__level {
+			position: absolute;
+			top: 0;
+
+			font-size: 12px;
+		}
+
+	.b-user-pic {
+		width: 200px;
+		height: 200px;
+
+		margin: 0 auto 10px;
+
+		border: 1px solid #556;
+	}
+
+.b-event-list {
+	float: none;
+
+	height: 100%;
+
+	margin-left: 307px;
+}
+
+.b-tabs {
+	height: 100%;
+}
+
+	.b-tabs-menu {
+		height: 30px;
+		margin: 0;
+		padding: 0;
+
+		border-bottom: 1px solid #556;
+	}
+
+		.b-tabs-link {
+			display: inline-block;
+			height: 28px;
+
+			vertical-align: top;
+
+			border: 2px solid transparent;
+			border-bottom: none;
+
+			color: #ccc;
+
+			cursor: pointer;
+		}
+
+			.b-tabs-link__active {
+				border-color: #556;
+
+				color: #fff;
+
+				cursor: default;
+			}
+
+				.b-tabs-link__active .b-tabs-link__important {
+					color: #f33;
+				}
+
+			.b-tabs-link__important {
+				color: #f77;
+				font-weight: bold;
+			}
+
+			.b-tabs-link__text {
+				padding: 0 10px;
+
+				vertical-align: middle;
+			}
+
+	.b-tabs-content {
+		height: 100%;
+
+		margin-top: -31px;
+		padding-top: 1px;
+	}
+
+		.b-tabs-tab {
+			display: none;
+
+			margin-top: 31px;
+			padding: 10px;
+
+			min-height: 100px;
+		}
+
+			.b-tabs-tab__active {
+				display: block;
+			}

@@ -3,7 +3,7 @@ var g_actions;
 (function (window, $) {
 	function onResize() {
 		var block = $('#main'),
-			h = document.body.clientHeight - 160,
+			h = document.body.clientHeight - $('#header').outerHeight() - $('#footer').outerHeight() - 60,
 			minHeight = 500;
 
 		h = Math.max(h, minHeight);

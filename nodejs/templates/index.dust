@@ -1,8 +1,8 @@
 {?full}
 	{>header/}
 {/full}
-	<!--div class="b-block b-block__full">
-		<div class="b-block-content">
+	<!--div class="b-content-block b-content-block__full">
+		<div class="b-content-block-content">
 			<div class="b-message">
 				<h2 class="b-title">Добро пожаловать{?user}, {user.name}{/user}!</h2>
 
@@ -11,11 +11,42 @@
 		</div>
 	</div-->
 
-	<div class="b-element b-header">
+	<div id="header" class="b-element b-header">
 		<a href="#" class="b-logout-link action" onclick="return {action: 'logout'}">Выйти</a>
 	</div>
-	<div id="main" class="b-element b-main"></div>
-	<div class="b-element b-footer">
+	<div id="main" class="b-element b-main">
+		<div class="b-content-block b-user-info">
+			<div class="b-user-name">
+				<span class="b-user-name__name">{user.name}</span>
+				<span class="b-user-name__level">42</span>
+			</div>
+			<div class="b-user-pic">
+				<img class="b-user-pic__image" src="/i/avatars/userpic.jpg" alt="userpic" />
+			</div>
+			<div class="b-user-status"></div>
+		</div>
+		<div class="b-content-block b-event-list">
+			<div class="b-tabs">
+				<ul class="b-tabs-menu">
+					<li class="b-tabs-link b-tabs-link__important">
+						<span class="b-tabs-link__text">Важное!</span>
+					</li>
+					<li class="b-tabs-link b-tabs-link__active">
+						<span class="b-tabs-link__text">Твой город</span>
+					</li>
+					<li class="b-tabs-link">
+						<span class="b-tabs-link__text">Твоя страна</span>
+					</li>
+				</ul>
+				<div class="b-tabs-content">
+					<div class="b-tabs-tab"></div>
+					<div class="b-tabs-tab b-tabs-tab__active"></div>
+					<div class="b-tabs-tab"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="footer" class="b-element b-footer">
 		<span class="b-copyright">
 			<a class="b-link" href="http://twitter.com/the_outreach" target="_blank">@the_outreach</a>
 			<a class="b-link" href="http://mashina.org" target="_blank">Добрая Машина Правды</a>
