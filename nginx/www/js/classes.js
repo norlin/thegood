@@ -4,17 +4,19 @@ var Server = function (url) {
 	this.url = url;
 };
 
-Server.prototype.post = function (method,data,callback,error) {
+Server.prototype.post = function (method, data, callback, error) {
 	$.ajax({
-		url: this.url+method,
+		url: this.url + method,
 		type: 'POST',
 		dataType: 'json',
-		data: {json:JSON.stringify(data)},
+		data: {
+			json: JSON.stringify(data)
+		},
 		success: callback,
 		error: error
 	});
 };
 
-Server.prototype.getPage = function (page,callback,error) {
-	this.post(page,{},callback,error);
+Server.prototype.getPage = function (page, callback, error) {
+	this.post(page, {}, callback, error);
 };

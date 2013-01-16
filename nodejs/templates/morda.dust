@@ -10,7 +10,7 @@
 				<h2 class="b-title">Друзья!</h2>
 
 				<div class="b-epigraph">
-					<div id="lastStanding"></div>
+					<div class="js-pseudo-block" onclick="return {type:'countdown',textStart:'Проверка отсчёта:',textEnd:'Россия будет свободной!',date:1358625600000}"></div>
 				</div>
 				<i class="g-clear"></i>
 

@@ -1,0 +1,10 @@
+{?countdown.done}
+	{countdown.textFinish}
+{:else}
+	{countdown.textStart}<br />
+	<span class="b-laststand">
+		{countdown.hours} {countdown.hoursWord} {countdown.minutes} {countdown.minutesWord} {countdown.seconds} {countdown.secondsWord}
+	</span>
+	<i class="g-clear"></i>
+	{countdown.textEnd}
+{/countdown.done}

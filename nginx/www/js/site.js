@@ -1,21 +1,29 @@
 /*jslint browser: true, sloppy: true, white: true, maxerr: 50, indent: 4 */
 var g_actions;
 (function (window, $) {
-	function onResize() {
-		var block = $('#main'),
-			h = document.body.clientHeight - $('#header').outerHeight() - $('#footer').outerHeight() - 60,
-			minHeight = 500;
-
-		h = Math.max(h, minHeight);
-
-		block.height(h);
-	}
-
 	$().ready(function () {
-		var nojs = $("#nojs").length,
+		var nojs = $('#nojs').length,
 			$body = $('body'),
 			// создаём объект для общения с сервером
-			g_inited = false;
+			g_inited = false,
+			app;
+
+		app = new Block({
+			params: {
+				lang: 'ru',
+				type: 'dummy',
+				body: $body,
+				dust: window.dust,
+				classes: {
+					gHidden: 'g-hidden',
+					gHiddenTransition: 'g-transition__hidden'
+				}
+			}
+		});
+
+		window.test = app;
+
+		app.Actions.initBlocks();
 
 		//разные функции
 		g_actions = {
@@ -146,44 +154,11 @@ var g_actions;
 			}
 			*/
 
-			onResize();
-			$(window).on('resize', onResize);
-
 			$(document).on('keydown', function (e) {
 				if (e.keyCode === 27) {
 					$('.b-popup').remove();
 				}
 			});
-
-			function lastStanding() {
-				var date1 = new Date(2012, 5, 12, 12),
-					date2 = new Date(),
-					seconds,
-					minutes,
-					hours;
-
-				seconds = (date1.getTime() - date2.getTime()) / 1000;
-				if (seconds > 0) {
-					minutes = Math.floor(seconds / 60);
-					seconds = Math.floor(seconds - (minutes * 60));
-					hours = Math.floor(minutes / 60);
-					minutes = Math.floor(minutes - (hours * 60));
-
-					$('#lastStanding').html('Власть жуликов и воров кончится через <br />' +
-						'<span class="b-laststand">' +
-						hours + ' ' + word_end(['часов', 'часа', 'час'], hours) + ' ' +
-						minutes + ' ' + word_end(['минут', 'минуты', 'минута'], minutes) + ' ' +
-						seconds + ' ' + word_end(['секунд', 'секунды', 'секунда'], seconds) +
-						'</span><i class="g-clear"></i>' +
-						'12 июня на улицу надо выйти абсолютно всем и каждому.'
-					);
-				} else {
-					$('#lastStanding').html('Россия без путина!');
-				}
-			}
-
-			window.setInterval(lastStanding, 1000);
-			lastStanding();
 
 			g_actions.init();
 		}
