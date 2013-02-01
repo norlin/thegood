@@ -12,7 +12,7 @@ var Block = function (n, app) {
 				/**
 				 * create other blocks from DOM-nodes:
 				 * for example:
-				 * <a href="#" class="js-pseudo-block" onclick="return {type:'action', action:'jsActionName', someParam:value1, param2: ...}">Make JS-action</a>
+				 * <a href="#" class="js-pseudo-block" onclick="return {type:'action', action:'example', someParam:value1, param2: ...}">Make JS-action</a>
 				 */
 				this.app = app;
 				this.element = n;
