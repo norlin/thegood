@@ -1,5 +1,5 @@
 Block.prototype.Actions.initBlocks = function(params) {
-	var dummy = this,
+	var app = this,
 		target = params && params.target ? params.target : '.js-pseudo-block',
 		parent = params ? $(params.parent) : null,
 		bodyBlock;
@@ -16,10 +16,10 @@ Block.prototype.Actions.initBlocks = function(params) {
 	}
 
 	target.each(function () {
-		new Block(this, dummy);
+		new Block(this, app);
 	}).removeClass('js-pseudo-block');
 
-	bodyBlock = dummy.params.body.data('Block');
+	bodyBlock = app.params.body.data('Block');
 	if (bodyBlock) {
 		bodyBlock = bodyBlock.keyboardControl;
 	}

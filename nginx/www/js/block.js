@@ -1,19 +1,26 @@
-var Block = function (n, dummy) {
-	var BlockInstance = function (superBlock, n, params, dummy) {
+var Block = function (n, app) {
+	var BlockInstance = function (superBlock, n, params, app) {
 		this.params = params;
 
 		if (superBlock.blocks[this.params.type]) {
-			/* если такой блок есть */
-			if (this.params.type === 'dummy') {
-				this.Actions = superBlock.Actions;
+			/* if current block exists */
+			this.Actions = superBlock.Actions;
+			if (this.params.type === 'app') {
+				/* create main block */
 				this.blocks = superBlock.blocks;
 			} else {
-				/* для обычных блоков,
-				создаваемых в верстке */
-				this.dummy = dummy;
+				/**
+				 * create other blocks from DOM-nodes:
+				 * for example:
+				 * <a href="#" class="js-pseudo-block" onclick="return {type:'action', action:'jsActionName', someParam:value1, param2: ...}">Make JS-action</a>
+				 */
+				this.app = app;
 				this.element = n;
 				this.$element = $(n);
 
+				/**
+				 * add block-type classname for css-styling
+				 */
 				this.baseClass = 'b-' + this.params.type;
 
 				this.$element.addClass(this.baseClass);
@@ -21,7 +28,7 @@ var Block = function (n, dummy) {
 
 				blocksObject[this.params.type] = this;
 			}
-			/* инициализируем конкретный тип блока */
+			/* initialize current block */
 			superBlock.blocks[this.params.type].apply(this);
 		}
 
@@ -30,7 +37,7 @@ var Block = function (n, dummy) {
 	superBlock = this,
 	blocksObject = {};
 	/*
-	инициализация блока (js-pseudo-block)
+	block initialization (js-pseudo-block)
 	*/
 
 	if (typeof (n.params) === 'object') {
@@ -40,32 +47,37 @@ var Block = function (n, dummy) {
 			return 'No onclick function!';
 		}
 
-		/* получаем параметры... */
+		/* get params... */
 		superBlock.params = n.onclick();
 	}
 
-	/* ...проверяем наличие обязательных */
+	/* ...check for params */
 	if (!superBlock.params) {
 		return 'No block params!';
 	}
 
 	if (superBlock.params instanceof Array) {
+		/**
+		 * Array means that current DOM-node has multiple blocks instances
+		 * In current version you can't make more than one block of one type.
+		 *
+		 * p.s. actually, you CAN do this, but you can't access some of this block instances later
+		 * but all of it will work
+		 */
 		superBlock.instances = [];
 		superBlock.params.forEach(function (params) {
 			var block;
 
 			if (typeof (params) === 'object') {
-				if (params.type) {
-					block = new BlockInstance(superBlock, n, params, dummy);
-				} else {
-					$(n).data('Keyboard', {type:'element', params: params});
-				}
+				block = new BlockInstance(superBlock, n, params, app);
+				superBlock.instances.push(block);
 			}
-
-			superBlock.instances.push(block);
 		});
 	} else {
-		superBlock = new BlockInstance(superBlock, n, superBlock.params, dummy);
+		/**
+		 * Only one block for current DOM-node
+		 */
+		superBlock = new BlockInstance(superBlock, n, superBlock.params, app);
 	}
 
 	$(n).data('Block', blocksObject);
@@ -82,101 +94,47 @@ Block.prototype.blocks = {
 	//BLOCKS
 };
 
-Block.prototype.blocks.dummy = function () {
-	var dummy = this,
+Block.prototype.blocks.app = function () {
+	var app = this,
 		actions = {},
 		action;
 
-	if (dummy.inited) {
+	if (app.inited) {
 		return this;
 	}
 
-	for (action in dummy.Actions) {
-		if (dummy.Actions.hasOwnProperty(action) && typeof(dummy.Actions[action]) === 'function') {
-			actions[action] = dummy.Actions[action].bind(dummy);
+	for (action in app.Actions) {
+		if (app.Actions.hasOwnProperty(action) && typeof(app.Actions[action]) === 'function') {
+			actions[action] = app.Actions[action].bind(app);
 		}
 	}
 
-	dummy.Actions = actions;
+	app.Actions = actions;
 
-	dummy.classes = this.params.classes;
+	app.classes = this.params.classes;
 
-	dummy.render = function (template, data, callback) {
-		dummy.params.dust.render(template, data, callback);
-	};
+	app.ajaxRequest = {};
 
-	dummy.popups = [];
-	dummy.timers = {};
-	dummy.status = {};
-
-	dummy.queue = {
-		_timer: null,
-		_queue: [],
-		add: function(fn, context, time) {
-			var setTimer = function(time) {
-				dummy.queue._timer = setTimeout(function() {
-					time = dummy.queue.doStep();
-
-					if (dummy.queue._queue.length) {
-						setTimer(time);
-					}
-				}, time || 2);
-			};
-
-			if (fn) {
-				dummy.queue._queue.push([fn, context, time]);
-				if (dummy.queue._queue.length == 1) {
-					setTimer(time);
-				}
-				return;
-			}
-		},
-		doStep: function () {
-			var current,
-				next;
-
-			current = dummy.queue._queue.shift();
-			if (!current) {
-				return 0;
-			}
-
-			current[0].call(current[1] || window);
-
-			next = dummy.queue._queue[0];
-			return next ? next[2] : 0;
-
-		},
-		clear: function() {
-			clearTimeout(dummy.queue._timer);
-			dummy.queue._queue = [];
-		}
-	};
+	app.ajaxQueue = {};
 
 	/**
-	 * dummy.getWord('word') достанет строку из window.i18n[dummy.params.lang].lang['word']
-		dummy.getWord('word','section') достанет строку из window.i18n[dummy.params.lang]['section']['word']
-		dummy.getWord('word','section', 'lang') достанет строку из window.i18n[lang]['section']['word']
+	 * localization
+	 * app.getWord('word') return string from window.i18n[app.params.lang].lang['word']
+		app.getWord('word','section') return string from window.i18n[app.params.lang]['section']['word']
+		app.getWord('word','section', 'lang') return string from window.i18n[lang]['section']['word']
 	 */
-	dummy.getWord = function (key, section, lang) {
+	app.getWord = function (key, section, lang) {
 		if (!key) {
 			throw 'No key param!';
 		}
 
-		lang = lang || dummy.params.lang;
+		lang = lang || app.params.lang;
 		section = section || 'lang';
 
 		return getWord(lang, section, key);
 	};
 
-	function onEsc(e) {
-		if (e.which === 27) {
-			e.stopPropagation();
-			e.preventDefault();
-			dummy.Actions.popupClose.apply(dummy);
-		}
-	}
-
-	$(document).off('keydown.popup').on('keydown.popup', onEsc);
+	app.ajax = app.Actions.ajax;
 
 	return this;
 };

@@ -11,7 +11,7 @@ var g_actions;
 		app = new Block({
 			params: {
 				lang: 'ru',
-				type: 'dummy',
+				type: 'app',
 				body: $body,
 				dust: window.dust,
 				classes: {

@@ -1,6 +1,6 @@
 Block.prototype.blocks.countdown = function () {
 	var block = this,
-		app = this.dummy,
+		app = this.app,
 		$node = block.$element,
 		finishDate = new Date(block.params.date),
 		countdown = {
